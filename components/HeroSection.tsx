@@ -6,9 +6,9 @@ interface HeroSectionProps {
 
 export default function HeroSection({ setCurrentPage }: HeroSectionProps) {
   const stats = [
-    { number: '15+', label: 'Thèmes' },
-    { number: '150+', label: 'Modules' },
-    { number: '5', label: 'Destinations' },
+    { number: '15+', label: 'Domaines de compétence' },
+    { number: '150+', label: 'Thèmes' },
+    { number: '5+', label: 'Destinations' },
     { number: '1000+', label: 'Formés' }
   ];
 

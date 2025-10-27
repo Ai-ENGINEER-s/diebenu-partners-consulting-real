@@ -1,98 +1,144 @@
 // app/formation/[slug]/page.tsx
 'use client';
 
-import React, { useState } from 'react';
-import { ChevronDown, ChevronRight, MapPin, Calendar } from 'lucide-react';
+import React from 'react';
+import Image from 'next/image';
+import { ChevronRight, MapPin, Calendar, Clock, BookOpen, Users } from 'lucide-react';
 import { Theme, Module } from '@/types/index';
 
-// Définition des props simplifiée
 interface ThemePageProps {
-    theme: Theme; // Reçu de la page principale (simule la récupération de données)
+    theme: Theme;
+    module: Module;
     setCurrentPage: (page: string) => void;
 }
 
-export default function ThemePage({ theme, setCurrentPage }: ThemePageProps) {
-  const [expandedModule, setExpandedModule] = useState<string | null>(null);
-
-  const toggleModule = (code: string) => {
-    setExpandedModule(expandedModule === code ? null : code);
-  };
+export default function ThemePage({ theme, module, setCurrentPage }: ThemePageProps) {
+  // Utiliser l'image du module en priorité, sinon celle du thème
+  const heroImage = module.image || theme.image || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=450&fit=crop';
 
   return (
     <>
-      {/* Hero du Thème */}
-      <div className="pt-32 pb-16 bg-gradient-to-br from-gray-900 to-red-900">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* Hero Section avec image du module */}
+      <div className="relative pt-32 pb-64 overflow-hidden">
+        {/* Image de fond */}
+        <div className="absolute inset-0">
+          <Image
+            src={heroImage}
+            alt={module.title}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/50"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-6">
           <button 
             onClick={() => setCurrentPage('formation')}
-            className="text-white mb-8 flex items-center hover:text-red-300 transition-colors"
+            className="text-white mb-8 flex items-center hover:text-red-400 transition-colors group"
           >
-            <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
+            <ChevronRight className="w-5 h-5 rotate-180 mr-2 group-hover:-translate-x-1 transition-transform" />
             Retour au catalogue
           </button>
-          <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-4">{theme.title}</h1>
-          <p className="text-xl text-gray-200">{theme.modules.length} modules détaillés</p>
+
+          {/* Badge du code */}
+          <div className="inline-block px-5 py-2 bg-red-600 text-white rounded-lg font-bold text-sm shadow-xl mb-6">
+            {module.code}
+          </div>
+
+          {/* Titre du module */}
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 max-w-4xl leading-tight">
+            {module.title}
+          </h1>
+
+          {/* Catégorie */}
+          <div className="flex items-center text-gray-200 text-lg">
+            <BookOpen className="w-5 h-5 mr-2" />
+            <span className="font-semibold">{theme.title}</span>
+          </div>
         </div>
       </div>
 
-      {/* Modules (Accordéon) */}
-      <section className="py-20 bg-white">
+      {/* Section Description - Chevauche le hero */}
+      <div className="relative -mt-48 pb-20 bg-white">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">Détail du Programme</h2>
-          <div className="space-y-6">
-            {theme.modules.map((module: Module) => (
-              <div key={module.code} className="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                {/* Header du module (Bouton pour ouvrir/fermer) */}
-                <button
-                  onClick={() => toggleModule(module.code)}
-                  className="w-full p-8 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-300"
-                >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-6">
-                    <span className="px-4 py-2 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md flex-shrink-0">
-                      {module.code}
-                    </span>
-                    <h3 className="text-xl font-bold text-gray-900">{module.title}</h3>
-                  </div>
-                  <ChevronDown className={`w-7 h-7 text-red-600 transition-transform duration-300 ${expandedModule === module.code ? 'rotate-180' : ''}`} />
-                </button>
+          {/* Card principale de description */}
+          <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 mb-12 border border-gray-100">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="p-3 bg-red-50 rounded-xl">
+                <BookOpen className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">À propos de ce module</h2>
+                <div className="w-16 h-1 bg-red-600 rounded-full"></div>
+              </div>
+            </div>
+            
+           <div 
+  className="text-lg text-gray-700 leading-relaxed border-l-4 border-red-300 pl-6 py-2 prose"
+  dangerouslySetInnerHTML={{ __html: module.themeDetail }}
+/>
+          </div>
 
-                {/* Contenu du module (Affiché/Caché) */}
-                {expandedModule === module.code && (
-                  <div className="px-8 pb-8 border-t bg-gray-50 animate-slide-up">
-                    <div className="pt-8">
-                      <p className="text-gray-700 mb-8 text-lg border-l-4 border-red-300 pl-4">{module.themeDetail}</p>
-                      
-                      <h4 className="font-bold mb-6 text-gray-900 flex items-center text-xl">
-                        <Calendar className="w-5 h-5 mr-2 text-red-600" />
-                        Sessions Disponibles
-                      </h4>
-                      
-                      {/* Liste des sessions */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        {module.sessions.map((session, idx) => (
-                          <div key={idx} className="bg-white rounded-xl p-6 border-2 border-red-100 shadow-sm">
-                            <MapPin className="w-5 h-5 text-red-600 mb-2" />
-                            <p className="font-bold mb-2 text-gray-900">{session.location}</p>
-                            <p className="text-sm text-gray-600 font-medium">{session.date}</p>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Bouton d'inscription */}
-                      <button 
-                        onClick={() => setCurrentPage('contact')} 
-                        className="w-full bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition duration-300 shadow-lg transform hover:scale-[1.005]"
-                      >
-                        S'inscrire à ce module
-                      </button>
+          {/* Section Sessions Disponibles */}
+          <div className="mb-12">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-3 bg-red-50 rounded-xl">
+                <Calendar className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900">Sessions Disponibles</h2>
+                <p className="text-gray-600 mt-1">{module.sessions.length} sessions programmées</p>
+              </div>
+            </div>
+
+            {/* Grid des sessions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {module.sessions.map((session, idx) => (
+                <div 
+                  key={idx} 
+                  className="bg-white rounded-xl p-6 border-2 border-gray-100 hover:border-red-300 hover:shadow-xl transition-all duration-300 group cursor-pointer"
+                >
+                  {/* Localisation */}
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="p-2 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+                      <MapPin className="w-5 h-5 text-red-600" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900 text-lg">{session.location}</p>
+                      <p className="text-sm text-gray-500">Lieu de formation</p>
                     </div>
                   </div>
-                )}
+
+                  {/* Date */}
+                  <div className="flex items-center gap-2 text-gray-700 bg-gray-50 rounded-lg p-3 group-hover:bg-red-50 transition-colors">
+                    <Clock className="w-4 h-4 text-gray-500 group-hover:text-red-600 transition-colors" />
+                    <p className="font-medium text-sm">{session.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl p-8 md:p-12 shadow-2xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-white">
+                <h3 className="text-2xl md:text-3xl font-bold mb-2">Prêt à vous inscrire ?</h3>
+                <p className="text-red-100">Rejoignez-nous et développez vos compétences</p>
               </div>
-            ))}
+              <button 
+                onClick={() => setCurrentPage('contact')} 
+                className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition duration-300 shadow-lg transform hover:scale-105 whitespace-nowrap flex items-center gap-2"
+              >
+                <Users className="w-5 h-5" />
+                S'inscrire maintenant
+              </button>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
     </>
   );
 }

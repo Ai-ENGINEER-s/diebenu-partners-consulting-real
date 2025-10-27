@@ -27,33 +27,52 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                 {/* Grid principal - Logo + 3 colonnes */}
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
                     
-                    {/* Colonne Logo & Branding */}
+                    {/* Colonne Logo & Branding - VERSION AMÉLIORÉE */}
                     <div className="lg:col-span-1 flex flex-col items-center lg:items-start">
                         <div className="relative group mb-6">
-                            {/* Effet glow premium */}
-                            <div className="absolute -inset-4"></div>
+                            {/* Effet glow premium animé */}
+                            <div className="absolute -inset-6 bg-gradient-to-r from-red-600/20 via-orange-600/20 to-red-600/20 rounded-3xl blur-3xl opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
                             
-                            {/* Container logo */}
-                            <div className="relative  ">
-                                <Image
-                                    src="/images/logo/logo-transparent.png"
-                                    alt="DIEBENU & PARTNERS"
-                                    width={240}
-                                    height={45}
-                                    priority
-                                    className="w-full h-auto"
-                                />
+                            {/* Container logo avec fond subtil SANS bordure */}
+                            <div className="relative backdrop-blur-md bg-gradient-to-br from-white/8 via-gray-800/30 to-gray-900/40 rounded-2xl p-6 shadow-2xl overflow-hidden">
+                                {/* Effet de brillance animé */}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                
+                                {/* Logo avec filtre pour inverser les couleurs sombres */}
+                                <div className="relative z-10" style={{
+                                    filter: 'brightness(1.2) contrast(1.1)',
+                                    mixBlendMode: 'normal'
+                                }}>
+                                    <Image
+                                        src="/images/logo/logotrans.png"
+                                        alt="DIEBENU & PARTNERS"
+                                        width={240}
+                                        height={45}
+                                        priority
+                                        className="w-full h-auto drop-shadow-[0_2px_20px_rgba(239,68,68,0.4)]"
+                                        style={{
+                                            filter: 'drop-shadow(0 0 30px rgba(239, 68, 68, 0.3)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.4))'
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Particules décoratives */}
+                                <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
+                                <div className="absolute bottom-2 left-2 w-1 h-1 bg-orange-500 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
                             </div>
                         </div>
                         
-                        <p className="text-gray-400 text-center lg:text-left text-sm leading-relaxed mb-6">
+                        <p className="text-gray-400 text-center lg:text-left text-sm leading-relaxed mb-6 font-light">
                             Building a better world, together.
                         </p>
 
-                        {/* Indicateur décoratif */}
-                        <div className="flex items-center gap-2">
-                            <div className="h-[2px] w-12 bg-gradient-to-r from-red-600 to-transparent"></div>
-                            <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></div>
+                        {/* Indicateur décoratif moderne */}
+                        <div className="flex items-center gap-3">
+                            <div className="h-[2px] w-16 bg-gradient-to-r from-red-600 via-orange-500 to-transparent rounded-full"></div>
+                            <div className="relative">
+                                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></div>
+                                <div className="absolute inset-0 w-2 h-2 rounded-full bg-red-600 animate-ping"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -152,7 +171,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                                     <Phone className="w-4 h-4" />
                                 </span>
                                 <a href="tel:+212606698210" className="text-xs text-gray-400 group-hover/item:text-white transition-colors font-medium">
-                                    +212 606 698 210
+                                    +212 606 698 210 / +212 665 288 522
                                 </a>
                             </li>
                             <li className="group/item flex items-center gap-3 hover:translate-x-1 transition-all duration-300">

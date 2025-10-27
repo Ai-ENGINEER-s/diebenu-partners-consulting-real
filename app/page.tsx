@@ -1,20 +1,20 @@
 'use client';
 
 import React, { useState, ComponentType } from 'react';
-import { Theme } from '@/types/index';
-// Utilisation des imports directs (convention Next.js)
+// La correction principale est d'assurer que CET import est utilisé PARTOUT
+// J'ajoute 'Session' car l'erreur le mentionne comme point de défaillance.
+import { Theme, Module, Session } from '@/types/index';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-
-// Importation des composants pour la page d'accueil
+import FormationsRealisees from '../components/FormationsRealisees';
 import HeroSection from '../components/HeroSection';
 import MotDuDG from '../components/MotDuDG';
 import PolesExpertise from '../components/PolesExpertise';
 import VisionMissionValues from '../components/VisionMissionValues';
 import CTASection from '../components/CTASection';
 import DestinationsSection from '../components/DestinationsSection';
-
-// Importation des pages (Les chemins de page sont relatifs à ce fichier)
+import Tarifs from '@/components/Tarifs';
+// Importation pages
 import FormationPage from './formation/page';
 import ThemePage from './formation/[slug]/page';
 import ConseilPage from './conseil/page';
@@ -22,69 +22,90 @@ import RecherchePage from './recherche-financement/page';
 import AboutPage from './a-propos/page';
 import ContactPage from './contact/page';
 
-// Interface commune pour toutes les pages qui reçoivent la fonction de navigation
+// Interfaces navigation interne
 interface CommonPageProps {
-    setCurrentPage: (page: string) => void;
+  setCurrentPage: (page: string) => void;
 }
 
-// Interface pour la page de Formation
 interface FormationPageProps extends CommonPageProps {
-    setSelectedTheme: React.Dispatch<React.SetStateAction<Theme | null>>;
+  setSelectedTheme: (theme: Theme) => void;
+  setSelectedModule: (module: Module) => void;
 }
 
-// Interface pour la page de Thème
 interface ThemePageProps extends CommonPageProps {
-    theme: Theme;
+  theme: Theme;
+  module: Module;
 }
 
-// =========================================================
-// HACK TEMPORAIRE: Cast les composants importés pour forcer l'acceptation des props
-// C'est nécessaire car TypeScript ne peut pas voir les props des fichiers
-// externes (./conseil/page, etc.) sans un typage clair à l'importation.
-// La solution idéale serait d'exporter les interfaces depuis chaque page.
+// Typages forcés (Assertion de type)
+// Note: Ces 'as' forcent TypeScript à accepter les types.
+// Le problème vient de la définition de 'Theme' en amont.
 const TypedConseilPage = ConseilPage as ComponentType<CommonPageProps>;
 const TypedRecherchePage = RecherchePage as ComponentType<CommonPageProps>;
 const TypedAboutPage = AboutPage as ComponentType<CommonPageProps>;
 const TypedContactPage = ContactPage as ComponentType<CommonPageProps>;
 const TypedFormationPage = FormationPage as ComponentType<FormationPageProps>;
 const TypedThemePage = ThemePage as ComponentType<ThemePageProps>;
-// =========================================================
 
-
-/**
- * Composant principal de l'application qui gère la navigation (simulée ici par l'état)
- * et affiche la page correspondante.
- */
 export default function DiebenUPartners() {
-  // L'état simule la navigation dans un environnement Next.js App Router
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
+  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+
+  const setSelectedThemeSafe = (theme: Theme) => {
+    setSelectedTheme(theme);
+  };
+
+  const setSelectedModuleSafe = (module: Module) => {
+    setSelectedModule(module);
+  };
+
+  // Fonction pour gérer le changement de page avec reset
+  const handlePageChange = (page: string) => {
+    setCurrentPage(page);
+    // Reset des sélections si on retourne à la page formation
+    if (page === 'formation') {
+      setSelectedTheme(null);
+      setSelectedModule(null);
+    }
+  };
+
+  const commonProps: CommonPageProps = { setCurrentPage: handlePageChange };
 
   const renderPage = () => {
-    // Définir la prop à passer
-    const commonProps: CommonPageProps = { setCurrentPage };
-
     switch (currentPage) {
       case 'home':
         return <HomePage {...commonProps} />;
       case 'formation':
-        // Utilisation du composant typé
-        return <TypedFormationPage {...commonProps} setSelectedTheme={setSelectedTheme} />;
-      case 'theme':
-        return selectedTheme 
-          ? <TypedThemePage theme={selectedTheme} {...commonProps} /> 
-          : <TypedFormationPage {...commonProps} setSelectedTheme={setSelectedTheme} />;
+        return (
+          <TypedFormationPage
+            {...commonProps}
+            setSelectedTheme={setSelectedThemeSafe}
+            setSelectedModule={setSelectedModuleSafe}
+          />
+        );
+      case 'theme': // Cette page affiche un module spécifique d'un thème
+        return selectedTheme && selectedModule ? (
+          <TypedThemePage
+            theme={selectedTheme}
+            module={selectedModule}
+            {...commonProps}
+          />
+        ) : (
+          // Fallback : si l'état est incomplet, retourne à la page de formation
+          <TypedFormationPage
+            {...commonProps}
+            setSelectedTheme={setSelectedThemeSafe}
+            setSelectedModule={setSelectedModuleSafe}
+          />
+        );
       case 'conseil':
-        // Utilisation du composant typé
         return <TypedConseilPage {...commonProps} />;
       case 'recherche':
-        // Utilisation du composant typé
         return <TypedRecherchePage {...commonProps} />;
       case 'about':
-        // Utilisation du composant typé
         return <TypedAboutPage {...commonProps} />;
       case 'contact':
-        // Utilisation du composant typé
         return <TypedContactPage {...commonProps} />;
       default:
         return <HomePage {...commonProps} />;
@@ -93,37 +114,46 @@ export default function DiebenUPartners() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar est toujours présente */}
-      <Navbar 
-        currentPage={currentPage} 
-        setCurrentPage={setCurrentPage} 
-        setSelectedTheme={setSelectedTheme} 
+      <Navbar
+        currentPage={currentPage}
+        setCurrentPage={handlePageChange}
+        // L'erreur provient d'ici :
+        // Le 'setSelectedThemeSafe' (qui utilise le 'Theme' importé ici)
+        // n'est pas compatible avec le 'Theme' attendu par Navbar (qui l'importe différemment)
+        setSelectedTheme={setSelectedThemeSafe}
       />
-      
-      <main className="pt-20"> {/* Ajout d'un padding pour éviter le chevauchement avec la navbar fixe */}
-        {renderPage()}
-      </main>
 
-      {/* Footer est toujours présent */}
-      <Footer setCurrentPage={setCurrentPage} />
+      <main className="pt-20">{renderPage()}</main>
+
+      <Footer setCurrentPage={handlePageChange} />
     </div>
   );
 }
 
-// ============ HOME PAGE COMPONENTS ============
-
+// HOME PAGE COMPONENT
 interface HomePageProps {
-    setCurrentPage: (page: string) => void;
+  setCurrentPage: (page: string) => void;
 }
 
 function HomePage({ setCurrentPage }: HomePageProps) {
   return (
     <>
       <HeroSection setCurrentPage={setCurrentPage} />
-      <MotDuDG />
+      {/* <MotDuDG /> */}
       <PolesExpertise setCurrentPage={setCurrentPage} />
-      <DestinationsSection /> {/* Ajout selon la structure fournie */}
+      {/* <FormationsRealisees/> */}
+      <DestinationsSection />
       <VisionMissionValues />
+      <section className="py-10 md:py-14 lg:py-20 bg-gradient-to-b from-gray-950 via-gray-900 to-black relative overflow-hidden">
+  {/* Effets de fond */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(220,38,38,0.1),transparent_50%)]"></div>
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(220,38,38,0.08),transparent_50%)]"></div>
+
+  <div className="max-w-7xl mx-auto px-6 relative z-10">
+    <Tarifs />
+  </div>
+</section>
+
       <CTASection setCurrentPage={setCurrentPage} />
     </>
   );

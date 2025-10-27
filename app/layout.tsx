@@ -10,16 +10,12 @@ export const metadata = {
   description: 'Cabinet international d\'études, de conseil et de formation professionnelle. Building a better world, together.',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
-      <body>
-        {/* Le composant DiebenUPartners gère l'état de la page */}
-        <DiebenUPartners />
+      <body suppressHydrationWarning={true}>
+       
+        {children}
       </body>
     </html>
   );
