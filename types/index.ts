@@ -19,5 +19,21 @@ interface Theme {
   modules: Module[];
   image: string;
 }
+// TYPES
+// =========================================================================
+interface Session {
+    date: string;
+}
 
-export type { Session, Module, Theme };
+
+
+
+interface SearchResult {
+    type: 'theme' | 'module';
+    title: string;
+    detail: string;
+    targetTheme: Theme;
+    moduleCode?: string;
+}
+
+export type { Session, Module, Theme , SearchResult,  };

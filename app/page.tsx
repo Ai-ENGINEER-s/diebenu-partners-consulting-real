@@ -4,23 +4,23 @@ import React, { useState, ComponentType } from 'react';
 // La correction principale est d'assurer que CET import est utilisé PARTOUT
 // J'ajoute 'Session' car l'erreur le mentionne comme point de défaillance.
 import { Theme, Module, Session } from '@/types/index';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import FormationsRealisees from '../components/FormationsRealisees';
-import HeroSection from '../components/HeroSection';
-import MotDuDG from '../components/MotDuDG';
-import PolesExpertise from '../components/PolesExpertise';
-import VisionMissionValues from '../components/VisionMissionValues';
-import CTASection from '../components/CTASection';
+import HeroSection from '@/components/HeroSection';
+import MotDuDG from '@/components/MotDuDG';
+import PolesExpertise from '@/components/PolesExpertise';
+import VisionMissionValues from '@/components/VisionMissionValues';
+import CTASection from '@/components/CTASection';
 import DestinationsSection from '../components/DestinationsSection';
 import Tarifs from '@/components/Tarifs';
 // Importation pages
-import FormationPage from './formation/page';
-import ThemePage from './formation/[slug]/page';
-import ConseilPage from './conseil/page';
-import RecherchePage from './recherche-financement/page';
-import AboutPage from './a-propos/page';
-import ContactPage from './contact/page';
+import FormationPage from '@/app/formation/page';
+import ThemePage from '@/app/formation/[slug]/page';
+import ConseilPage from '@/app/conseil/page';
+import RecherchePage from '@/app/recherche-financement/page';
+import AboutPage from '@/app/a-propos/page';
+import ContactPage from '@/app/contact/page';
 
 // Interfaces navigation interne
 interface CommonPageProps {
@@ -118,9 +118,7 @@ export default function DiebenUPartners() {
       <Navbar
         currentPage={currentPage}
         setCurrentPage={handlePageChange}
-        // L'erreur provient d'ici :
-        // Le 'setSelectedThemeSafe' (qui utilise le 'Theme' importé ici)
-        // n'est pas compatible avec le 'Theme' attendu par Navbar (qui l'importe différemment)
+        
         setSelectedTheme={setSelectedThemeSafe}
       />
 

@@ -5,35 +5,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Menu, X, ChevronDown, ChevronRight, BookOpen, Briefcase, Zap, Search, LayoutGrid, Award, Loader2, Target, BarChart2, BriefcaseBusiness, Settings } from 'lucide-react'; 
 import Image from "next/image";
 import { FORMATION_CATALOGUE } from '@/data/catalogue';
-import MegaMenuConseil from './MegaMenuConseil';
+import MegaMenuConseil from '@/components/MegaMenuConseil';
+import {Theme, SearchResult} from '@/types/index';
 // =========================================================================
-// TYPES
-// =========================================================================
-interface Session {
-    date: string;
-}
-
-interface Module {
-    code: string;
-    title: string; 
-    themeDetail: string;
-    sessions: Session[];
-}
-
-interface Theme {
-    slug: string;
-    title: string; 
-    image: string;
-    modules: Module[];
-}
-
-interface SearchResult {
-    type: 'theme' | 'module';
-    title: string;
-    detail: string;
-    targetTheme: Theme;
-    moduleCode?: string;
-}
 
 interface NavbarProps {
     currentPage: string;
