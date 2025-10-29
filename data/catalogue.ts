@@ -4,18 +4,18 @@
 // data/catalogue.ts
 
 
-import { Theme } from '@/types/index';
+import { Theme, Session } from '@/types/index';
 
 // Fonctions utilitaires basées sur l'interprétation des données fournies
 const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
-const generateSessions = (date1: string, date2: string, date3: string) => [
+// ↓ ↓ ↓ Ajoutez le type de retour ': Session[]' ici ↓ ↓ ↓
+const generateSessions = (date1: string, date2: string, date3: string): Session[] => [
+// ↑ ↑ ↑ Ajoutez le type de retour ': Session[]' ici ↑ ↑ ↑
   { date: date1, location: 'Casablanca' },
   { date: date2, location: 'Abidjan' },
   { date: date3, location: 'Dakar' },
 ];
-
-
 const FORMATION_CATALOGUE: Theme[] = [
 
  // Thème 1 : Gouvernance, Leadership et Management stratégique

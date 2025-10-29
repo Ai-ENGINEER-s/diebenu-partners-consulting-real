@@ -17,7 +17,7 @@ interface Theme {
   slug: string;
   title: string;
   modules: Module[];
-  image: string;
+  image?: string;
 }
 // TYPES
 // =========================================================================
