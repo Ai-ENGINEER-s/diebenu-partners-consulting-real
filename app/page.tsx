@@ -1,9 +1,8 @@
+// app/page.tsx
 'use client';
 
 import React, { useState, ComponentType } from 'react';
-// La correction principale est d'assurer que CET import est utilisé PARTOUT
-// J'ajoute 'Session' car l'erreur le mentionne comme point de défaillance.
-import { Theme, Module, Session } from '@/types/index';
+import { Theme, Module, Session, ThemeForOtherPages, ModuleForOtherPages } from '@/types/index';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import FormationsRealisees from '../components/FormationsRealisees';
@@ -14,11 +13,16 @@ import VisionMissionValues from '@/components/VisionMissionValues';
 import CTASection from '@/components/CTASection';
 import DestinationsSection from '../components/DestinationsSection';
 import Tarifs from '@/components/Tarifs';
+
 // Importation pages
 import FormationPage from '@/app/formation/page';
 import ThemePage from '@/app/formation/[slug]/page';
+import EtudePage from '@/app/etude/page';
+import EtudeDetailPage from '@/app/etude/[slug]/page';
 import ConseilPage from '@/app/conseil/page';
-import RecherchePage from '@/app/recherche-financement/page';
+import ConseilDetailPage from '@/app/conseil/[slug]/page';
+import RecherchePage from '@/app/recherche-financement/page'; // Catalogue Financement
+import FinancementDetailPage from '@/app/recherche-financement/[slug]/page'; // Détail Financement
 import AboutPage from '@/app/a-propos/page';
 import ContactPage from '@/app/contact/page';
 
@@ -32,41 +36,105 @@ interface FormationPageProps extends CommonPageProps {
   setSelectedModule: (module: Module) => void;
 }
 
+interface EtudePageProps extends CommonPageProps {
+  setSelectedTheme: (theme: ThemeForOtherPages) => void;
+  setSelectedModule: (module: ModuleForOtherPages) => void;
+}
+interface ConseilPageProps extends CommonPageProps {
+  setSelectedTheme: (theme: ThemeForOtherPages) => void;
+  setSelectedModule: (module: ModuleForOtherPages) => void;
+}
+interface FinancementPageProps extends CommonPageProps {
+  setSelectedTheme: (theme: ThemeForOtherPages) => void;
+  setSelectedModule: (module: ModuleForOtherPages) => void;
+}
+
 interface ThemePageProps extends CommonPageProps {
   theme: Theme;
   module: Module;
 }
 
-// Typages forcés (Assertion de type)
-// Note: Ces 'as' forcent TypeScript à accepter les types.
-// Le problème vient de la définition de 'Theme' en amont.
-const TypedConseilPage = ConseilPage as ComponentType<CommonPageProps>;
-const TypedRecherchePage = RecherchePage as ComponentType<CommonPageProps>;
+interface EtudeDetailPageProps extends CommonPageProps {
+  theme: ThemeForOtherPages;
+  module: ModuleForOtherPages;
+}
+interface ConseilDetailPageProps extends CommonPageProps {
+  theme: ThemeForOtherPages;
+  module: ModuleForOtherPages;
+}
+interface FinancementDetailPageProps extends CommonPageProps {
+  theme: ThemeForOtherPages;
+  module: ModuleForOtherPages;
+}
+
+// Typages forcés
+const TypedEtudePage = EtudePage as ComponentType<EtudePageProps>;
+const TypedConseilPage = ConseilPage as ComponentType<ConseilPageProps>;
+const TypedRecherchePage = RecherchePage as ComponentType<FinancementPageProps>; // Catalogue Financement
 const TypedAboutPage = AboutPage as ComponentType<CommonPageProps>;
 const TypedContactPage = ContactPage as ComponentType<CommonPageProps>;
 const TypedFormationPage = FormationPage as ComponentType<FormationPageProps>;
 const TypedThemePage = ThemePage as ComponentType<ThemePageProps>;
+const TypedEtudeDetailPage = EtudeDetailPage as ComponentType<EtudeDetailPageProps>;
+const TypedConseilDetailPage = ConseilDetailPage as ComponentType<ConseilDetailPageProps>;
+const TypedFinancementDetailPage = FinancementDetailPage as ComponentType<FinancementDetailPageProps>; // Détail Financement
 
 export default function DiebenUPartners() {
   const [currentPage, setCurrentPage] = useState('home');
+
+  // États séparés pour Formation
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
 
-  const setSelectedThemeSafe = (theme: Theme) => {
-    setSelectedTheme(theme);
-  };
+  // États séparés pour Etude
+  const [selectedEtudeTheme, setSelectedEtudeTheme] = useState<ThemeForOtherPages | null>(null);
+  const [selectedEtudeModule, setSelectedEtudeModule] = useState<ModuleForOtherPages | null>(null);
 
-  const setSelectedModuleSafe = (module: Module) => {
-    setSelectedModule(module);
+  // États séparés pour Conseil
+  const [selectedConseilTheme, setSelectedConseilTheme] = useState<ThemeForOtherPages | null>(null);
+  const [selectedConseilModule, setSelectedConseilModule] = useState<ModuleForOtherPages | null>(null);
+
+  // États séparés pour Financement ('recherche')
+  const [selectedFinancementTheme, setSelectedFinancementTheme] = useState<ThemeForOtherPages | null>(null);
+  const [selectedFinancementModule, setSelectedFinancementModule] = useState<ModuleForOtherPages | null>(null);
+
+  // Setters pour Formation
+  const setSelectedThemeSafe = (theme: Theme) => { setSelectedTheme(theme); };
+  const setSelectedModuleSafe = (module: Module) => { setSelectedModule(module); };
+
+  // Setters pour Etude
+  const setSelectedEtudeThemeSafe = (theme: ThemeForOtherPages) => { setSelectedEtudeTheme(theme); };
+  const setSelectedEtudeModuleSafe = (module: ModuleForOtherPages) => { setSelectedEtudeModule(module); };
+
+  // Setters pour Conseil
+  const setSelectedConseilThemeSafe = (theme: ThemeForOtherPages) => { setSelectedConseilTheme(theme); };
+  const setSelectedConseilModuleSafe = (module: ModuleForOtherPages) => { setSelectedConseilModule(module); };
+
+  // --- CORRECTION : Ajout des Setters pour Financement ---
+  const setSelectedFinancementThemeSafe = (theme: ThemeForOtherPages) => {
+    setSelectedFinancementTheme(theme);
   };
+  const setSelectedFinancementModuleSafe = (module: ModuleForOtherPages) => {
+    setSelectedFinancementModule(module);
+  };
+  // ----------------------------------------------------
 
   // Fonction pour gérer le changement de page avec reset
   const handlePageChange = (page: string) => {
     setCurrentPage(page);
-    // Reset des sélections si on retourne à la page formation
+    // Reset des sélections appropriées selon la page
     if (page === 'formation') {
       setSelectedTheme(null);
       setSelectedModule(null);
+    } else if (page === 'etude') {
+      setSelectedEtudeTheme(null);
+      setSelectedEtudeModule(null);
+    } else if (page === 'conseil') {
+      setSelectedConseilTheme(null);
+      setSelectedConseilModule(null);
+    } else if (page === 'recherche') { // Clé pour Financement
+      setSelectedFinancementTheme(null);
+      setSelectedFinancementModule(null);
     }
   };
 
@@ -76,6 +144,7 @@ export default function DiebenUPartners() {
     switch (currentPage) {
       case 'home':
         return <HomePage {...commonProps} />;
+
       case 'formation':
         return (
           <TypedFormationPage
@@ -84,7 +153,32 @@ export default function DiebenUPartners() {
             setSelectedModule={setSelectedModuleSafe}
           />
         );
-      case 'theme': // Cette page affiche un module spécifique d'un thème
+
+      case 'etude':
+        return (
+          <TypedEtudePage
+            {...commonProps}
+            setSelectedTheme={setSelectedEtudeThemeSafe}
+            setSelectedModule={setSelectedEtudeModuleSafe}
+          />
+        );
+
+      case 'etude-detail':
+        return selectedEtudeTheme && selectedEtudeModule ? (
+          <TypedEtudeDetailPage
+            theme={selectedEtudeTheme}
+            module={selectedEtudeModule}
+            {...commonProps}
+          />
+        ) : (
+          <TypedEtudePage // Fallback
+            {...commonProps}
+            setSelectedTheme={setSelectedEtudeThemeSafe}
+            setSelectedModule={setSelectedEtudeModuleSafe}
+          />
+        );
+
+      case 'theme': // Détail Formation
         return selectedTheme && selectedModule ? (
           <TypedThemePage
             theme={selectedTheme}
@@ -92,22 +186,67 @@ export default function DiebenUPartners() {
             {...commonProps}
           />
         ) : (
-          // Fallback : si l'état est incomplet, retourne à la page de formation
-          <TypedFormationPage
+          <TypedFormationPage // Fallback
             {...commonProps}
             setSelectedTheme={setSelectedThemeSafe}
             setSelectedModule={setSelectedModuleSafe}
           />
         );
+
       case 'conseil':
-        return <TypedConseilPage {...commonProps} />;
-      case 'recherche':
-        return <TypedRecherchePage {...commonProps} />;
-        
+        return (
+          <TypedConseilPage
+            {...commonProps}
+            setSelectedTheme={setSelectedConseilThemeSafe}
+            setSelectedModule={setSelectedConseilModuleSafe}
+          />
+        );
+
+      case 'conseil-detail':
+        return selectedConseilTheme && selectedConseilModule ? (
+          <TypedConseilDetailPage
+            theme={selectedConseilTheme}
+            module={selectedConseilModule}
+            {...commonProps}
+          />
+        ) : (
+          <TypedConseilPage // Fallback
+            {...commonProps}
+            setSelectedTheme={setSelectedConseilThemeSafe}
+            setSelectedModule={setSelectedConseilModuleSafe}
+          />
+        );
+
+      case 'recherche': // Catalogue Financement
+        return (
+          <TypedRecherchePage
+            {...commonProps}
+            setSelectedTheme={setSelectedFinancementThemeSafe}
+            setSelectedModule={setSelectedFinancementModuleSafe}
+          />
+        );
+
+      case 'financement-detail': // Détail Financement
+        return selectedFinancementTheme && selectedFinancementModule ? (
+          <TypedFinancementDetailPage
+            theme={selectedFinancementTheme}
+            module={selectedFinancementModule}
+            {...commonProps}
+          />
+        ) : (
+          <TypedRecherchePage // Fallback
+            {...commonProps}
+            setSelectedTheme={setSelectedFinancementThemeSafe}
+            setSelectedModule={setSelectedFinancementModuleSafe}
+          />
+        );
+
       case 'about':
         return <TypedAboutPage {...commonProps} />;
+
       case 'contact':
         return <TypedContactPage {...commonProps} />;
+
       default:
         return <HomePage {...commonProps} />;
     }
@@ -118,8 +257,15 @@ export default function DiebenUPartners() {
       <Navbar
         currentPage={currentPage}
         setCurrentPage={handlePageChange}
-        
         setSelectedTheme={setSelectedThemeSafe}
+        setSelectedEtudeTheme={setSelectedEtudeThemeSafe}
+        setSelectedEtudeModule={setSelectedEtudeModuleSafe}
+        setSelectedConseilTheme={setSelectedConseilThemeSafe}
+        setSelectedConseilModule={setSelectedConseilModuleSafe}
+        // --- CORRECTION : Passage des props à Navbar ---
+        setSelectedFinancementTheme={setSelectedFinancementThemeSafe}
+        setSelectedFinancementModule={setSelectedFinancementModuleSafe}
+        // ----------------------------------------------
       />
 
       <main className="pt-20">{renderPage()}</main>
@@ -144,14 +290,14 @@ function HomePage({ setCurrentPage }: HomePageProps) {
       <DestinationsSection />
       <VisionMissionValues />
       <section className="py-10 md:py-14 lg:py-20 bg-gradient-to-b from-gray-950 via-gray-900 to-black relative overflow-hidden">
-  {/* Effets de fond */}
-  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(220,38,38,0.1),transparent_50%)]"></div>
-  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(220,38,38,0.08),transparent_50%)]"></div>
+        {/* Effets de fond */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(220,38,38,0.1),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(220,38,38,0.08),transparent_50%)]"></div>
 
-  <div className="max-w-7xl mx-auto px-6 relative z-10">
-    <Tarifs />
-  </div>
-</section>
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <Tarifs />
+        </div>
+      </section>
 
       <CTASection setCurrentPage={setCurrentPage} />
     </>

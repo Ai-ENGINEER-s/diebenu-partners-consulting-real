@@ -2,22 +2,46 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Menu, X, ChevronDown, ChevronRight, BookOpen, Briefcase, Zap, Search, LayoutGrid, Award, Loader2, Target, BarChart2, BriefcaseBusiness, Settings } from 'lucide-react'; 
+import { Menu, X, ChevronDown, FileText, ChevronRight, BookOpen, Briefcase, Zap, Search, LayoutGrid, Award, Loader2, Target, BarChart2, BriefcaseBusiness, Settings } from 'lucide-react';
 import Image from "next/image";
 import { FORMATION_CATALOGUE } from '@/data/catalogue';
-import MegaMenuConseil from '@/components/MegaMenuConseil';
-import {Theme, SearchResult} from '@/types/index';
+import { Etude_CATALOGUE } from '@/data/catalogue'; 
+import { Conseil_CATALOGUE } from '@/data/catalogue'; 
+import { Financement_CATALOGUE } from '@/data/catalogue'; // <-- AJOUTÉ
+import MegaMenuFormation from '@/components/MegaMenuFormation';
+import MegaMenuEtude from '@/components/MegaMenuEtude';
+import MegaMenuConseil from '@/components/MegaMenuConseil'; 
+import MegaMenuFinancement from '@/components/MegaMenuFinancement'; // <-- AJOUTÉ
+import { Theme, SearchResult, ThemeForOtherPages, ModuleForOtherPages } from '@/types/index';
+
+
 // =========================================================================
 
 interface NavbarProps {
     currentPage: string;
     setCurrentPage: (page: string) => void;
     setSelectedTheme: (theme: Theme) => void;
+    setSelectedEtudeTheme: (theme: ThemeForOtherPages) => void;
+    setSelectedEtudeModule: (module: ModuleForOtherPages) => void;
+    setSelectedConseilTheme: (theme: ThemeForOtherPages) => void; 
+    setSelectedConseilModule: (module: ModuleForOtherPages) => void;
+    setSelectedFinancementTheme: (theme: ThemeForOtherPages) => void; // <-- AJOUTÉ
+    setSelectedFinancementModule: (module: ModuleForOtherPages) => void; // <-- AJOUTÉ
 }
 
 // ============ Composant Principal Navbar ============
 
-export default function Navbar({ currentPage, setCurrentPage, setSelectedTheme }: NavbarProps) {
+export default function Navbar({ 
+    currentPage, 
+    setCurrentPage, 
+    setSelectedTheme, 
+    setSelectedEtudeTheme,
+    setSelectedEtudeModule,
+    setSelectedConseilTheme,
+    setSelectedConseilModule,
+    setSelectedFinancementTheme, // <-- AJOUTÉ
+    setSelectedFinancementModule // <-- AJOUTÉ
+}: NavbarProps) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
@@ -26,8 +50,9 @@ export default function Navbar({ currentPage, setCurrentPage, setSelectedTheme }
     const [searchTerm, setSearchTerm] = useState('');
     const [searchLoading, setSearchLoading] = useState(false);
 
-    // Fonction de recherche
-    const searchResults: SearchResult[] = useMemo(() => {
+    // ... (Fonction de recherche, useEffects... restent inchangés) ...
+     // Fonction de recherche
+     const searchResults: SearchResult[] = useMemo(() => {
         if (!searchTerm || searchTerm.length < 2) return [];
         
         const lowerSearch = searchTerm.toLowerCase();
@@ -85,7 +110,8 @@ export default function Navbar({ currentPage, setCurrentPage, setSelectedTheme }
         { label: 'Accueil', page: 'home', icon: LayoutGrid },
         { label: 'Formations', page: 'formation', hasMega: true, icon: BookOpen },
         { label: 'Conseil', page: 'conseil', hasMega: true, icon: Briefcase },
-        { label: 'Financement', page: 'recherche', icon: Zap },
+        { label: 'Financement', page: 'recherche', hasMega: true, icon: Zap }, // <-- MODIFIÉ
+        { label: 'Etude', page: 'etude', hasMega: true, icon: FileText },
         { label: 'À propos', page: 'about', icon: Award },
     ];
 
@@ -97,15 +123,80 @@ export default function Navbar({ currentPage, setCurrentPage, setSelectedTheme }
         setIsSearchOpen(false);
     };
 
+    // Handler pour FORMATION
     const handleThemeSelect = (theme: Theme) => {
         setSelectedTheme(theme);
-        setCurrentPage('theme');
+        setCurrentPage('theme'); 
         setActiveMegaMenu(null);
         setMobileMenuOpen(false);
         setMobileSubMenuOpen(null);
         setIsSearchOpen(false);
     };
 
+    // Handlers pour ETUDE
+    const handleEtudeThemeSelect = (theme: ThemeForOtherPages) => {
+        setSelectedEtudeTheme(theme);
+        setCurrentPage('etude'); 
+        setActiveMegaMenu(null);
+        setMobileMenuOpen(false);
+        setMobileSubMenuOpen(null);
+        setIsSearchOpen(false);
+    };
+    
+    const handleEtudeModuleSelect = (module: ModuleForOtherPages, theme: ThemeForOtherPages) => {
+        setSelectedEtudeTheme(theme);
+        setSelectedEtudeModule(module);
+        setCurrentPage('etude-detail'); 
+        setActiveMegaMenu(null);
+        setMobileMenuOpen(false);
+        setMobileSubMenuOpen(null);
+        setIsSearchOpen(false);
+    };
+
+    // Handlers pour CONSEIL
+    const handleConseilThemeSelect = (theme: ThemeForOtherPages) => {
+        setSelectedConseilTheme(theme);
+        setCurrentPage('conseil'); 
+        setActiveMegaMenu(null);
+        setMobileMenuOpen(false);
+        setMobileSubMenuOpen(null);
+        setIsSearchOpen(false);
+    };
+    
+    const handleConseilModuleSelect = (module: ModuleForOtherPages, theme: ThemeForOtherPages) => {
+        setSelectedConseilTheme(theme);
+        setSelectedConseilModule(module);
+        setCurrentPage('conseil-detail');
+        setActiveMegaMenu(null);
+        setMobileMenuOpen(false);
+        setMobileSubMenuOpen(null);
+        setIsSearchOpen(false);
+    };
+
+    // =======================================================
+    // <-- AJOUTÉ : Nouveaux handlers pour FINANCEMENT
+    // =======================================================
+    const handleFinancementThemeSelect = (theme: ThemeForOtherPages) => {
+        setSelectedFinancementTheme(theme);
+        setCurrentPage('recherche'); // Navigue vers la page catalogue 'recherche'
+        setActiveMegaMenu(null);
+        setMobileMenuOpen(false);
+        setMobileSubMenuOpen(null);
+        setIsSearchOpen(false);
+    };
+    
+    const handleFinancementModuleSelect = (module: ModuleForOtherPages, theme: ThemeForOtherPages) => {
+        setSelectedFinancementTheme(theme); // Définit le thème parent
+        setSelectedFinancementModule(module); // Définit le module spécifique
+        setCurrentPage('financement-detail'); // Navigue vers la page de détail
+        setActiveMegaMenu(null);
+        setMobileMenuOpen(false);
+        setMobileSubMenuOpen(null);
+        setIsSearchOpen(false);
+    };
+    // =======================================================
+
+    // ... (handlers de recherche... restent inchangés) ...
     const handleSearchClick = () => {
         setIsSearchOpen(true);
         setSearchTerm('');
@@ -138,6 +229,7 @@ export default function Navbar({ currentPage, setCurrentPage, setSelectedTheme }
     const toggleMobileSubMenu = (page: string) => {
         setMobileSubMenuOpen(mobileSubMenuOpen === page ? null : page);
     };
+
 
     return (
         <>
@@ -219,8 +311,30 @@ export default function Navbar({ currentPage, setCurrentPage, setSelectedTheme }
                     {activeMegaMenu === 'formation' && (
                         <MegaMenuFormation onThemeSelect={handleThemeSelect} />
                     )}
+                    
                     {activeMegaMenu === 'conseil' && (
-                        <MegaMenuConseil onSelect={() => handlePageChange('conseil')} />
+                        <MegaMenuConseil 
+                            onThemeSelect={handleConseilThemeSelect}
+                            onModuleSelect={handleConseilModuleSelect}
+                        />
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* <-- AJOUTÉ : Mega Menu pour FINANCEMENT --> */}
+                    {/* ======================================================= */}
+                    {activeMegaMenu === 'recherche' && (
+                        <MegaMenuFinancement 
+                            onThemeSelect={handleFinancementThemeSelect}
+                            onModuleSelect={handleFinancementModuleSelect}
+                        />
+                    )}
+                    {/* ======================================================= */}
+                    
+                    {activeMegaMenu === 'etude' && (
+                        <MegaMenuEtude 
+                            onThemeSelect={handleEtudeThemeSelect} 
+                            onModuleSelect={handleEtudeModuleSelect} 
+                        />
                     )}
                 </div>
             </nav>
@@ -283,32 +397,75 @@ export default function Navbar({ currentPage, setCurrentPage, setSelectedTheme }
                                         </div>
                                     )}
 
-                                    {/* Sous-menu mobile pour Conseil */}
+                                    {/* Sous-menu mobile pour CONSEIL */}
                                     {item.page === 'conseil' && mobileSubMenuOpen === 'conseil' && (
                                         <div className="mt-2 ml-4 space-y-1 bg-gray-50 rounded-xl p-3">
+                                            {Conseil_CATALOGUE.map(theme => (
+                                                <button
+                                                    key={theme.slug}
+                                                    onClick={() => handleConseilThemeSelect(theme)}
+                                                    className="w-full text-left px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-white hover:text-red-700 transition-all flex items-center justify-between group"
+                                                >
+                                                    <span className="font-medium line-clamp-2">{theme.title}</span>
+                                                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-red-600 flex-shrink-0 ml-2" />
+                                                </button>
+                                            ))}
                                             <button
                                                 onClick={() => handlePageChange('conseil')}
-                                                className="w-full text-left px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-white hover:text-red-700 transition-all"
+                                                className="w-full text-left px-4 py-3 rounded-lg text-sm font-semibold text-red-600 hover:bg-white transition-all mt-2 border-t border-gray-200 pt-4"
                                             >
-                                                <div className="font-medium">Conseil Stratégique</div>
-                                                <div className="text-xs text-gray-500 mt-1">Élaboration de stratégies</div>
-                                            </button>
-                                            <button
-                                                onClick={() => handlePageChange('conseil')}
-                                                className="w-full text-left px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-white hover:text-red-700 transition-all"
-                                            >
-                                                <div className="font-medium">Études & Diagnostics</div>
-                                                <div className="text-xs text-gray-500 mt-1">Analyses sectorielles</div>
-                                            </button>
-                                            <button
-                                                onClick={() => handlePageChange('conseil')}
-                                                className="w-full text-left px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-white hover:text-red-700 transition-all"
-                                            >
-                                                <div className="font-medium">Accompagnement Projets</div>
-                                                <div className="text-xs text-gray-500 mt-1">Mise en œuvre</div>
+                                                Voir tous les pôles de conseil →
                                             </button>
                                         </div>
                                     )}
+
+                                    {/* ======================================================= */}
+                                    {/* <-- AJOUTÉ : Sous-menu mobile pour FINANCEMENT --> */}
+                                    {/* ======================================================= */}
+                                    {item.page === 'recherche' && mobileSubMenuOpen === 'recherche' && (
+                                        <div className="mt-2 ml-4 space-y-1 bg-gray-50 rounded-xl p-3">
+                                            {Financement_CATALOGUE.map(theme => (
+                                                <button
+                                                    key={theme.slug}
+                                                    onClick={() => handleFinancementThemeSelect(theme)}
+                                                    className="w-full text-left px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-white hover:text-red-700 transition-all flex items-center justify-between group"
+                                                >
+                                                    <span className="font-medium line-clamp-2">{theme.title}</span>
+                                                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-red-600 flex-shrink-0 ml-2" />
+                                                </button>
+                                            ))}
+                                            <button
+                                                onClick={() => handlePageChange('recherche')}
+                                                className="w-full text-left px-4 py-3 rounded-lg text-sm font-semibold text-red-600 hover:bg-white transition-all mt-2 border-t border-gray-200 pt-4"
+                                            >
+                                                Voir toutes les prestations →
+                                            </button>
+                                        </div>
+                                    )}
+                                    {/* ======================================================= */}
+
+                                    {/* Sous-menu mobile pour ETUDE */}
+                                    {item.page === 'etude' && mobileSubMenuOpen === 'etude' && (
+                                        <div className="mt-2 ml-4 space-y-1 bg-gray-50 rounded-xl p-3">
+                                            {Etude_CATALOGUE.map(theme => (
+                                                <button
+                                                    key={theme.slug}
+                                                    onClick={() => handleEtudeThemeSelect(theme)}
+                                                    className="w-full text-left px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-white hover:text-red-700 transition-all flex items-center justify-between group"
+                                                >
+                                                    <span className="font-medium line-clamp-2">{theme.title}</span>
+                                                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-red-600 flex-shrink-0 ml-2" />
+                                                </button>
+                                            ))}
+                                            <button
+                                                onClick={() => handlePageChange('etude')}
+                                                className="w-full text-left px-4 py-3 rounded-lg text-sm font-semibold text-red-600 hover:bg-white transition-all mt-2 border-t border-gray-200 pt-4"
+                                            >
+                                                Voir tous les pôles d'étude →
+                                            </button>
+                                        </div>
+                                    )}
+
                                 </div>
                             ))}
 
@@ -348,9 +505,8 @@ export default function Navbar({ currentPage, setCurrentPage, setSelectedTheme }
 }
 
 // =========================================================================
-// COMPOSANT : SEARCH OVERLAY (Design Moderne & Épuré)
+// COMPOSANT : SEARCH OVERLAY (Reste inchangé)
 // =========================================================================
-
 interface SearchOverlayProps {
     isOpen: boolean;
     searchTerm: string;
@@ -362,8 +518,9 @@ interface SearchOverlayProps {
 }
 
 const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSearchChange, searchResults, onSelect, onClose, isLoading }) => {
-    // Fermeture avec touche Escape
-    useEffect(() => {
+    // ... (code de l'overlay de recherche inchangé) ...
+     // Fermeture avec touche Escape
+     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isOpen) {
                 onClose();
@@ -564,113 +721,4 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
         </div>
     );
 };
-
-// =========================================================================
-// COMPOSANT : MEGA MENU FORMATION (Design Premium 2 Colonnes)
-// =========================================================================
-
-interface MegaMenuFormationProps {
-    onThemeSelect: (theme: Theme) => void;
-}
-
-const groupedThemesData = [
-    {
-        name: "Stratégie & Management",
-        icon: Target,
-        themes: FORMATION_CATALOGUE.slice(0, 5)
-    },
-    {
-        name: "Finance & Performance",
-        icon: BarChart2,
-        themes: FORMATION_CATALOGUE.slice(5, 10)
-    },
-    {
-        name: "Métiers & Opérations",
-        icon: BriefcaseBusiness,
-        themes: FORMATION_CATALOGUE.slice(10, 15)
-    },
-    {
-        name: "Technique & SI",
-        icon: Settings,
-        themes: FORMATION_CATALOGUE.slice(15, 20)
-    }
-];
-
-function MegaMenuFormation({ onThemeSelect }: MegaMenuFormationProps) {
-    const [activeGroup, setActiveGroup] = useState(groupedThemesData[0]);
-
-    return (
-        <div 
-            className="absolute top-24 left-0 w-full bg-white backdrop-blur-xl shadow-2xl border-t border-gray-200 animate-in fade-in slide-in-from-top-4 overflow-hidden"
-        >
-            <div className="max-w-7xl mx-auto px-8 py-10 flex">
-                
-                <div className="w-1/3 pr-8 border-r border-gray-200">
-                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 px-3">Nos Pôles de Formation</h3>
-                    <div className="space-y-1">
-                        {groupedThemesData.map((group) => (
-                            <button
-                                key={group.name}
-                                onMouseEnter={() => setActiveGroup(group)}
-                                onClick={() => setActiveGroup(group)}
-                                className={`w-full flex items-center text-left px-3 py-3 rounded-lg transition-all duration-200 group ${
-                                    activeGroup.name === group.name 
-                                        ? 'bg-gradient-to-r from-red-50 to-pink-50 text-red-700' 
-                                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                                }`}
-                            >
-                                <group.icon className={`w-5 h-5 mr-3 flex-shrink-0 ${
-                                    activeGroup.name === group.name ? 'text-red-600' : 'text-gray-400 group-hover:text-gray-600'
-                                }`} />
-                                <span className="font-semibold text-sm">{group.name}</span>
-                                <ChevronRight className={`w-4 h-4 ml-auto flex-shrink-0 ${
-                                    activeGroup.name === group.name ? 'text-red-500' : 'text-gray-300'
-                                }`} />
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="w-2/3 pl-10">
-                    <h3 className="text-lg font-bold text-gray-900 mb-5">{activeGroup.name}</h3>
-                    
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-                        {activeGroup.themes.map(theme => (
-                            <button
-                                key={theme.slug}
-                                onClick={() => onThemeSelect(theme)}
-                                className="text-left p-3 rounded-lg transition-all duration-200 group flex items-center justify-between w-full hover:bg-gray-50"
-                            >
-                                <h4 className="font-semibold text-gray-800 group-hover:text-red-700 text-sm leading-tight line-clamp-2 flex-grow pr-4">
-                                    {theme.title}
-                                </h4>
-                                
-                                <div className="flex items-center flex-shrink-0 space-x-3">
-                                    <span className="text-xs font-semibold text-gray-600 bg-gray-100 group-hover:bg-red-100 group-hover:text-red-700 transition-all duration-200 px-3 py-1 rounded-full">
-                                        {theme.modules.length} {theme.modules.length > 1 ? 'modules' : 'module'}
-                                    </span>
-                                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-red-600 transition-transform transform group-hover:translate-x-0.5" />
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="mt-6 border-t border-gray-200 pt-5">
-                         <button
-                            onClick={() => onThemeSelect(FORMATION_CATALOGUE[0])}
-                            className="w-full text-left p-4 rounded-lg bg-gradient-to-r from-red-600 to-red-700 text-white font-bold hover:from-red-700 hover:to-red-800 transition-all flex items-center justify-between transform hover:scale-[1.01] duration-200 shadow-lg hover:shadow-red-300"
-                        >
-                            <span>Voir tout le catalogue</span>
-                            <ChevronRight className="w-5 h-5 ml-2" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// =========================================================================
-// MEGA MENU CONSEIL
-// =========================================================================
 

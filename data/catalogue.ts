@@ -5,7 +5,7 @@
 
 
 import { Theme, Session } from '@/types/index';
-
+import {  ThemeForOtherPages } from '@/types/index';
 // Fonctions utilitaires basées sur l'interprétation des données fournies
 const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
@@ -1263,6 +1263,344 @@ const FORMATION_CATALOGUE: Theme[] = [
   },
 ];
 
+
+
+
+const Etude_CATALOGUE: ThemeForOtherPages[] = [
+
+  {
+    slug: slugify('Les études sectorielles et socio-économiques'),
+    title: 'Les études sectorielles et socio-économiques',
+    modules: [
+      {
+        code: 'APP 01',
+        title: 'Analyse prospective des dynamiques économiques et sociales : tendances, défis et leviers de compétitivité',
+        themeDetail: '<p>Dans un contexte mondial en constante mutation, caractérisé par des chocs économiques successifs, des transitions technologiques rapides et des transformations sociales profondes, comprendre les dynamiques économiques et sociales devient un impératif stratégique.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> conduit des études prospectives de haut niveau pour décrypter les tendances émergentes, anticiper les mutations structurelles et identifier les leviers de compétitivité durable des économies africaines et internationales.</p><p style="margin-top: 1rem;">Nos analyses s’appuient sur une combinaison rigoureuse de données empiriques, d’outils de modélisation économique et d’approches comparatives sectorielles.</p><p style="margin-top: 1rem;">Nous examinons l’évolution des marchés du travail, des chaînes de valeur, des comportements des ménages et des investissements, afin de mettre en évidence les facteurs clés influençant la résilience et la transformation des économies contemporaines.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> travaille en étroite collaboration avec les gouvernements, les institutions publiques, les organisations régionales et les acteurs du secteur privé pour élaborer des diagnostics approfondis et des scénarios prospectifs réalistes.</p><p style="margin-top: 1rem;">Ces analyses visent à fournir aux décideurs des éclairages stratégiques sur les choix politiques, économiques et sociaux à privilégier pour renforcer la compétitivité et la durabilité de leurs systèmes.</p><p style="margin-top: 1rem;">Grâce à une approche pluridisciplinaire alliant expertise économique, sociologique et territoriale, <strong>DIEBENU & PARTNERS</strong> contribue à une meilleure compréhension des transformations structurelles et à la formulation de stratégies adaptées aux défis futurs.</p><p style="margin-top: 1rem;">Nos études offrent ainsi une vision prospective et opérationnelle permettant aux institutions de bâtir des politiques publiques cohérentes, inclusives et ancrées dans les réalités locales, tout en s’alignant sur les standards internationaux de performance et de durabilité.</p>',
+        image: '/images/etude/APP/1.jpg',
+      },
+      {
+        code: 'APP 02',
+        title: 'Études sectorielles pour l’appui à la décision publique et la planification stratégique',
+        themeDetail: '<p>Dans un environnement marqué par la complexité et l’interdépendance des secteurs économiques, les décideurs publics ont besoin d’outils d’analyse fiables pour orienter leurs politiques et anticiper les mutations structurelles.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> réalise des études sectorielles approfondies visant à éclairer les choix stratégiques et à soutenir la formulation de politiques publiques cohérentes, inclusives et durables.</p><p style="margin-top: 1rem;">Nos interventions reposent sur une analyse fine des dynamiques propres à chaque secteur — agriculture, énergie, industrie, numérique, services, etc. — en identifiant les atouts, contraintes, opportunités et menaces.</p><p style="margin-top: 1rem;">Grâce à des approches quantitatives et qualitatives, nous offrons une lecture intégrée des chaînes de valeur, des mécanismes de compétitivité et des enjeux de gouvernance sectorielle.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions dans la définition de plans d’action sectoriels alignés sur les priorités nationales et internationales, notamment les ODD.</p><p style="margin-top: 1rem;">Ces études permettent aux gouvernements et acteurs économiques de disposer de bases solides pour la planification, la programmation budgétaire et la mise en œuvre de réformes structurelles.</p><p style="margin-top: 1rem;">Nos travaux offrent une vision prospective et pragmatique, fondée sur des données probantes, pour renforcer la capacité décisionnelle des acteurs publics et promouvoir des stratégies de développement à fort impact socio-économique.</p>',
+        image: '/images/etude/APP/2.jpg',
+      },
+      {
+        code: 'APP 03',
+        title: 'Évaluation des politiques publiques et mesure de leurs impacts socio-économiques',
+        themeDetail: '<p>L’évaluation des politiques publiques constitue un levier essentiel pour mesurer la pertinence, l’efficacité et la durabilité des actions menées par les gouvernements et leurs partenaires.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> conçoit et met en œuvre des dispositifs d’évaluation rigoureux, permettant de mesurer l’impact réel des politiques, programmes et réformes sur les populations et les territoires.</p><p style="margin-top: 1rem;">Nos méthodologies combinent l’analyse de performance, l’évaluation d’impact et les approches participatives, afin de garantir une compréhension holistique des résultats obtenus et des écarts observés.</p><p style="margin-top: 1rem;">Cette approche fondée sur les preuves facilite la réorientation stratégique et le renforcement des capacités institutionnelles en matière de suivi-évaluation.</p><p style="margin-top: 1rem;">En collaborant avec les administrations, les bailleurs de fonds et les organisations régionales, <strong>DIEBENU & PARTNERS</strong> contribue à instaurer une culture de la redevabilité et de la performance publique.</p><p style="margin-top: 1rem;">Nos évaluations offrent une lecture claire des impacts socio-économiques, favorisent la transparence et soutiennent la prise de décision fondée sur les résultats.</p><p style="margin-top: 1rem;">À travers cette expertise, <strong>DIEBENU & PARTNERS</strong> aide les institutions à consolider la confiance citoyenne, améliorer l’efficacité de l’action publique et maximiser la valeur des politiques mises en œuvre.</p>',
+        image: '/images/etude/APP/3.jpg',
+      },
+      {
+        code: 'APP 04',
+        title: 'Cartographie des chaînes de valeur et identification des gisements de croissance inclusive',
+        themeDetail: '<p>Face aux défis du développement industriel et à la nécessité de renforcer la compétitivité locale, la compréhension des chaînes de valeur est devenue un outil stratégique incontournable.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> mène des études de cartographie des chaînes de valeur afin d’identifier les points de blocage, les potentiels de transformation et les opportunités d’investissement durable.</p><p style="margin-top: 1rem;">Nos analyses détaillent les interactions entre acteurs, ressources, infrastructures et marchés, tout en évaluant la contribution de chaque maillon à la création de valeur et à l’emploi.</p><p style="margin-top: 1rem;">Nous mettons en lumière les leviers permettant de renforcer l’intégration des PME, l’innovation technologique et l’inclusion sociale dans les filières prioritaires.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> appuie ainsi les gouvernements, bailleurs et opérateurs privés dans la conception de stratégies de développement productif, adaptées aux spécificités locales.</p><p style="margin-top: 1rem;">Ces cartographies facilitent la planification d’interventions ciblées, l’optimisation des politiques industrielles et la mise en place d’écosystèmes économiques résilients.</p><p style="margin-top: 1rem;">Notre approche favorise une croissance inclusive et durable, en valorisant les secteurs porteurs et en stimulant la compétitivité nationale et régionale à travers une meilleure coordination des chaînes de valeur.</p>',
+        image: '/images/etude/APP/4.jpg',
+    },
+      {
+        code: 'APP 05',
+        title: 'Études d’impact économique et social des grands projets d’investissement',
+        themeDetail: '<p>Les grands projets d’investissement, qu’ils soient publics ou privés, exercent des effets multiples sur les économies locales et nationales.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> conduit des études d’impact économique et social approfondies pour mesurer les retombées réelles de ces projets et guider les décisions d’investissement vers une création de valeur durable.</p><p style="margin-top: 1rem;">Nos analyses s’appuient sur des modèles économiques dynamiques, des études de terrain et des projections quantitatives, permettant d’évaluer les effets directs, indirects et induits sur l’emploi, le revenu, la fiscalité et le développement territorial.</p><p style="margin-top: 1rem;">Nous identifions également les risques socio-environnementaux et les mesures d’atténuation nécessaires à la durabilité des investissements.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions publiques, investisseurs et partenaires techniques dans la mise en œuvre d’approches responsables et inclusives.</p><p style="margin-top: 1rem;">Ces études contribuent à renforcer la transparence, à anticiper les impacts potentiels et à optimiser les retombées socio-économiques des projets structurants.</p><p style="margin-top: 1rem;">En fournissant une vision claire et factuelle, nos travaux soutiennent la prise de décision éclairée et favorisent la conception de politiques d’investissement responsables, alignées sur les priorités nationales et internationales.</p>',
+        image: '/images/etude/APP/5.jpg',
+      },
+    ]
+  },
+{
+    slug: slugify('Les diagnostics organisationnels et institutionnels'),
+    title: 'Les diagnostics organisationnels et institutionnels',
+    modules: [
+      {
+        code: 'DOI 01',
+        title: 'Diagnostic global de performance organisationnelle : analyser, comprendre et transformer les institutions publiques et privées',
+        themeDetail: '<p>La performance organisationnelle constitue un facteur clé pour l’efficacité et la résilience des institutions publiques et privées.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> réalise des diagnostics globaux afin de mesurer les forces, faiblesses, opportunités et menaces au sein des organisations, en adoptant une vision systémique des fonctions, processus et ressources.</p><p style="margin-top: 1rem;">Nos équipes combinent analyses quantitatives et qualitatives pour comprendre les enjeux de gouvernance, de pilotage, de capital humain et de structuration institutionnelle.</p><p style="margin-top: 1rem;">Ce diagnostic permet d’identifier les leviers prioritaires pour renforcer la performance, améliorer l’efficience opérationnelle et préparer des plans de transformation adaptés aux réalités organisationnelles.</p><p style="margin-top: 1rem;">En travaillant avec des décideurs et des équipes opérationnelles, <strong>DIEBENU & PARTNERS</strong> accompagne la définition de stratégies concrètes pour optimiser l’organisation et les processus clés.</p><p style="margin-top: 1rem;">Les résultats permettent aux institutions de mieux orienter leurs ressources, de maximiser leur impact et de créer des environnements plus performants et résilients.</p><p style="margin-top: 1rem;">Notre approche favorise une transformation institutionnelle durable, en intégrant la culture organisationnelle, la gouvernance et les mécanismes de décision dans une vision cohérente et structurante.</p>',
+        image: '/images/etude/DOI/1.jpg',
+      },
+      {
+        code: 'DOI 02',
+        title: 'Cartographie et optimisation des processus internes pour une meilleure efficience institutionnelle',
+        themeDetail: '<p>La maîtrise des processus internes est essentielle pour améliorer l’efficacité, réduire les coûts et renforcer la qualité des services dans les institutions publiques et privées.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> effectue des cartographies détaillées des processus organisationnels, en identifiant les redondances, points de blocage et opportunités d’optimisation.</p><p style="margin-top: 1rem;">Nos experts utilisent des outils méthodologiques avancés pour analyser le flux des activités, les interactions entre services et la répartition des responsabilités.</p><p style="margin-top: 1rem;">Ces analyses permettent de proposer des ajustements et de mettre en place des pratiques optimales pour améliorer la productivité et la cohérence des opérations.</p><p style="margin-top: 1rem;">En collaborant étroitement avec les équipes internes, <strong>DIEBENU & PARTNERS</strong> facilite l’adoption de solutions pragmatiques et durables pour rationaliser les processus et renforcer l’efficience institutionnelle.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure coordination des activités, un gain de temps et de ressources, et une capacité accrue à répondre aux objectifs stratégiques.</p><p style="margin-top: 1rem;">Cette approche contribue à transformer les institutions en organisations agiles, transparentes et capables de produire des résultats durables et mesurables.</p>',
+        image: '/images/etude/DOI/2.jpg',
+      },
+      {
+        code: 'DOI 03',
+        title: 'Évaluation de la maturité organisationnelle et élaboration de plans de transformation institutionnelle',
+        themeDetail: '<p>Évaluer la maturité organisationnelle est un préalable indispensable pour identifier les axes de progrès et planifier des transformations adaptées.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> propose des analyses approfondies de la maturité institutionnelle, en se basant sur des critères de gouvernance, de culture organisationnelle, de capacités opérationnelles et de systèmes de pilotage.</p><p style="margin-top: 1rem;">Cette démarche permet de positionner l’organisation sur une échelle de maturité, de détecter les écarts et de définir des actions concrètes pour renforcer son efficacité et sa résilience.</p><p style="margin-top: 1rem;">Nos experts élaborent des plans de transformation structurés, intégrant les objectifs stratégiques, les priorités institutionnelles et les contraintes spécifiques de chaque organisation.</p><p style="margin-top: 1rem;">En accompagnant la mise en œuvre de ces plans, <strong>DIEBENU & PARTNERS</strong> favorise le renforcement des capacités institutionnelles et la création de valeur durable pour les parties prenantes.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure adaptabilité, un alignement stratégique renforcé et des institutions capables de répondre efficacement aux défis contemporains.</p><p style="margin-top: 1rem;">Notre approche favorise une transformation progressive mais structurante, garantissant que chaque institution dispose des outils, processus et compétences nécessaires pour atteindre ses objectifs stratégiques.</p>',
+        image: '/images/etude/DOI/3.jpg',
+      },
+      {
+        code: 'DOI 04',
+        title: 'Analyse des capacités institutionnelles et renforcement du pilotage stratégique',
+        themeDetail: '<p>La capacité institutionnelle constitue le socle de l’efficacité et de la performance organisationnelle.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> évalue les compétences, ressources, processus et mécanismes de gouvernance afin de mesurer l’aptitude d’une organisation à atteindre ses objectifs et à conduire des réformes structurelles.</p><p style="margin-top: 1rem;">Cette analyse identifie les forces et les déficits institutionnels, fournit des recommandations sur les leviers à mobiliser et facilite l’élaboration de stratégies de renforcement des capacités.</p><p style="margin-top: 1rem;">Les travaux portent également sur l’optimisation des systèmes de pilotage, la responsabilisation des acteurs et la mise en place d’indicateurs pertinents pour un suivi efficace de la performance.</p><p style="margin-top: 1rem;">En accompagnant les institutions publiques et privées, <strong>DIEBENU & PARTNERS</strong> favorise la structuration d’un pilotage stratégique solide et cohérent.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure coordination interne, des décisions plus éclairées et un renforcement de la capacité à anticiper et gérer les risques organisationnels.</p><p style="margin-top: 1rem;">Cette approche permet aux institutions de devenir plus stratégiques, performantes et capables de s’adapter rapidement aux évolutions de leur environnement.</p>',
+        image: '/images/etude/DOI/4.jpg',
+      },
+      {
+        code: 'DOI 05',
+       title: 'Évaluation de la gouvernance et du climat organisationnel : vers des institutions plus performantes et inclusives',
+        themeDetail: '<p>Une gouvernance efficace et un climat organisationnel positif sont des facteurs déterminants de la performance et de la résilience institutionnelle.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> conduit des évaluations détaillées du cadre de gouvernance, des processus décisionnels et des relations internes afin de mesurer la qualité de la gestion et le climat organisationnel.</p><p style="margin-top: 1rem;">Cette démarche inclut l’analyse de la participation, de la transparence, de la communication interne et de la motivation des équipes, afin de proposer des recommandations adaptées aux besoins spécifiques des institutions.</p><p style="margin-top: 1rem;">Nous accompagnons la mise en œuvre de solutions favorisant l’inclusion, la responsabilisation et la performance collective.</p><p style="margin-top: 1rem;">En travaillant avec les dirigeants et les collaborateurs, <strong>DIEBENU & PARTNERS</strong> contribue à renforcer l’engagement, la cohésion et l’efficacité organisationnelle.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure prise de décision, un environnement de travail plus collaboratif et inclusif, et des institutions capables de produire des résultats durables et mesurables.</p>',
+        image: '/images/etude/DOI/5.jpg',
+      },
+    ]
+  },
+{
+    slug: slugify('Analyse des politiques publiques'),
+    title: 'Analyse des politiques publiques',
+    modules: [
+      {
+        code: 'EIEPP 01',
+        title: 'Étude d’efficacité et d’impact des politiques publiques nationales et locales',
+        themeDetail: '<p>L’efficacité des politiques publiques est essentielle pour atteindre les objectifs de développement et améliorer le bien-être des populations.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> mène des études rigoureuses pour mesurer l’impact des politiques publiques, en combinant analyses quantitatives et qualitatives, enquêtes de terrain et consultations des parties prenantes.</p><p style="margin-top: 1rem;">Nos experts identifient les facteurs qui favorisent ou freinent la mise en œuvre des politiques, évaluent les résultats concrets obtenus et mesurent les écarts par rapport aux objectifs fixés.</p><p style="margin-top: 1rem;">Cette approche permet de proposer des recommandations stratégiques pour renforcer l’efficacité des politiques, améliorer leur ciblage et maximiser l’impact social et économique.</p><p style="margin-top: 1rem;">En travaillant étroitement avec les administrations, les décideurs et les acteurs locaux, <strong>DIEBENU & PARTNERS</strong> facilite la mise en œuvre de mesures correctives adaptées et pragmatiques.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure allocation des ressources, une politique publique plus pertinente et un impact tangible sur les populations et les collectivités.</p><p style="margin-top: 1rem;">Notre approche garantit une évaluation complète et objective, permettant aux institutions de renforcer leur performance, leur crédibilité et leur légitimité auprès des citoyens.</p>',
+        image: '/images/etude/EIEPP/1.jpg',
+      },
+      {
+        code: 'EIEPP 02',
+        title: 'Analyse de la cohérence et de la complémentarité intersectorielle des politiques publiques',
+        themeDetail: '<p>La cohérence entre différents secteurs est un facteur clé pour la réussite des politiques publiques et la maximisation de leur impact.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> analyse les interactions entre les politiques publiques sectorielles et identifie les synergies ou conflits potentiels afin de garantir leur alignement stratégique.</p><p style="margin-top: 1rem;">Nos experts examinent les objectifs, les instruments et les résultats des différentes politiques pour détecter les duplications, les incohérences et les opportunités de coordination.</p><p style="margin-top: 1rem;">Cette analyse permet de formuler des recommandations pour renforcer la complémentarité des interventions publiques et favoriser une approche intégrée de la gouvernance.</p><p style="margin-top: 1rem;">En collaborant avec les décideurs et les acteurs sectoriels,<strong>DIEBENU & PARTNERS</strong> soutient la mise en place de mécanismes de coordination efficaces et de processus décisionnels harmonisés.</p><p style="margin-top: 1rem;">Les résultats incluent des politiques publiques plus intégrées, une meilleure utilisation des ressources et un impact accru sur la société et l’économie.</p><p style="margin-top: 1rem;">Cette démarche permet aux institutions de renforcer la gouvernance intersectorielle et d’optimiser la cohérence de leurs programmes et interventions.</p>',
+        image: '/images/etude/EIEPP/2.jpg',
+      },
+      {
+        code: 'EIEPP 03',
+        title: 'Étude comparative des politiques publiques dans un contexte régional et international',
+        themeDetail: '<p>Comprendre les expériences et bonnes pratiques à l’échelle régionale et internationale permet d’améliorer l’efficacité des politiques publiques nationales.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> réalise des études comparatives afin d’identifier les modèles réussis, les innovations et les approches adaptées au contexte local.</p><p style="margin-top: 1rem;">Nos analyses évaluent les politiques publiques selon des critères pertinents tels que la performance, l’impact social, la durabilité et la gouvernance.</p><p style="margin-top: 1rem;">Ces études offrent des éléments de référence et des recommandations permettant d’adapter les meilleures pratiques aux réalités institutionnelles et socio-économiques locales.</p><p style="margin-top: 1rem;">En travaillant avec des institutions nationales, régionales et internationales, <strong>DIEBENU & PARTNERS</strong> favorise l’apprentissage institutionnel et la capitalisation des expériences.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure conception des politiques publiques, un renforcement de la légitimité des décisions et un impact plus conséquent sur la population.</p><p style="margin-top: 1rem;">Cette approche comparative contribue à une gouvernance éclairée et à l’amélioration continue des interventions publiques.</p>',
+        image: '/images/etude/EIEPP/3.jpg',
+      },
+      {
+        code: 'EIEPP 04',
+        title: 'Analyse de l’intégration des Objectifs de Développement Durable (ODD) dans les politiques publiques',
+        themeDetail: '<p>L’intégration des ODD est un enjeu central pour aligner les politiques publiques sur les priorités de développement durable.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> analyse dans quelle mesure les politiques nationales et locales prennent en compte les objectifs internationaux et les traduisent en actions concrètes et mesurables.</p><p style="margin-top: 1rem;">Nos experts évaluent la cohérence entre les ODD et les programmes existants, identifient les lacunes et proposent des solutions pour renforcer leur intégration dans les plans sectoriels et institutionnels.</p><p style="margin-top: 1rem;">Cette approche favorise une mise en œuvre stratégique et coordonnée des ODD, assurant une plus grande efficacité et un impact durable sur la société.</p><p style="margin-top: 1rem;">En accompagnant les décideurs et les institutions, <strong>DIEBENU & PARTNERS</strong> facilite l’alignement des politiques publiques avec les priorités nationales et internationales.</p><p style="margin-top: 1rem;">Les résultats incluent un meilleur suivi des objectifs de développement durable, une planification plus stratégique et une contribution tangible à la transformation sociale et économique.</p><p style="margin-top: 1rem;">Cette démarche permet aux institutions de maximiser la valeur publique créée et de renforcer leur crédibilité à l’échelle nationale et internationale.</p>',
+        image: '/images/etude/EIEPP/4.jpg',
+      },
+      {
+        code: 'EIEPP 05',
+        title: 'Évaluation de la valeur publique créée par les politiques : transparence, participation et équité',
+        themeDetail: '<p>Mesurer la valeur publique générée par les politiques est essentiel pour garantir l’efficacité, la légitimité et l’équité des interventions publiques.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> évalue l’impact des politiques sur les citoyens, en prenant en compte la transparence des processus, la participation des parties prenantes et l’équité des résultats.</p><p style="margin-top: 1rem;">Nos experts utilisent des méthodologies rigoureuses pour analyser les effets des politiques sur les populations, les institutions et l’économie, tout en identifiant les leviers d’amélioration.</p><p style="margin-top: 1rem;">Cette approche permet de proposer des recommandations pour renforcer la valeur publique, améliorer la participation citoyenne et assurer une distribution équitable des bénéfices.</p><p style="margin-top: 1rem;">En collaborant avec les administrations et les décideurs, <strong>DIEBENU & PARTNERS</strong> soutient la mise en place de pratiques de gouvernance transparentes et inclusives.</p><p style="margin-top: 1rem;">Les résultats incluent une plus grande confiance des citoyens, une meilleure efficacité des politiques et un impact socio-économique durable.</p><p style="margin-top: 1rem;">Cette démarche garantit aux institutions de produire des politiques plus justes, responsables et socialement pertinentes.</p>',
+        image: '/images/etude/EIEPP/5.jpg',
+      },
+    ]
+  },
+{
+    slug: slugify('Les études d\'impact et évaluations de projets/programmes'),
+    title: 'Les études d\'impact et évaluations de projets/programmes',
+    modules: [
+      {
+        code: 'ESSE 01',
+        title: 'Évaluation ex ante, intermédiaire et ex post des projets et programmes de développement',
+        themeDetail: '<p>La réussite des projets et programmes de développement repose sur une évaluation rigoureuse à chaque étape de leur cycle de vie.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions et bailleurs de fonds en réalisant des évaluations ex ante, intermédiaires et ex post, afin de mesurer la pertinence, l’efficacité et l’impact des interventions.</p><p style="margin-top: 1rem;">Nos experts utilisent des méthodologies adaptées pour identifier les risques, anticiper les obstacles et mesurer les performances au fil du temps.</p><p style="margin-top: 1rem;">Cette approche permet de proposer des ajustements stratégiques, d’optimiser la mise en œuvre des projets et de garantir une valeur ajoutée maximale pour les bénéficiaires.</p><p style="margin-top: 1rem;">En collaborant étroitement avec les équipes de projet, les autorités locales et les partenaires de développement, <strong>DIEBENU & PARTNERS</strong> assure une compréhension fine des enjeux contextuels.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure planification, une allocation efficiente des ressources et un renforcement de l’impact socio-économique des programmes.</p><p style="margin-top: 1rem;">Cette démarche assure aux institutions et aux bailleurs une maîtrise complète des performances et une amélioration continue des projets de développement.</p>',
+        image: '/images/etude/ESSE/1.jpg',
+      },
+      {
+        code: 'ESSE 02',
+        title: 'Études d’impact économique, social et environnemental des projets de développement',
+        themeDetail: '<p>L’impact des projets de développement doit être mesuré dans toutes ses dimensions pour garantir la durabilité et la pertinence des interventions.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> conduit des études approfondies pour évaluer les effets économiques, sociaux et environnementaux des projets, en intégrant des analyses quantitatives et qualitatives.</p><p style="margin-top: 1rem;">Nos experts identifient les externalités positives et négatives, évaluent les retombées sur les communautés locales et mesurent la conformité aux normes environnementales et sociales.</p><p style="margin-top: 1rem;">Ces études permettent de proposer des stratégies d’amélioration, d’anticiper les risques et d’optimiser la valeur ajoutée des projets pour toutes les parties prenantes.</p><p style="margin-top: 1rem;">En travaillant avec les décideurs, les bailleurs et les communautés, <strong>DIEBENU & PARTNERS</strong> favorise une compréhension complète des impacts multidimensionnels.</p><p style="margin-top: 1rem;">Les résultats incluent des projets mieux alignés sur les priorités de développement durable, une meilleure acceptabilité sociale et un impact environnemental réduit.</p><p style="margin-top: 1rem;">Cette approche garantit une gestion responsable et stratégique des projets de développement.</p>',
+        image: '/images/etude/ESSE/2.jpg',
+      },
+      {
+        code: 'ESSE 03',
+        title: 'Évaluation de la performance et de la durabilité institutionnelle des programmes',
+        themeDetail: '<p>La durabilité institutionnelle est un facteur clé pour assurer l’efficacité à long terme des programmes de développement.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> évalue la performance des programmes et leur capacité à s’inscrire dans le temps, en analysant les structures, les processus et les mécanismes de gouvernance.</p><p style="margin-top: 1rem;">Nos experts identifient les points forts et les faiblesses institutionnelles, évaluent la résilience organisationnelle et recommandent des ajustements pour renforcer la durabilité des programmes.</p><p style="margin-top: 1rem;">Cette approche permet de consolider les acquis, d’optimiser les ressources et d’assurer une meilleure pérennité des interventions.</p><p style="margin-top: 1rem;">En accompagnant les institutions et les équipes de gestion, <strong>DIEBENU & PARTNERS</strong> favorise la mise en place de pratiques organisationnelles robustes et orientées résultats.</p><p style="margin-top: 1rem;">Les résultats incluent une performance institutionnelle renforcée, une meilleure continuité des programmes et un impact durable sur les bénéficiaires et les communautés.</p>',
+        image: '/images/etude/ESSE/3.jpg',
+      },
+      {
+        code: 'ESSE 04',
+        title: 'Études d’impact des projets sur les inégalités territoriales et la cohésion sociale',
+        themeDetail: '<p>La planification et l’évaluation des projets de développement nécessitent une compréhension approfondie de leurs effets sur l’équité territoriale et sociale.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> réalise des études d’impact qui mesurent comment les projets influencent les inégalités régionales et la cohésion sociale.</p><p style="margin-top: 1rem;">Nos analyses mettent en lumière les zones et populations vulnérables, identifient les disparités dans la distribution des bénéfices et évaluent la contribution des projets à l’inclusion et à la solidarité territoriale.</p><p style="margin-top: 1rem;">Cette approche permet de proposer des interventions correctives pour réduire les inégalités et renforcer la cohésion sociale dans les zones concernées.</p><p style="margin-top: 1rem;">En travaillant avec les décideurs et les communautés locales, <strong>DIEBENU & PARTNERS</strong> assure que les projets de développement sont inclusifs et équitables.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure justice sociale, une cohésion territoriale renforcée et un impact positif sur la qualité de vie des populations.</p>',
+        image: '/images/etude/ESSE/4.jpg',
+      },
+      {
+        code: 'ESSE 05',
+        title: 'Évaluation participative et approche fondée sur les résultats pour les programmes de développement',
+        themeDetail: '<p>L’implication des parties prenantes et une approche orientée résultats sont essentielles pour l’efficacité des programmes de développement.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> met en œuvre des évaluations participatives qui associent bénéficiaires, institutions et partenaires à l’analyse de la performance des programmes.</p><p style="margin-top: 1rem;">Nos experts combinent des indicateurs de résultats mesurables avec des consultations participatives pour identifier les réussites et les points à améliorer.</p><p style="margin-top: 1rem;">Cette approche permet de co-construire des solutions adaptées, d’assurer la responsabilisation des acteurs et d’optimiser la mise en œuvre des programmes.</p><p style="margin-top: 1rem;">En accompagnant les institutions et les communautés, <strong>DIEBENU & PARTNERS</strong> favorise une évaluation transparente et inclusive.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure appropriation des projets, une performance mesurable et une plus grande durabilité des interventions sur le terrain.</p>',
+        image: '/images/etude/ESSE/5.jpg',
+      },
+    ]
+  },
+]
+
+
+
+
+const Financement_CATALOGUE: ThemeForOtherPages[] = [
+ {
+    slug: slugify('Recherche et mobilisation de financement'),
+    title: 'Recherche et mobilisation de financement',
+    modules: [
+      {
+        code: 'RM 01',
+        title: 'La cartographie des opportunités de financement (internes et externes)',
+        themeDetail: '<p>Identifier les sources de financement appropriées est une étape cruciale pour le succès des projets de développement.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les organisations dans la cartographie exhaustive des opportunités de financement, qu’elles soient internes, publiques, privées, bilatérales ou multilatérales.</p><p style="margin-top: 1rem;">Nos experts évaluent la pertinence de chaque opportunité en fonction des objectifs stratégiques, du calendrier et des contraintes spécifiques des projets.</p><p style="margin-top: 1rem;">Cette analyse permet de prioriser les sources de financement les plus adaptées et d’optimiser les chances de succès des démarches auprès des bailleurs.</p><p style="margin-top: 1rem;">En combinant intelligence de marché et bases de données actualisées, <strong>DIEBENU & PARTNERS</strong> offre une vision claire des financements disponibles.</p><p style="margin-top: 1rem;">Les résultats incluent une meilleure planification financière, une allocation efficace des ressources et l’identification de partenariats stratégiques potentiels.</p><p style="margin-top: 1rem;">Cette démarche permet aux organisations de maximiser leur portefeuille de financements et d’assurer la durabilité de leurs projets.</p>',
+        image: '/images/recherche-financement/RM/1.jpg',
+      },
+      {
+        code: 'RM 02',
+        title: 'La structuration de projets bancables répondant aux exigences des bailleurs',
+        themeDetail: '<p>La structuration adéquate des projets est essentielle pour attirer les bailleurs de fonds et garantir leur financement.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les porteurs de projets dans l’élaboration de modèles financiers solides, de plans opérationnels clairs et de dispositifs de gouvernance adaptés aux attentes des bailleurs.</p><p style="margin-top: 1rem;">Nos experts intègrent les critères de risque, de rentabilité et de durabilité pour rendre les projets “bancables” et attractifs aux investisseurs.</p><p style="margin-top: 1rem;">Cette approche permet de sécuriser les financements, de renforcer la crédibilité des projets et de faciliter l’approbation par les institutions financières.</p><p style="margin-top: 1rem;">En travaillant étroitement avec les équipes projets, <strong>DIEBENU & PARTNERS</strong> garantit que la structure du projet est cohérente, efficace et alignée avec les standards internationaux.</p><p style="margin-top: 1rem;">Les résultats incluent un projet financièrement viable, attractif pour les bailleurs et capable de générer un impact durable sur le terrain.</p>',
+        image: '/images/recherche-financement/RM/2.jpg',
+      },
+      {
+        code: 'RM 03',
+        title: 'La rédaction de notes conceptuelles et de propositions techniques',
+        themeDetail: '<p>La qualité de la documentation présentée aux bailleurs est déterminante pour obtenir un financement.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> assiste les organisations dans la rédaction de notes conceptuelles et de propositions techniques claires, structurées et convaincantes.</p><p style="margin-top: 1rem;">Nos experts mettent l’accent sur la pertinence, la clarté, la cohérence et la démonstration de l’impact attendu, en respectant les exigences spécifiques de chaque bailleur.</p><p style="margin-top: 1rem;">Cette méthodologie augmente les chances de succès et renforce l’image professionnelle et crédible du porteur de projet.</p><p style="margin-top: 1rem;">En collaborant avec les équipes internes, <strong>DIEBENU & PARTNERS</strong> s’assure que les documents reflètent fidèlement les objectifs stratégiques et opérationnels des projets.</p><p style="margin-top: 1rem;">Les résultats incluent des propositions de qualité, une meilleure visibilité auprès des bailleurs et un accroissement significatif des opportunités de financement.</p>',
+        image: '/images/recherche-financement/RM/3.jpg',
+      },
+      {
+        code: 'RM 04',
+        title: 'Le positionnement auprès des bailleurs de fonds bilatéraux, multilatéraux et privés',
+        themeDetail: '<p>Le succès de la recherche de financement dépend aussi de la capacité à établir des relations stratégiques avec les bailleurs.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les organisations dans le positionnement stratégique auprès des bailleurs bilatéraux, multilatéraux et privés, en identifiant les interlocuteurs clés et les opportunités d’engagement.</p><p style="margin-top: 1rem;">Nos experts conseillent sur les stratégies de communication, de négociation et de présentation pour renforcer la crédibilité et la visibilité des projets auprès des financeurs.</p><p style="margin-top: 1rem;">Cette approche permet de créer des relations de confiance, d’anticiper les besoins des bailleurs et de mieux aligner les projets sur leurs priorités stratégiques.</p><p style="margin-top: 1rem;">En facilitant ces interactions, <strong>DIEBENU & PARTNERS</strong> assure un positionnement efficace et durable sur le marché du financement.</p><p style="margin-top: 1rem;">Les résultats incluent une augmentation des opportunités de financement, une meilleure reconnaissance des projets et un réseau de partenaires financiers solide pour soutenir le développement institutionnel et sectoriel.</p>',
+        image: '/images/recherche-financement/RM/4.jpg',
+      },
+    ]
+  },
+]
+
+
+const Conseil_CATALOGUE: ThemeForOtherPages[] = [
+
+{
+    slug: slugify('Elaboration de plans stratégiques sectoriels ou institutionnels'),
+    title: 'Elaboration de plans stratégiques sectoriels ou institutionnels',
+    modules: [
+      {
+        code: 'AGPPR 01',
+        title: 'Transformation stratégique et performance institutionnelle',
+        themeDetail: '<p>Dans un contexte mondial marqué par la transition écologique, la pression réglementaire croissante et la quête de performance durable, de nombreuses institutions font face à une équation complexe : comment conjuguer efficacité organisationnelle, rentabilité, impact sociétal et neutralité carbone ?</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les décideurs publics et privés dans la transformation stratégique de leurs organisations afin d’accroître leur performance institutionnelle tout en intégrant pleinement les principes du développement durable.</p><p style="margin-top: 1rem;">Notre démarche repose sur une analyse rigoureuse de la situation actuelle des institutions – gouvernance, performance économique, impact environnemental et social – afin d’identifier les leviers stratégiques les plus pertinents. Nous co-construisons avec nos clients des feuilles de route ambitieuses et réalistes, articulant les impératifs de transformation organisationnelle, de réduction des émissions de carbone, d’amélioration de la gouvernance et de création de valeur partagée.</p><p style="margin-top: 1rem;">Grâce à une approche intégrée, alliant stratégie, innovation et impact, <strong>DIEBENU & PARTNERS</strong> aide les institutions à se repositionner durablement, à renforcer leur efficacité opérationnelle et à atteindre une performance globale — économique, sociale et environnementale — en phase avec les standards internationaux et les attentes des parties prenantes.</p>',
+        image: '/images/conseil/AGPPR/photo_1_2025-10-29_11-54-53.jpg',
+      },
+      {
+        code: 'AGPPR 02',
+        title: 'Planification stratégique et prospective institutionnelle',
+        themeDetail: '<p>Face à un environnement mondial en mutation rapide — instabilité économique, changements climatiques, transitions technologiques et attentes accrues des citoyens — les institutions doivent désormais anticiper plutôt que réagir.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les organisations publiques et parapubliques dans la conception et la mise en œuvre de stratégies prospectives alignées sur les priorités nationales et les dynamiques régionales. Nous aidons les dirigeants à structurer une vision à long terme, à identifier les tendances émergentes et à traduire les ambitions politiques en objectifs mesurables et opérationnels.</p><p style="margin-top: 1rem;">Notre approche combine diagnostic stratégique, modélisation des scénarios futurs et définition de trajectoires institutionnelles adaptées à chaque contexte. Nous plaçons l’anticipation, la flexibilité et l’innovation au cœur des plans stratégiques, afin de renforcer la résilience et la performance des institutions.</p><p style="margin-top: 1rem;">Avec <strong>DIEBENU & PARTNERS,</strong> la planification stratégique devient un véritable levier de transformation durable et de gouvernance éclairée, permettant aux institutions d’agir aujourd’hui en cohérence avec les enjeux de demain.</p>',
+        image: '/images/conseil/AGPPR/photo_2_2025-10-29_11-54-53.jpg',
+      },
+      {
+        code: 'AGPPR 03',
+        title: 'Renforcement du capital humain et gestion stratégique des talents',
+        themeDetail: '<p>Dans un monde où la compétence et l’innovation deviennent les moteurs essentiels de la performance institutionnelle, la gestion stratégique des talents s’impose comme un pilier central de la transformation organisationnelle.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> soutient les institutions dans la conception de politiques modernes de développement du capital humain, alliant performance, motivation et engagement. Nous intervenons dans la redéfinition des cadres de compétences, la mise en place de systèmes d’évaluation et de gestion de carrière, ainsi que la promotion d’une culture managériale axée sur les résultats et l’apprentissage continu.</p><p style="margin-top: 1rem;">Notre approche repose sur une analyse fine des besoins institutionnels, une valorisation du leadership et une intégration des outils digitaux pour optimiser le suivi des performances et la planification des effectifs.</p><p style="margin-top: 1rem;">Avec <strong>DIEBENU & PARTNERS,</strong> les institutions renforcent leur attractivité, fidélisent leurs talents et bâtissent des équipes agiles, compétentes et prêtes à relever les défis de la modernisation publique et de la compétitivité mondiale.</p>',
+        image: '/images/conseil/AGPPR/photo_3_2025-10-29_11-54-53.jpg',
+      },
+      {
+        code: 'AGPPR 04',
+        title: 'Intégration des ODD et priorités nationales dans les plans sectoriels',
+        themeDetail: '<p>Les Objectifs de Développement Durable (ODD) constituent aujourd’hui un cadre universel d’action pour les politiques publiques et la planification sectorielle. Cependant, leur appropriation demeure souvent fragmentée et peu opérationnelle au sein des institutions.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les gouvernements, ministères et agences dans la traduction des ODD en politiques sectorielles concrètes et mesurables. Nous aidons à identifier les priorités nationales, à construire des cadres logiques intégrés et à concevoir des systèmes de suivi-évaluation alignés sur les indicateurs de durabilité.</p><p style="margin-top: 1rem;">Notre approche repose sur l’articulation entre développement économique, inclusion sociale et préservation environnementale, tout en garantissant la cohérence entre les stratégies nationales et les agendas régionaux et internationaux.</p><p style="margin-top: 1rem;">Avec <strong>DIEBENU & PARTNERS,</strong> les institutions passent de la théorie à l’action : elles intègrent les ODD comme levier stratégique de transformation et de performance durable au service du développement national.</p>',
+        image: '/images/conseil/AGPPR/photo_4_2025-10-29_11-54-53.jpg',
+      },
+      {
+        code: 'AGPPR 05',
+        title: 'Digitalisation et intelligence stratégique au service de la planification',
+      themeDetail: '<p>À l’ère du numérique et de la donnée, la planification institutionnelle doit s’appuyer sur des outils technologiques capables de renforcer la prise de décision et la performance. La digitalisation devient alors un vecteur d’efficacité, de transparence et d’innovation publique.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions dans la conception et la mise en œuvre de systèmes d’information intégrés, de plateformes décisionnelles et d’outils d’intelligence stratégique permettant de piloter en temps réel les politiques publiques et les plans sectoriels.</p><p style="margin-top: 1rem;">Notre expertise couvre l’analyse de données, la cartographie numérique, la veille stratégique, ainsi que l’implémentation d’outils d’aide à la décision basés sur l’intelligence artificielle et la modélisation prospective.</p><p style="margin-top: 1rem;">Avec <strong>DIEBENU & PARTNERS,</strong> les organisations se dotent d’une architecture numérique solide et intelligente, leur permettant de transformer la donnée en levier stratégique et d’orienter la planification vers plus d’agilité, de performance et de durabilité.</p>',
+        image: '/images/conseil/AGPPR/photo_5_2025-10-29_11-54-53.jpg',
+      },
+    ]
+  },
+
+{
+    slug: slugify('Le repositionnement organisationnel et la redéfinition des missions'),
+    title: 'Le repositionnement organisationnel et la redéfinition des missions',
+    modules: [
+      {
+        code: 'ASODD 01',
+        title: 'Diagnostic organisationnel et refonte des modèles de gouvernance',
+        themeDetail: '<p>Dans un contexte où la performance publique dépend de la clarté des structures et de la cohérence des mandats, un diagnostic organisationnel approfondi devient essentiel.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions dans l’évaluation de leurs structures internes, de leurs processus décisionnels et de leurs mécanismes de gouvernance afin d’identifier les leviers d’efficacité et de rationalisation.</p><p style="margin-top: 1rem;">Nous analysons les rôles, les fonctions et les interactions institutionnelles pour repenser les modèles de gouvernance à la lumière des nouvelles exigences de transparence, de redevabilité et de performance.</p><p style="margin-top: 1rem;">Notre approche intégrée vise à aligner la structure sur la stratégie, à moderniser les organes décisionnels et à renforcer la coordination entre les acteurs, pour une gouvernance plus agile, responsable et orientée résultats.</p>',
+        image: '/images/conseil/ASODD/photo_1_2025-10-29_11-55-20.jpg',
+      },
+      {
+        code: 'ASODD 02',
+        title: 'Repositionnement stratégique des institutions publiques et parapubliques',
+        themeDetail: '<p>Face aux nouvelles priorités nationales, régionales et internationales, les institutions doivent constamment ajuster leurs missions, leur positionnement et leurs offres de valeur publique.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> aide les organisations à redéfinir leur place au sein de l’écosystème institutionnel, à clarifier leurs mandats et à structurer des stratégies de repositionnement cohérentes avec les attentes des citoyens, des bailleurs et des autorités de tutelle.</p><p style="margin-top: 1rem;">Nous intervenons sur la révision des cadres stratégiques, la mise en cohérence des objectifs institutionnels et la conception de modèles de gestion intégrés.</p><p style="margin-top: 1rem;">Grâce à une méthodologie participative, nous permettons aux institutions de renforcer leur pertinence, leur visibilité et leur impact, en se positionnant comme des acteurs clés du développement durable et de la modernisation publique.</p>',
+        image: '/images/conseil/ASODD/photo_2_2025-10-29_11-55-20.jpg',
+      },
+      {
+        code: 'ASODD 03',
+        title: 'Transformation organisationnelle et conduite du changement',
+        themeDetail: '<p>La transformation organisationnelle n’est plus une option : elle s’impose comme une nécessité face aux évolutions technologiques, institutionnelles et sociales.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions publiques dans la conception et la mise en œuvre de plans de transformation cohérents, en alliant rigueur méthodologique, agilité et engagement des acteurs.</p><p style="margin-top: 1rem;">Nous intervenons sur la révision des structures, l’adaptation des modes de fonctionnement, l’introduction d’outils numériques et la consolidation de nouvelles pratiques managériales.</p><p style="margin-top: 1rem;">Notre démarche repose sur une conduite du changement participative, favorisant l’appropriation par le personnel, la réduction des résistances et la pérennisation des nouvelles dynamiques organisationnelles.</p>',
+        image: '/images/conseil/ASODD/photo_3_2025-10-29_11-55-20.jpg',
+      },
+      {
+        code: 'ASODD 04',
+        title: 'Optimisation des processus et redéfinition des missions opérationnelles',
+        themeDetail: '<p>L’optimisation des processus institutionnels constitue un levier stratégique majeur pour améliorer la qualité du service public et la performance globale des organisations.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> aide les institutions à cartographier leurs processus, à identifier les redondances, les goulots d’étranglement et les pertes d’efficacité afin de concevoir des chaînes opérationnelles simplifiées, fluides et alignées sur les objectifs stratégiques.</p><p style="margin-top: 1rem;">Nous accompagnons également la redéfinition des missions et responsabilités des directions et services, en veillant à une meilleure articulation entre les fonctions support et les métiers de base.</p><p style="margin-top: 1rem;">Grâce à une approche systémique, nous permettons aux institutions de gagner en agilité, en cohérence et en efficacité, tout en renforçant la transparence et la qualité du pilotage opérationnel.</p>',
+        image: '/images/conseil/ASODD/photo_4_2025-10-29_11-55-20.jpg',
+      },
+      {
+     code: 'ASODD 05',
+        title: 'Management du changement et engagement du capital humain',
+        themeDetail: '<p>Toute réforme organisationnelle réussie repose avant tout sur la mobilisation des femmes et des hommes qui la portent.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions dans la mise en place de stratégies efficaces de management du changement, centrées sur l’humain, la communication et le développement des compétences.</p><p style="margin-top: 1rem;">Nous aidons à créer des environnements favorables à l’adhésion, à stimuler la motivation et à encourager la responsabilisation à tous les niveaux hiérarchiques. Nos interventions intègrent des outils de leadership transformationnel, de coaching institutionnel et de gestion participative.</p><p style="margin-top: 1rem;">Avec <strong>DIEBENU & PARTNERS,</strong> la conduite du changement devient un processus partagé, maîtrisé et porteur d’un impact durable sur la performance institutionnelle et l’engagement du capital humain.</p>',
+        image: '/images/conseil/ASODD/photo_5_2025-10-29_11-55-20.jpg',
+      },
+    ]
+  },
+{
+    slug: slugify('Amélioration de la gouvernance, du pilotage de la performance et de la redevabilité'),
+    title: 'Amélioration de la gouvernance, du pilotage de la performance et de la redevabilité',
+    modules: [
+      {
+        code: 'EPSSI 01',
+        title: 'Modernisation de la gouvernance institutionnelle et refonte des mécanismes de décision',
+        themeDetail: '<p>La modernisation de la gouvernance institutionnelle constitue un enjeu majeur pour renforcer la crédibilité et l’efficacité des organisations publiques et parapubliques.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions dans la refonte de leurs structures décisionnelles, afin d’assurer une meilleure cohérence entre vision stratégique, orientations politiques et actions opérationnelles.</p><p style="margin-top: 1rem;">Nous analysons les organes de gouvernance existants, leurs interactions et les processus décisionnels pour identifier les leviers de modernisation et de simplification.</p><p style="margin-top: 1rem;">Notre approche vise à instaurer une gouvernance agile, claire et orientée vers les résultats, en intégrant les meilleures pratiques internationales et les exigences de transparence et de redevabilité.</p><p style="margin-top: 1rem;">Nous favorisons également l’émergence de modèles décisionnels plus inclusifs et collaboratifs, adaptés aux contextes nationaux et sectoriels, permettant aux institutions de mieux anticiper les défis et de prendre des décisions éclairées et durables.</p>',
+        image: '/images/conseil/EPSSI/photo_1_2025-10-29_11-46-28.jpg',
+      },
+      {
+        code: 'EPSSI 02',
+        title: 'Mise en place de systèmes de pilotage axés sur la performance et les résultats',
+        themeDetail: '<p>Dans un environnement marqué par la recherche d’efficacité et d’impact, la mise en place de systèmes de pilotage modernes devient indispensable pour mesurer, orienter et améliorer la performance institutionnelle.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> conçoit et met en œuvre des dispositifs de pilotage intégrés permettant de relier les ressources aux résultats, tout en assurant un suivi continu des performances.</p><p style="margin-top: 1rem;">Nos experts aident les institutions à développer des indicateurs pertinents, des tableaux de bord stratégiques et des mécanismes d’évaluation dynamique pour appuyer la prise de décision.</p><p style="margin-top: 1rem;">Nous veillons à ce que chaque outil de pilotage serve non seulement à contrôler, mais aussi à apprendre et à ajuster les politiques et programmes selon les objectifs fixés.</p><p style="margin-top: 1rem;">L’approche de <strong>DIEBENU & PARTNERS</strong> repose sur la culture du résultat et la responsabilisation des acteurs, afin de promouvoir une gouvernance performante, transparente et durable.</p>',
+        image: '/images/conseil/EPSSI/photo_2_2025-10-29_11-46-28.jpg',
+      },
+      {
+        code: 'EPSSI 03',
+        title: 'Renforcement de la redevabilité et des mécanismes de transparence publique',
+        themeDetail: '<p>La redevabilité publique est aujourd’hui un pilier fondamental de la bonne gouvernance et de la confiance entre les institutions et les citoyens.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> aide les organisations à concevoir et à opérationnaliser des mécanismes robustes de transparence et de reddition de comptes, adaptés aux normes nationales et internationales.</p><p style="margin-top: 1rem;">Nous travaillons sur la clarification des responsabilités, la diffusion de l’information publique, la production de rapports de performance et la mise en place de cadres d’évaluation indépendants.</p><p style="margin-top: 1rem;">Notre approche combine diagnostic institutionnel, accompagnement stratégique et renforcement des capacités pour ancrer durablement la culture de redevabilité.</p><p style="margin-top: 1rem;">En favorisant l’accès à l’information, la participation citoyenne et la traçabilité des actions publiques, <strong>DIEBENU & PARTNERS</strong> contribue à renforcer la légitimité, la crédibilité et la responsabilité des institutions dans la gestion des affaires publiques.</p>',
+        image: '/images/conseil/EPSSI/photo_3_2025-10-29_11-46-28.jpg',
+      },
+      {
+        code: 'EPSSI 04',
+        title: 'Gouvernance participative et implication des acteurs clés dans la prise de décision',
+      themeDetail: '<p>Une gouvernance efficace repose sur l’écoute, la concertation et l’implication active des parties prenantes dans les processus décisionnels.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> promeut une gouvernance participative, fondée sur le dialogue, la co-construction et l’inclusion des acteurs institutionnels, économiques et sociaux.</p><p style="margin-top: 1rem;">Nous accompagnons les institutions dans la conception et la mise en œuvre de mécanismes de concertation multi-acteurs, de plateformes de coordination et de cadres de dialogue structurés.</p><p style="margin-top: 1rem;">Ces dispositifs permettent d’améliorer la légitimité des décisions, d’anticiper les résistances et de favoriser la cohésion autour des objectifs collectifs.</p><p style="margin-top: 1rem;">Notre démarche privilégie la transparence, la collaboration et l’innovation institutionnelle, en plaçant la participation au cœur de la gouvernance publique et du pilotage stratégique.</p>',
+        image: '/images/conseil/EPSSI/photo_4_2025-10-29_11-46-28.jpg',
+      },
+      {
+        code: 'EPSSI 05',
+        title: 'Digitalisation du pilotage stratégique et gouvernance fondée sur les données',
+        themeDetail: '<p>La révolution numérique ouvre de nouvelles perspectives pour le pilotage et la gouvernance des institutions publiques.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les organisations dans leur transition vers une gouvernance fondée sur les données (data-driven governance), en intégrant les technologies digitales au cœur de la planification et du suivi stratégique.</p><p style="margin-top: 1rem;">Nous aidons à concevoir des systèmes d’information décisionnels, des plateformes de gestion de la performance et des outils analytiques permettant d’améliorer la réactivité et la précision des décisions.</p><p style="margin-top: 1rem;">Grâce à la digitalisation, les institutions peuvent désormais anticiper les risques, mesurer les résultats en temps réel et optimiser leurs ressources avec une efficacité accrue.</p><p style="margin-top: 1rem;">Avec <strong>DIEBENU & PARTNERS,</strong> la gouvernance se transforme en un levier d’intelligence stratégique, où les données deviennent un moteur de transparence, d’innovation et de performance durable.</p>',
+        image: '/images/conseil/EPSSI/photo_5_2025-10-29_11-46-28.jpg',
+    },
+    ]
+  },
+
+{
+    slug: slugify('Alignement des stratégies avec les Objectifs de Développement Durable (ODD)'),
+    title: 'Alignement des stratégies avec les Objectifs de Développement Durable (ODD)',
+    modules: [
+      {
+        code: 'RORM 01',
+        title: 'Diagnostic stratégique et alignement institutionnel avec les ODD',
+        themeDetail: '<p>Le diagnostic stratégique constitue la première étape essentielle pour assurer la cohérence entre les priorités institutionnelles et les Objectifs de Développement Durable (ODD).</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les institutions publiques et organisations partenaires dans l’analyse approfondie de leurs cadres stratégiques, politiques et opérationnels afin d’évaluer leur niveau d’alignement avec les cibles mondiales de durabilité.</p><p style="margin-top: 1rem;">Notre approche repose sur une méthodologie rigoureuse de cartographie des objectifs, d’identification des écarts et de hiérarchisation des priorités.</p><p style="margin-top: 1rem;">Ce travail permet de mettre en lumière les synergies et les zones d’amélioration nécessaires pour orienter les politiques vers une trajectoire inclusive, résiliente et durable.</p><p style="margin-top: 1rem;">À travers des diagnostics intégrés et participatifs, <strong>DIEBENU & PARTNERS</strong> aide les décideurs à repenser leurs stratégies dans une logique d’impact, de cohérence et d’efficacité à long terme.</p>',
+        image: '/images/conseil/RORM/photo_1_2025-10-29_11-54-21.jpg',
+      },
+      {
+        code: 'RORM 02',
+        title: 'Intégration des ODD dans les cadres de planification et de performance organisationnelle',
+        themeDetail: '<p>Intégrer les ODD dans les outils de planification et de performance constitue un levier puissant pour transformer les stratégies institutionnelles en actions mesurables et durables.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> assiste les institutions dans la révision de leurs cadres logiques, plans de développement et instruments de suivi afin d’y ancrer les cibles et indicateurs des ODD.</p><p style="margin-top: 1rem;">Nous concevons des modèles de planification intégrée permettant de relier les ressources, les résultats et les impacts dans une perspective de développement équitable et inclusif.</p><p style="margin-top: 1rem;">Notre accompagnement vise également à renforcer les capacités internes pour instaurer une culture de performance orientée vers la durabilité et la redevabilité.</p><p style="margin-top: 1rem;">Grâce à une approche participative et analytique, <strong>DIEBENU & PARTNERS</strong> permet aux institutions de traduire leurs engagements en résultats concrets, traçables et alignés sur les priorités nationales et internationales.</p>',
+        image: '/images/conseil/RORM/photo_2_2025-10-29_11-54-21.jpg',
+      },
+      {
+        code: 'RORM 03',
+        title: 'Élaboration de stratégies durables et inclusives pour une croissance résiliente',
+        themeDetail: '<p>Face aux défis économiques, sociaux et environnementaux actuels, les organisations doivent adopter des stratégies résilientes, inclusives et porteuses d’impact durable.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> aide les institutions à concevoir des stratégies globales qui intègrent les principes de durabilité, de responsabilité sociétale et de justice sociale dans leurs plans de croissance.</p><p style="margin-top: 1rem;">Nos experts appuient la définition de visions à long terme, fondées sur des analyses prospectives et des scénarios de transformation adaptés aux réalités locales.</p><p style="margin-top: 1rem;">Nous favorisons des approches intégrées qui articulent les priorités économiques, sociales et environnementales, tout en tenant compte des exigences de performance et de compétitivité.</p><p style="margin-top: 1rem;">Avec <strong>DIEBENU & PARTNERS,</strong> la stratégie devient un outil de transformation durable, capable de concilier développement, équité et résilience institutionnelle.</p>',
+        image: '/images/conseil/RORM/photo_3_2025-10-29_11-54-21.jpg',
+      },
+      {
+        code: 'RORM 04',
+        title: 'Mise en place de mécanismes de suivi-évaluation et de reporting ODD',
+        themeDetail: '<p>Le suivi-évaluation et le reporting ODD sont des composantes centrales de la gouvernance durable et de la transparence institutionnelle.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> conçoit et met en œuvre des dispositifs de suivi et d’évaluation intégrant les indicateurs internationaux des ODD aux mécanismes nationaux de planification et de gestion de la performance.</p><p style="margin-top: 1rem;">Nous développons des outils de collecte, d’analyse et de visualisation des données permettant aux décideurs de mesurer les progrès réalisés, d’identifier les écarts et d’ajuster les politiques en conséquence.</p><p style="margin-top: 1rem;">Nos équipes favorisent également l’institutionnalisation de pratiques de reporting transparent et harmonisé, conformes aux exigences des partenaires techniques et financiers.</p><p style="margin-top: 1rem;">Par une approche fondée sur la rigueur, la participation et l’innovation, <strong>DIEBENU & PARTNERS</strong> aide les institutions à instaurer une culture de redevabilité et d’amélioration continue au service du développement durable.</p>',
+        image: '/images/conseil/RORM/photo_4_2025-10-29_11-54-21.jpg',
+      },
+      {
+        code: 'RORM 05',
+        title: 'Mobilisation des partenariats stratégiques et financements pour accélérer la réalisation des ODD',
+        themeDetail: '<p>La réalisation des ODD nécessite des partenariats solides et des mécanismes de financement innovants capables de soutenir les priorités nationales et locales.</p><p style="margin-top: 1rem;"><strong>DIEBENU & PARTNERS</strong> accompagne les gouvernements, agences et institutions dans la conception de cadres de coopération et de financement favorisant la convergence des efforts autour des ODD.</p><p style="margin-top: 1rem;">Nous identifions les acteurs clés — publics, privés, académiques et communautaires — et facilitons la mise en place de partenariats stratégiques axés sur l’impact et la complémentarité.</p><p style="margin-top: 1rem;">Notre expertise couvre également la recherche de financements verts, la conception de projets bancables et la mobilisation des ressources auprès des bailleurs internationaux.</p><p style="margin-top: 1rem;">En favorisant des alliances multi-acteurs et des instruments financiers durables, <strong>DIEBENU & PARTNERS</strong> contribue à accélérer la mise en œuvre des ODD et à renforcer la résilience institutionnelle et économique des territoires.</p>',
+        image: '/images/conseil/RORM/photo_5_2025-10-29_11-54-21.jpg',
+      },
+    ]
+  },
+
+]
 export const DESTINATIONS = [
   { name: 'Casablanca', country: 'Maroc' },
   { name: 'Abidjan', country: 'Côte d\'Ivoire' },
@@ -1271,4 +1609,4 @@ export const DESTINATIONS = [
   { name: 'Dubaï', country: 'Émirats Arabes Unis' }
 ];
 
-export { FORMATION_CATALOGUE };
+export { FORMATION_CATALOGUE  , Conseil_CATALOGUE ,Financement_CATALOGUE,Etude_CATALOGUE};

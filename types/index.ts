@@ -13,10 +13,24 @@ interface Module {
   image?: string; // ✅ <-- Ajout ici
 }
 
+interface ModuleForOtherPages {
+  code: string;
+  title: string;
+  themeDetail: string;
+
+  image?: string; // ✅ <-- Ajout ici
+}
 interface Theme {
   slug: string;
   title: string;
   modules: Module[];
+  image?: string;
+}
+
+interface ThemeForOtherPages {
+ slug: string;
+  title: string;
+  modules: ModuleForOtherPages[];
   image?: string;
 }
 // TYPES
@@ -36,4 +50,4 @@ interface SearchResult {
     moduleCode?: string;
 }
 
-export type { Session, Module, Theme , SearchResult,  };
+export type { Session, Module, Theme , SearchResult, ModuleForOtherPages, ThemeForOtherPages };
