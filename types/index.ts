@@ -10,6 +10,7 @@ interface Module {
   title: string;
   themeDetail: string;
   sessions: Session[];
+  image?: string; // ✅ <-- Ajout ici
 }
 
 interface Theme {

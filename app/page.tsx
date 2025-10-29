@@ -103,6 +103,7 @@ export default function DiebenUPartners() {
         return <TypedConseilPage {...commonProps} />;
       case 'recherche':
         return <TypedRecherchePage {...commonProps} />;
+        
       case 'about':
         return <TypedAboutPage {...commonProps} />;
       case 'contact':
