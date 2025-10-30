@@ -130,7 +130,7 @@ const ContactForm: FC = () => {
                     : 'top-4 text-gray-500'
                 }`}
               >
-                Sujet
+                Objet
               </label>
               <input
                 type="text"
@@ -236,7 +236,7 @@ const ContactForm: FC = () => {
             </div>
             <div>
               <h3 className="font-bold text-xl mb-2 text-gray-900">Téléphone</h3>
-              <p className="text-gray-700 text-lg font-semibold">+212 606 698 210</p>
+              <p className="text-gray-700 text-lg font-semibold">+212 606 698 210 / +212 665 288 522</p>
             </div>
           </div>
         </div>

@@ -107,7 +107,10 @@ export default function FinancementDetailPage({ theme, module, setCurrentPage }:
                 <p className="text-red-100">Contactez-nous pour échanger avec nos experts.</p>
               </div>
               <button 
-                onClick={() => setCurrentPage('contact')} 
+          onClick={() => {
+                  window.scrollTo(0, 0); // <-- Ajouté pour remonter en haut
+                  setCurrentPage('contact');
+                }}
                 className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition duration-300 shadow-lg transform hover:scale-105 whitespace-nowrap flex items-center gap-2"
               >
                 <Users className="w-5 h-5" />

@@ -25,11 +25,11 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
       <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-xl text-gray-700 mb-12 text-center max-w-4xl mx-auto">
-            **DIEBENU & PARTNERS** est un cabinet international spécialisé dans le **conseil stratégique**, les **études**, la **formation professionnelle** et la **recherche de financement**. Fort de notre expertise et de notre réseau panafricain, nous nous engageons à délivrer des solutions à fort impact.
+            DIEBENU & PARTNERS est un cabinet international spécialisé dans le conseil stratégique, les études, la formation professionnelle et la recherche de financement. Fort de notre expertise et de notre réseau à travers le monde, nous nous engageons à délivrer des solutions à fort impact.
           </p>
           
           <VisionMissionValues />
-          <MotDuDG /> 
+          {/* <MotDuDG />  */}
 
           <div className="mt-20">
             <PolesExpertise setCurrentPage={setCurrentPage} />

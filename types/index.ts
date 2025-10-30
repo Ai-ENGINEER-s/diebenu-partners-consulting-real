@@ -2,7 +2,7 @@
 
 interface Session {
   date: string;
-  location: 'Casablanca' | 'Abidjan' | 'Dakar' | 'Ouagadougou' | 'Dubaï';
+  location: 'Session 1' | 'Session 2' | 'Session 3' | 'Session 4' | 'Session 5';
 }
 
 interface Module {

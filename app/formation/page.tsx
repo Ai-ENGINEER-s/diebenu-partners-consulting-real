@@ -7,6 +7,7 @@ import { BookOpen, MapPin, Euro, ArrowRight, Info, ChevronLeft, ChevronRight, Ch
 import { FORMATION_CATALOGUE } from '@/data/catalogue';
 import { Theme, Module } from '@/types/index';
 import Tarifs from '@/components/Tarifs';
+
 interface FormationPageProps {
   setCurrentPage: (page: string) => void;
   setSelectedTheme: (theme: Theme) => void;
@@ -147,6 +148,10 @@ function ThemeRow({
               onMouseEnter={() => setHoveredModule(module.code)}
               onMouseLeave={() => setHoveredModule(null)}
               onClick={() => {
+                // ========================================
+                // ============ CORRECTION ICI ============
+                window.scrollTo(0, 0); // <-- CORRECTION AJOUTÉE
+                // ========================================
                 setSelectedTheme(theme);
                 setSelectedModule(module);
                 setCurrentPage('theme');

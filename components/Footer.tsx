@@ -11,6 +11,22 @@ interface FooterProps {
 }
 
 export default function Footer({ setCurrentPage }: FooterProps) {
+
+    // =======================================================
+    // ============== CORRECTION AJOUTÉE ICI =================
+    // =======================================================
+    /**
+     * Gère le clic sur un lien du footer.
+     * Remonte en haut de la page AVANT de changer la vue.
+     */
+    const handleLinkClick = (page: string) => {
+        window.scrollTo(0, 0);
+        setCurrentPage(page);
+    };
+    // =======================================================
+    // ================= FIN DE LA CORRECTION ================
+    // =======================================================
+
     return (
         <footer className="relative bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 text-white overflow-hidden">
             {/* Effets de fond ultra moderne */}
@@ -85,7 +101,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                         <ul className="space-y-3">
                             <li>
                                 <button 
-                                    onClick={() => setCurrentPage('formation')} 
+                                    onClick={() => handleLinkClick('formation')} // <-- CORRIGÉ
                                     className="group/item w-full flex items-center gap-3 text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1"
                                 >
                                     <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 group-hover/item:from-red-600 group-hover/item:to-orange-600 transition-all duration-300 shadow-lg">
@@ -96,7 +112,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                             </li>
                             <li>
                                 <button 
-                                    onClick={() => setCurrentPage('conseil')} 
+                                    onClick={() => handleLinkClick('conseil')} // <-- CORRIGÉ
                                     className="group/item w-full flex items-center gap-3 text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1"
                                 >
                                     <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 group-hover/item:from-red-600 group-hover/item:to-orange-600 transition-all duration-300 shadow-lg">
@@ -107,7 +123,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                             </li>
                             <li>
                                 <button 
-                                    onClick={() => setCurrentPage('recherche')} 
+                                    onClick={() => handleLinkClick('recherche')} // <-- CORRIGÉ
                                     className="group/item w-full flex items-center gap-3 text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1"
                                 >
                                     <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 group-hover/item:from-red-600 group-hover/item:to-orange-600 transition-all duration-300 shadow-lg">
@@ -118,7 +134,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                             </li>
                             <li>
                                 <button 
-                                    onClick={() => setCurrentPage('contact')} 
+                                    onClick={() => handleLinkClick('contact')} // <-- CORRIGÉ
                                     className="group/item w-full flex items-center gap-3 text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1"
                                 >
                                     <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 group-hover/item:from-red-600 group-hover/item:to-orange-600 transition-all duration-300 shadow-lg">

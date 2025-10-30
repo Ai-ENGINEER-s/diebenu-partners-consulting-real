@@ -88,8 +88,25 @@ export default function ThemePage({ theme, module, setCurrentPage }: ThemePagePr
                 <Calendar className="w-6 h-6 text-red-600" />
               </div>
               <div>
-                <h2 className="text-3xl font-bold text-gray-900">Sessions Disponibles</h2>
-                <p className="text-gray-600 mt-1">{module.sessions.length} sessions programmées</p>
+             <h3 className="text-3xl font-bold text-gray-900 mb-3">
+  AU PROGRAMME SIMULTANÉMENT À :
+</h3>
+
+<div className="flex flex-wrap gap-3">
+  {["Casablanca", "Abidjan", "Dakar", "Ouagadougou", "Dubaï"].map((ville) => (
+    <span
+      key={ville}
+      className="px-4 py-2 bg-gradient-to-r from-red-600 to-rose-500 text-white font-semibold rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 cursor-default"
+    >
+      {ville}
+    </span>
+  ))}
+</div>
+
+<p className="text-gray-600 mt-3 text-lg">
+  {module.sessions.length} sessions programmées
+</p>
+
               </div>
             </div>
 
@@ -129,7 +146,10 @@ export default function ThemePage({ theme, module, setCurrentPage }: ThemePagePr
                 <p className="text-red-100">Rejoignez-nous et développez vos compétences</p>
               </div>
               <button 
-                onClick={() => setCurrentPage('contact')} 
+                onClick={() => {
+                  window.scrollTo(0, 0); // <-- Ajouté pour remonter en haut
+                  setCurrentPage('contact');
+                }}
                 className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition duration-300 shadow-lg transform hover:scale-105 whitespace-nowrap flex items-center gap-2"
               >
                 <Users className="w-5 h-5" />

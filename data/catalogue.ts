@@ -12,9 +12,9 @@ const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-')
 // ↓ ↓ ↓ Ajoutez le type de retour ': Session[]' ici ↓ ↓ ↓
 const generateSessions = (date1: string, date2: string, date3: string): Session[] => [
 // ↑ ↑ ↑ Ajoutez le type de retour ': Session[]' ici ↑ ↑ ↑
-  { date: date1, location: 'Casablanca' },
-  { date: date2, location: 'Abidjan' },
-  { date: date3, location: 'Dakar' },
+  { date: date1, location: 'Session 1' },
+  { date: date2, location: 'Session 2' },
+  { date: date3, location: 'Session 3' },
 ];
 const FORMATION_CATALOGUE: Theme[] = [
 

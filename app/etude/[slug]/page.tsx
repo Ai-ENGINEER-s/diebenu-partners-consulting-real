@@ -81,7 +81,9 @@ export default function EtudeDetailPage({ theme, module, setCurrentPage }: Etude
           </div>
 
           {/* Card informations complémentaires */}
+          
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 md:p-12 mb-12 border border-gray-200">
+            
             <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <BookOpen className="w-6 h-6 mr-3 text-red-600" />
               Détails de l'étude
@@ -106,7 +108,13 @@ export default function EtudeDetailPage({ theme, module, setCurrentPage }: Etude
                 <p className="text-red-100">Contactez-nous pour obtenir plus d'informations ou commander cette étude</p>
               </div>
               <button 
-                onClick={() => setCurrentPage('contact')} 
+                // ========================================
+                // ============ CORRECTION ICI ============
+                onClick={() => {
+                  window.scrollTo(0, 0); // <-- CORRECTION AJOUTÉE
+                  setCurrentPage('contact');
+                }} 
+                // ========================================
                 className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition duration-300 shadow-lg transform hover:scale-105 whitespace-nowrap flex items-center gap-2"
               >
                 <Users className="w-5 h-5" />

@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import Image from 'next/image'; // Importer Image de next/image
 
 // ⚠️ Utiliser le chemin direct vers l'image dans le dossier public
-const BACKGROUND_IMAGE_PATH = '/images/themes/hsae.jpg'; 
+const BACKGROUND_IMAGE_PATH = '/images/themes/DDERS/photo_9_2025-10-27_12-33-03.jpg'; 
 
 // Définition des props simplifiée
 interface CTASectionProps {
@@ -14,6 +14,22 @@ interface CTASectionProps {
 }
 
 export default function CTASection({ setCurrentPage }: CTASectionProps) {
+
+  // =======================================================
+  // ============== CORRECTION AJOUTÉE ICI =================
+  // =======================================================
+  /**
+   * Gère le clic sur un bouton CTA.
+   * Remonte en haut de la page AVANT de changer la vue.
+   */
+  const handleClick = (page: string) => {
+    window.scrollTo(0, 0);
+    setCurrentPage(page);
+  };
+  // =======================================================
+  // ================= FIN DE LA CORRECTION ================
+  // =======================================================
+
   return (
     <section className="relative py-24 bg-gray-900 overflow-hidden shadow-2xl">
       
@@ -42,14 +58,14 @@ export default function CTASection({ setCurrentPage }: CTASectionProps) {
         </p>
         <div className="flex flex-col sm:flex-row gap-6 justify-center">
           <button 
-            onClick={() => setCurrentPage('formation')}
+            onClick={() => handleClick('formation')} // <-- CORRIGÉ
             className="px-10 py-5 bg-white text-red-600 rounded-xl font-bold hover:bg-gray-100 transition duration-300 shadow-xl flex items-center justify-center group"
           >
             Nos formations
             <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
           </button>
           <button 
-            onClick={() => setCurrentPage('contact')}
+            onClick={() => handleClick('contact')} // <-- CORRIGÉ
             className="px-10 py-5 bg-white/10 text-white rounded-xl font-bold border-2 border-white/30 hover:bg-white/20 transition duration-300"
           >
             Prendre contact

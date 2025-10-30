@@ -148,11 +148,13 @@ function ThemeRow({
               onMouseEnter={() => setHoveredModule(module.code)}
               onMouseLeave={() => setHoveredModule(null)}
               onClick={() => {
+                // ========================================
+                // ============ CORRECTION ICI ============
+                window.scrollTo(0, 0); // <-- CORRECTION AJOUTÉE
+                // ========================================
                 setSelectedTheme(theme);
                 setSelectedModule(module);
-                // ============ CORRECTION ICI ============
-                setCurrentPage('conseil-detail'); // Était 'etude-detail'
-                // ========================================
+                setCurrentPage('conseil-detail');
               }}
             >
               <div 

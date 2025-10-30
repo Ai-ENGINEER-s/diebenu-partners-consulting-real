@@ -148,6 +148,10 @@ function ThemeRow({
               onMouseEnter={() => setHoveredModule(module.code)}
               onMouseLeave={() => setHoveredModule(null)}
               onClick={() => {
+                // ========================================
+                // ============ CORRECTION ICI ============
+                window.scrollTo(0, 0); // <-- CORRECTION AJOUTÉE
+                // ========================================
                 setSelectedTheme(theme);
                 setSelectedModule(module);
                 setCurrentPage('financement-detail'); // <-- CHANGÉ

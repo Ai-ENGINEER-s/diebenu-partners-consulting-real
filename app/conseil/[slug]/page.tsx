@@ -35,7 +35,7 @@ export default function ConseilDetailPage({ theme, module, setCurrentPage }: Con
         
         <div className="relative max-w-7xl mx-auto px-6">
           <button 
-            // ============ CORRECTION ICI ============
+            // ============ CORRECTION DEJA FAITE ============
             onClick={() => setCurrentPage('conseil')} // Était 'etude'
             // ========================================
             className="text-white mb-8 flex items-center hover:text-red-400 transition-colors group"
@@ -109,7 +109,13 @@ export default function ConseilDetailPage({ theme, module, setCurrentPage }: Con
                 <p className="text-red-100">Contactez-nous pour échanger avec nos experts.</p>
               </div>
               <button 
-                onClick={() => setCurrentPage('contact')} 
+                // ========================================
+                // ============ CORRECTION ICI ============
+                onClick={() => {
+                  window.scrollTo(0, 0); // <-- CORRECTION AJOUTÉE
+                  setCurrentPage('contact');
+                }} 
+                // ========================================
                 className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition duration-300 shadow-lg transform hover:scale-105 whitespace-nowrap flex items-center gap-2"
               >
                 <Users className="w-5 h-5" />

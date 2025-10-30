@@ -13,7 +13,7 @@ function Tarifs() {
       title: 'Option 1',
       subtitle: 'Frais pédagogique + Navette (Aéroport / lieu de formation) + Visites touristiques',
       icon: Euro,
-      badge: 'Essentiel',
+      // badge: 'Essentiel',
       popular: false,
       weeks: [
         {
@@ -42,7 +42,7 @@ function Tarifs() {
       title: 'Option 2',
       subtitle: "Option 1 + Appui à l'hébergement (petit déjeuner inclus) + Forfait déjeuner offert + PC portable ou Tablette ou Espèce",
       icon: Euro,
-      badge: 'Premium',
+      // badge: 'Premium',
       popular: true,
       weeks: [
         {
@@ -76,9 +76,7 @@ function Tarifs() {
           <Euro className="w-5 h-5 text-white mr-2" />
           <span className="text-white font-semibold text-sm">Tarification</span>
         </div>
-        <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
-          Investissez dans votre avenir
-        </h2>
+        
         <p className="text-gray-400 text-sm max-w-2xl mx-auto">
           Formules flexibles adaptées à vos besoins
         </p>
@@ -113,11 +111,12 @@ function Tarifs() {
                     }`} />
                   </div>
                   <div>
-                    <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${
+                    {/* <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${
                       tarif.popular ? 'bg-white/20 text-white' : 'bg-gray-700 text-gray-300'
                     }`}>
-                      {tarif.badge}
-                    </div>
+                      {/* {tarif.badge} */}
+                    {/* </div> */}
+                     
                     <h3 className="text-3xl font-bold text-white">
                       {tarif.title}
                     </h3>
