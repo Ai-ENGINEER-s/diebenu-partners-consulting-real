@@ -8,14 +8,14 @@ export default function VisionMissionValues() {
       icon: Target,
       title: 'Vision',
       description:
-        'Être un acteur de référence dans la transformation institutionnelle et le développement durable en Afrique.',
+        'Être un acteur de référence dans la transformation institutionnelle et le développement durable dans le monde.',
       color: 'blue',
     },
     {
       icon: Award,
       title: 'Mission',
-      description:
-        "Accompagner les organisations publiques et privées vers l'excellence opérationnelle et stratégique.",
+      description:"Accompagner les organisations vers l'excellence opérationnelle et stratégique",
+       
       color: 'red',
     },
     {

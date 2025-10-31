@@ -47,9 +47,9 @@ export default function HeroSection({ setCurrentPage }: HeroSectionProps) {
             
             {/* Titre Ultra Professionnel et Audacieux */}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight mb-4 leading-snug">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+              {/* <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
                 VOTRE MARQUE
-              </span>
+              </span> */}
               <span className="block text-3xl sm:text-4xl lg:text-5xl font-light text-gray-300 pt-1">
                 Le Sommet de l'Expertise
               </span>
@@ -57,7 +57,7 @@ export default function HeroSection({ setCurrentPage }: HeroSectionProps) {
             
             {/* Description raffinée */}
             <p className="text-lg sm:text-xl text-gray-300 mb-10 font-light leading-relaxed">
-              Cabinet international d'études, de conseil et de formation professionnelle. Nous sculptons l'avenir de votre organisation.
+              Cabinet international d'études, de conseil , de formation professionnelle et de recherche de financement. Nous sculptons l'avenir de votre organisation.
             </p>
             
             {/* 4. Boutons CTA avec interaction pro */}

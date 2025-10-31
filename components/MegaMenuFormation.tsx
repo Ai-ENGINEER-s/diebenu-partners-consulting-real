@@ -135,12 +135,12 @@ interface MegaMenuFormationProps {
 
 const groupedThemesData = [
     {
-        name: "Stratégie & Management",
+        name: "Stratégie ,  Management & Finance",
         icon: Target,
         themes: FORMATION_CATALOGUE.slice(0, 5)
     },
     {
-        name: "Finance & Performance",
+        name: " Performance & SI",
         icon: BarChart2,
         themes: FORMATION_CATALOGUE.slice(5, 10)
     },
@@ -150,7 +150,7 @@ const groupedThemesData = [
         themes: FORMATION_CATALOGUE.slice(10, 15)
     },
     {
-        name: "Technique & SI",
+        name: "Urbanisme & Technique ",
         icon: Settings,
         themes: FORMATION_CATALOGUE.slice(15, 20)
     }
