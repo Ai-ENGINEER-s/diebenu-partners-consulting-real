@@ -1,19 +1,18 @@
-// --- COMPOSANT TARIFS MODERNE ---
-
+// components/Tarifs.tsx
 'use client';
 
-
 import { BookOpen, MapPin, Euro, ArrowRight, Info, ChevronLeft, ChevronRight, Check, Star } from 'lucide-react';
-import Link from 'next/link';
 
-// --- COMPOSANT TARIFS MODERNE ---
-function Tarifs() {
+interface TarifsProps {
+  setCurrentPage?: (page: string) => void;
+}
+
+function Tarifs({ setCurrentPage }: TarifsProps) {
   const tarifs = [
     { 
       title: 'Option 1',
       subtitle: 'Frais pédagogique + Navette (Aéroport / lieu de formation) + Visites touristiques',
       icon: Euro,
-      // badge: 'Essentiel',
       popular: false,
       weeks: [
         {
@@ -42,7 +41,6 @@ function Tarifs() {
       title: 'Option 2',
       subtitle: "Option 1 + Appui à l'hébergement (petit déjeuner inclus) + Forfait déjeuner offert + PC portable ou Tablette ou Espèce",
       icon: Euro,
-      // badge: 'Premium',
       popular: true,
       weeks: [
         {
@@ -68,6 +66,12 @@ function Tarifs() {
       ]
     }
   ];
+
+  const handleReserverClick = () => {
+    if (setCurrentPage) {
+      setCurrentPage('contact');
+    }
+  };
 
   return (
     <div>
@@ -111,12 +115,6 @@ function Tarifs() {
                     }`} />
                   </div>
                   <div>
-                    {/* <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${
-                      tarif.popular ? 'bg-white/20 text-white' : 'bg-gray-700 text-gray-300'
-                    }`}>
-                      {/* {tarif.badge} */}
-                    {/* </div> */}
-                     
                     <h3 className="text-3xl font-bold text-white">
                       {tarif.title}
                     </h3>
@@ -167,17 +165,18 @@ function Tarifs() {
                 ))}
               </div>
 
-              {/* === MODIFICATION : Bouton CTA changé en Link === */}
-              <Link 
-                href="/contact"
+              {/* === CORRECTION : Bouton avec navigation interne === */}
+              <button 
+                onClick={handleReserverClick}
                 className={`block w-full mt-4 py-2.5 px-6 rounded-xl font-bold text-base text-center transition-all transform hover:scale-[1.02] hover:shadow-xl ${
                   tarif.popular 
                     ? 'bg-white text-primary-600 hover:bg-gray-100 shadow-lg' 
                     : 'bg-primary-600 text-white hover:bg-primary-700'
-                }`}>
+                }`}
+              >
                 Réserver maintenant
                 <ArrowRight className="inline-block ml-2 w-5 h-5" />
-              </Link>
+              </button>
             </div>
 
             {/* Effet de brillance au survol */}
@@ -186,7 +185,6 @@ function Tarifs() {
         ))}
       </div>
 
-      {/* === MODIFICATION : Note informative changée en HT === */}
       <div className="mt-6 text-center">
         <div className="inline-flex items-center px-4 py-2 bg-gray-800/50 rounded-full border border-gray-700 backdrop-blur-sm">
           <Info className="w-5 h-5 text-primary-400 mr-3" />
@@ -198,6 +196,5 @@ function Tarifs() {
     </div>
   );
 }
-
 
 export default Tarifs;

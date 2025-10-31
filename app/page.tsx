@@ -1,30 +1,32 @@
-// app/page.tsx
 'use client';
 
-import React, { useState, ComponentType } from 'react';
-import { Theme, Module, Session, ThemeForOtherPages, ModuleForOtherPages } from '@/types/index';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+// Ajout de 'useEffect' pour le scroll au chargement
+import React, { useState, ComponentType, useEffect } from 'react'; 
+// === CORRECTION DES CHEMINS D'IMPORTATION ===
+import { Theme, Module, ThemeForOtherPages, ModuleForOtherPages } from '../types/index';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import FormationsRealisees from '../components/FormationsRealisees';
-import HeroSection from '@/components/HeroSection';
-import MotDuDG from '@/components/MotDuDG';
-import PolesExpertise from '@/components/PolesExpertise';
-import VisionMissionValues from '@/components/VisionMissionValues';
-import CTASection from '@/components/CTASection';
+import HeroSection from '../components/HeroSection';
+import MotDuDG from '../components/MotDuDG';
+import PolesExpertise from '../components/PolesExpertise';
+import VisionMissionValues from '../components/VisionMissionValues';
+import CTASection from '../components/CTASection';
 import DestinationsSection from '../components/DestinationsSection';
-import Tarifs from '@/components/Tarifs';
+import Tarifs from '../components/Tarifs';
 
-// Importation pages
-import FormationPage from '@/app/formation/page';
-import ThemePage from '@/app/formation/[slug]/page';
-import EtudePage from '@/app/etude/page';
-import EtudeDetailPage from '@/app/etude/[slug]/page';
-import ConseilPage from '@/app/conseil/page';
-import ConseilDetailPage from '@/app/conseil/[slug]/page';
-import RecherchePage from '@/app/recherche-financement/page'; // Catalogue Financement
-import FinancementDetailPage from '@/app/recherche-financement/[slug]/page'; // Détail Financement
-import AboutPage from '@/app/a-propos/page';
-import ContactPage from '@/app/contact/page';
+// Importation pages (chemins relatifs)
+import FormationPage from './formation/page';
+import ThemePage from './formation/[slug]/page';
+import EtudePage from './etude/page';
+import EtudeDetailPage from './etude/[slug]/page';
+import ConseilPage from './conseil/page';
+import ConseilDetailPage from './conseil/[slug]/page';
+import RecherchePage from './recherche-financement/page';
+import FinancementDetailPage from './recherche-financement/[slug]/page';
+import AboutPage from './a-propos/page';
+import ContactPage from './contact/page';
+// ============================================
 
 // Interfaces navigation interne
 interface CommonPageProps {
@@ -40,10 +42,12 @@ interface EtudePageProps extends CommonPageProps {
   setSelectedTheme: (theme: ThemeForOtherPages) => void;
   setSelectedModule: (module: ModuleForOtherPages) => void;
 }
+
 interface ConseilPageProps extends CommonPageProps {
   setSelectedTheme: (theme: ThemeForOtherPages) => void;
   setSelectedModule: (module: ModuleForOtherPages) => void;
 }
+
 interface FinancementPageProps extends CommonPageProps {
   setSelectedTheme: (theme: ThemeForOtherPages) => void;
   setSelectedModule: (module: ModuleForOtherPages) => void;
@@ -58,10 +62,12 @@ interface EtudeDetailPageProps extends CommonPageProps {
   theme: ThemeForOtherPages;
   module: ModuleForOtherPages;
 }
+
 interface ConseilDetailPageProps extends CommonPageProps {
   theme: ThemeForOtherPages;
   module: ModuleForOtherPages;
 }
+
 interface FinancementDetailPageProps extends CommonPageProps {
   theme: ThemeForOtherPages;
   module: ModuleForOtherPages;
@@ -70,14 +76,14 @@ interface FinancementDetailPageProps extends CommonPageProps {
 // Typages forcés
 const TypedEtudePage = EtudePage as ComponentType<EtudePageProps>;
 const TypedConseilPage = ConseilPage as ComponentType<ConseilPageProps>;
-const TypedRecherchePage = RecherchePage as ComponentType<FinancementPageProps>; // Catalogue Financement
+const TypedRecherchePage = RecherchePage as ComponentType<FinancementPageProps>;
 const TypedAboutPage = AboutPage as ComponentType<CommonPageProps>;
 const TypedContactPage = ContactPage as ComponentType<CommonPageProps>;
 const TypedFormationPage = FormationPage as ComponentType<FormationPageProps>;
 const TypedThemePage = ThemePage as ComponentType<ThemePageProps>;
 const TypedEtudeDetailPage = EtudeDetailPage as ComponentType<EtudeDetailPageProps>;
 const TypedConseilDetailPage = ConseilDetailPage as ComponentType<ConseilDetailPageProps>;
-const TypedFinancementDetailPage = FinancementDetailPage as ComponentType<FinancementDetailPageProps>; // Détail Financement
+const TypedFinancementDetailPage = FinancementDetailPage as ComponentType<FinancementDetailPageProps>;
 
 export default function DiebenUPartners() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -94,7 +100,7 @@ export default function DiebenUPartners() {
   const [selectedConseilTheme, setSelectedConseilTheme] = useState<ThemeForOtherPages | null>(null);
   const [selectedConseilModule, setSelectedConseilModule] = useState<ModuleForOtherPages | null>(null);
 
-  // États séparés pour Financement ('recherche')
+  // États séparés pour Financement
   const [selectedFinancementTheme, setSelectedFinancementTheme] = useState<ThemeForOtherPages | null>(null);
   const [selectedFinancementModule, setSelectedFinancementModule] = useState<ModuleForOtherPages | null>(null);
 
@@ -110,18 +116,23 @@ export default function DiebenUPartners() {
   const setSelectedConseilThemeSafe = (theme: ThemeForOtherPages) => { setSelectedConseilTheme(theme); };
   const setSelectedConseilModuleSafe = (module: ModuleForOtherPages) => { setSelectedConseilModule(module); };
 
-  // --- CORRECTION : Ajout des Setters pour Financement ---
+  // Setters pour Financement
   const setSelectedFinancementThemeSafe = (theme: ThemeForOtherPages) => {
     setSelectedFinancementTheme(theme);
   };
   const setSelectedFinancementModuleSafe = (module: ModuleForOtherPages) => {
     setSelectedFinancementModule(module);
   };
-  // ----------------------------------------------------
 
-  // Fonction pour gérer le changement de page avec reset
+  // === CORRECTION SCROLL : Fonction pour gérer le changement de page avec reset et scroll ===
   const handlePageChange = (page: string) => {
     setCurrentPage(page);
+
+    // Force le navigateur à remonter en haut de la page à chaque changement
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
+
     // Reset des sélections appropriées selon la page
     if (page === 'formation') {
       setSelectedTheme(null);
@@ -132,11 +143,19 @@ export default function DiebenUPartners() {
     } else if (page === 'conseil') {
       setSelectedConseilTheme(null);
       setSelectedConseilModule(null);
-    } else if (page === 'recherche') { // Clé pour Financement
+    } else if (page === 'recherche') {
       setSelectedFinancementTheme(null);
       setSelectedFinancementModule(null);
     }
   };
+  
+  // Effet pour remonter en haut lors du chargement initial
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+  // =================================================================================
 
   const commonProps: CommonPageProps = { setCurrentPage: handlePageChange };
 
@@ -171,14 +190,14 @@ export default function DiebenUPartners() {
             {...commonProps}
           />
         ) : (
-          <TypedEtudePage // Fallback
+          <TypedEtudePage
             {...commonProps}
             setSelectedTheme={setSelectedEtudeThemeSafe}
             setSelectedModule={setSelectedEtudeModuleSafe}
           />
         );
 
-      case 'theme': // Détail Formation
+      case 'theme':
         return selectedTheme && selectedModule ? (
           <TypedThemePage
             theme={selectedTheme}
@@ -186,7 +205,7 @@ export default function DiebenUPartners() {
             {...commonProps}
           />
         ) : (
-          <TypedFormationPage // Fallback
+          <TypedFormationPage
             {...commonProps}
             setSelectedTheme={setSelectedThemeSafe}
             setSelectedModule={setSelectedModuleSafe}
@@ -210,14 +229,14 @@ export default function DiebenUPartners() {
             {...commonProps}
           />
         ) : (
-          <TypedConseilPage // Fallback
+          <TypedConseilPage
             {...commonProps}
             setSelectedTheme={setSelectedConseilThemeSafe}
             setSelectedModule={setSelectedConseilModuleSafe}
           />
         );
 
-      case 'recherche': // Catalogue Financement
+      case 'recherche':
         return (
           <TypedRecherchePage
             {...commonProps}
@@ -226,7 +245,7 @@ export default function DiebenUPartners() {
           />
         );
 
-      case 'financement-detail': // Détail Financement
+      case 'financement-detail':
         return selectedFinancementTheme && selectedFinancementModule ? (
           <TypedFinancementDetailPage
             theme={selectedFinancementTheme}
@@ -234,7 +253,7 @@ export default function DiebenUPartners() {
             {...commonProps}
           />
         ) : (
-          <TypedRecherchePage // Fallback
+          <TypedRecherchePage
             {...commonProps}
             setSelectedTheme={setSelectedFinancementThemeSafe}
             setSelectedModule={setSelectedFinancementModuleSafe}
@@ -262,10 +281,8 @@ export default function DiebenUPartners() {
         setSelectedEtudeModule={setSelectedEtudeModuleSafe}
         setSelectedConseilTheme={setSelectedConseilThemeSafe}
         setSelectedConseilModule={setSelectedConseilModuleSafe}
-        // --- CORRECTION : Passage des props à Navbar ---
         setSelectedFinancementTheme={setSelectedFinancementThemeSafe}
         setSelectedFinancementModule={setSelectedFinancementModuleSafe}
-        // ----------------------------------------------
       />
 
       <main className="pt-20">{renderPage()}</main>
@@ -295,7 +312,7 @@ function HomePage({ setCurrentPage }: HomePageProps) {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(220,38,38,0.08),transparent_50%)]"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <Tarifs />
+          <Tarifs setCurrentPage={setCurrentPage} />
         </div>
       </section>
 
