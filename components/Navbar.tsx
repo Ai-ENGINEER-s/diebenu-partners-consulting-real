@@ -846,7 +846,7 @@ export default function Navbar({
         { label: 'Formations', page: 'formation', hasMega: true, icon: BookOpen },
         { label: 'Conseil', page: 'conseil', hasMega: true, icon: Briefcase },
         { label: 'Recherche de Financement', page: 'recherche', hasMega: true, icon: Zap }, // <-- MODIFIÉ
-        { label: 'Etude', page: 'etude', hasMega: true, icon: FileText },
+        { label: 'Etudes', page: 'etude', hasMega: true, icon: FileText },
         { label: 'À propos', page: 'about', icon: Award },
     ];
 

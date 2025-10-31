@@ -2,13 +2,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronRight, Zap, DollarSign } from 'lucide-react';
+import { ChevronRight, Zap, CreditCard } from 'lucide-react';
+
 import { Financement_CATALOGUE } from '@/data/catalogue';
 import { ThemeForOtherPages, ModuleForOtherPages } from '@/types/index';
 
 // Mapper les icônes aux slugs
 const iconMap: { [key: string]: React.ElementType } = {
-  'recherche-et-mobilisation-de-financement': DollarSign,
+  'recherche-et-mobilisation-de-financement': CreditCard,
 };
 
 interface MegaMenuFinancementProps {

@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { MapPin, Mail, Phone, BookOpen, TrendingUp, Briefcase } from 'lucide-react';
+import { MapPin, Mail, Phone, BookOpen, TrendingUp,BarChart2, Briefcase } from 'lucide-react';
 import { DESTINATIONS } from '@/data/catalogue';
 
 interface FooterProps {
@@ -130,6 +130,17 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                                         <TrendingUp className="w-4 h-4" />
                                     </span>
                                     <span className="text-sm font-medium">Financement</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button 
+                                    onClick={() => handleLinkClick('etude')} // <-- CORRIGÉ
+                                    className="group/item w-full flex items-center gap-3 text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1"
+                                >
+                                    <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 group-hover/item:from-red-600 group-hover/item:to-orange-600 transition-all duration-300 shadow-lg">
+                                        <BarChart2 className="w-4 h-4" />
+                                    </span>
+                                    <span className="text-sm font-medium">Etudes</span>
                                 </button>
                             </li>
                             <li>
