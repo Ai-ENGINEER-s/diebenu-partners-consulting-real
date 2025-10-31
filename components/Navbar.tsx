@@ -733,23 +733,27 @@
 // };
 
 
+
+
+
 // app/components/Navbar.tsx
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Menu, X, ChevronDown, FileText, ChevronRight, BookOpen, Briefcase, Zap, Search, LayoutGrid, Award, Loader2, Target, BarChart2, BriefcaseBusiness, Settings } from 'lucide-react';
+import { Menu, X, ChevronDown, FileText, ChevronRight, BookOpen, Briefcase, Zap, Search, LayoutGrid, Award, Loader2 } from 'lucide-react';
 import Image from "next/image";
 import { FORMATION_CATALOGUE } from '@/data/catalogue';
-import { Etude_CATALOGUE } from '@/data/catalogue'; 
-import { Conseil_CATALOGUE } from '@/data/catalogue'; 
-import { Financement_CATALOGUE } from '@/data/catalogue'; 
+import { Etude_CATALOGUE } from '@/data/catalogue';
+import { Conseil_CATALOGUE } from '@/data/catalogue';
+import { Financement_CATALOGUE } from '@/data/catalogue';
 import MegaMenuFormation from '@/components/MegaMenuFormation';
 import MegaMenuEtude from '@/components/MegaMenuEtude';
-import MegaMenuConseil from '@/components/MegaMenuConseil'; 
-import MegaMenuFinancement from '@/components/MegaMenuFinancement'; 
+import MegaMenuConseil from '@/components/MegaMenuConseil';
+import MegaMenuFinancement from '@/components/MegaMenuFinancement';
 import { Theme, SearchResult, ThemeForOtherPages, ModuleForOtherPages } from '@/types/index';
 
-
+// =========================================================================
+// TYPES & INTERFACES
 // =========================================================================
 
 interface NavbarProps {
@@ -758,24 +762,26 @@ interface NavbarProps {
     setSelectedTheme: (theme: Theme) => void;
     setSelectedEtudeTheme: (theme: ThemeForOtherPages) => void;
     setSelectedEtudeModule: (module: ModuleForOtherPages) => void;
-    setSelectedConseilTheme: (theme: ThemeForOtherPages) => void; 
+    setSelectedConseilTheme: (theme: ThemeForOtherPages) => void;
     setSelectedConseilModule: (module: ModuleForOtherPages) => void;
-    setSelectedFinancementTheme: (theme: ThemeForOtherPages) => void; 
-    setSelectedFinancementModule: (module: ModuleForOtherPages) => void; 
+    setSelectedFinancementTheme: (theme: ThemeForOtherPages) => void;
+    setSelectedFinancementModule: (module: ModuleForOtherPages) => void;
 }
 
-// ============ Composant Principal Navbar ============
+// =========================================================================
+// COMPOSANT PRINCIPAL NAVBAR
+// =========================================================================
 
-export default function Navbar({ 
-    currentPage, 
-    setCurrentPage, 
-    setSelectedTheme, 
+export default function Navbar({
+    currentPage,
+    setCurrentPage,
+    setSelectedTheme,
     setSelectedEtudeTheme,
     setSelectedEtudeModule,
     setSelectedConseilTheme,
     setSelectedConseilModule,
-    setSelectedFinancementTheme, 
-    setSelectedFinancementModule 
+    setSelectedFinancementTheme,
+    setSelectedFinancementModule
 }: NavbarProps) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -785,21 +791,24 @@ export default function Navbar({
     const [searchTerm, setSearchTerm] = useState('');
     const [searchLoading, setSearchLoading] = useState(false);
 
-    // ... (Fonction de recherche, useEffects... restent inchangés) ...
-     // Fonction de recherche
-     const searchResults: SearchResult[] = useMemo(() => {
+    // =====================================================================
+    // FONCTION DE RECHERCHE MULTI-CATALOGUES
+    // =====================================================================
+    const searchResults: SearchResult[] = useMemo(() => {
         if (!searchTerm || searchTerm.length < 2) return [];
         
         const lowerSearch = searchTerm.toLowerCase();
         const results: SearchResult[] = [];
 
+        // RECHERCHE DANS FORMATIONS
         FORMATION_CATALOGUE.forEach(theme => {
             if (theme.title.toLowerCase().includes(lowerSearch)) {
                 results.push({
                     type: 'theme',
                     title: theme.title,
-                    detail: `${theme.modules.length} modules disponibles`,
+                    detail: `${theme.modules.length} modules - Formation`, // CORRIGÉ: Backticks
                     targetTheme: theme,
+                    pageType: 'formation',
                 });
             }
 
@@ -810,26 +819,116 @@ export default function Navbar({
                 if (matchCode || matchTitle) {
                     results.push({
                         type: 'module',
-                        title: `${module.code} : ${module.title}`,
-                        detail: `Thème: ${theme.title}`,
+                        title: `${module.code} : ${module.title}`, // CORRIGÉ: Backticks
+                        detail: `Thème: ${theme.title} - Formation`, // CORRIGÉ: Backticks
                         targetTheme: theme,
                         moduleCode: module.code,
+                        pageType: 'formation',
+                    });
+                }
+            });
+        });
+
+        // RECHERCHE DANS ÉTUDES
+        Etude_CATALOGUE.forEach(theme => {
+            if (theme.title.toLowerCase().includes(lowerSearch)) {
+                results.push({
+                    type: 'theme',
+                    title: theme.title,
+                    detail: `${theme.modules.length} études - Études`, // CORRIGÉ: Backticks
+                    targetTheme: theme,
+                    pageType: 'etude',
+                });
+            }
+
+            theme.modules.forEach(module => {
+                const matchCode = module.code.toLowerCase().includes(lowerSearch);
+                const matchTitle = module.title.toLowerCase().includes(lowerSearch);
+                
+                if (matchCode || matchTitle) {
+                    results.push({
+                        type: 'module',
+                        title: `${module.code} : ${module.title}`, // CORRIGÉ: Backticks
+                        detail: `Thème: ${theme.title} - Études`, // CORRIGÉ: Backticks
+                        targetTheme: theme,
+                        moduleCode: module.code,
+                        pageType: 'etude',
+                    });
+                }
+            });
+        });
+
+        // RECHERCHE DANS CONSEIL
+        Conseil_CATALOGUE.forEach(theme => {
+            if (theme.title.toLowerCase().includes(lowerSearch)) {
+                results.push({
+                    type: 'theme',
+                    title: theme.title,
+                    detail: `${theme.modules.length} prestations - Conseil`, // CORRIGÉ: Backticks
+                    targetTheme: theme,
+                    pageType: 'conseil',
+                });
+            }
+
+            theme.modules.forEach(module => {
+                const matchCode = module.code.toLowerCase().includes(lowerSearch);
+                const matchTitle = module.title.toLowerCase().includes(lowerSearch);
+                
+                if (matchCode || matchTitle) {
+                    results.push({
+                        type: 'module',
+                        title: `${module.code} : ${module.title}`, // CORRIGÉ: Backticks
+                        detail: `Thème: ${theme.title} - Conseil`, // CORRIGÉ: Backticks
+                        targetTheme: theme,
+                        moduleCode: module.code,
+                        pageType: 'conseil',
+                    });
+                }
+            });
+        });
+
+        // RECHERCHE DANS FINANCEMENT
+        Financement_CATALOGUE.forEach(theme => {
+            if (theme.title.toLowerCase().includes(lowerSearch)) {
+                results.push({
+                    type: 'theme',
+                    title: theme.title,
+                    detail: `${theme.modules.length} prestations - Financement`, // CORRIGÉ: Backticks
+                    targetTheme: theme,
+                    pageType: 'financement',
+                });
+            }
+
+            theme.modules.forEach(module => {
+                const matchCode = module.code.toLowerCase().includes(lowerSearch);
+                const matchTitle = module.title.toLowerCase().includes(lowerSearch);
+                
+                if (matchCode || matchTitle) {
+                    results.push({
+                        type: 'module',
+                        title: `${module.code} : ${module.title}`, // CORRIGÉ: Backticks
+                        detail: `Thème: ${theme.title} - Financement`, // CORRIGÉ: Backticks
+                        targetTheme: theme,
+                        moduleCode: module.code,
+                        pageType: 'financement',
                     });
                 }
             });
         });
 
         const uniqueResults = Array.from(new Map(results.map(item => [item.title, item])).values());
-        return uniqueResults.slice(0, 8);
+        return uniqueResults.slice(0, 12);
     }, [searchTerm]);
 
+    // =====================================================================
+    // EFFECTS
+    // =====================================================================
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 80);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Empêcher le scroll du body quand le menu mobile est ouvert
     useEffect(() => {
         if (mobileMenuOpen) {
             document.body.style.overflow = 'hidden';
@@ -841,17 +940,20 @@ export default function Navbar({
         };
     }, [mobileMenuOpen]);
 
+    // =====================================================================
+    // NAVIGATION
+    // =====================================================================
     const navItems = [
         { label: 'Accueil', page: 'home', icon: LayoutGrid },
         { label: 'Formations', page: 'formation', hasMega: true, icon: BookOpen },
         { label: 'Conseil', page: 'conseil', hasMega: true, icon: Briefcase },
-        { label: 'Recherche de Financement', page: 'recherche', hasMega: true, icon: Zap }, // <-- MODIFIÉ
+        { label: 'Recherche de Financement', page: 'recherche', hasMega: true, icon: Zap },
         { label: 'Etudes', page: 'etude', hasMega: true, icon: FileText },
         { label: 'À propos', page: 'about', icon: Award },
     ];
 
     const handlePageChange = (page: string) => {
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0);
         setCurrentPage(page);
         setActiveMegaMenu(null);
         setMobileMenuOpen(false);
@@ -859,34 +961,28 @@ export default function Navbar({
         setIsSearchOpen(false);
     };
 
-    // Handler pour FORMATION (Utilisé par la RECHERCHE)
+    // =====================================================================
+    // HANDLERS POUR FORMATION
+    // =====================================================================
     const handleThemeSelect = (theme: Theme) => {
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0);
         setSelectedTheme(theme);
-        setCurrentPage('theme'); // <-- CORRECT pour la recherche (va à la page détail)
+        setCurrentPage('theme');
         setActiveMegaMenu(null);
         setMobileMenuOpen(false);
         setMobileSubMenuOpen(null);
         setIsSearchOpen(false);
     };
 
-    // =================================================================
-    // NOUVEAU HANDLER (Pour le Mega Menu et le Menu Mobile)
-    // =================================================================
     const handleMegaMenuFormationSelect = (theme: Theme) => {
-        // Définit l'ancre AVANT de changer de page
-        window.location.hash = `theme-${theme.slug}`;
+        window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
         
-        // Si on est déjà sur la page formation, on force le scroll
         if (currentPage === 'formation') {
-             const element = document.getElementById(`theme-${theme.slug}`);
+             const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
              if (element) {
-                 // Le scrollMarginTop sera géré par le CSS/style sur FormationPage
                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
              }
         } else {
-            // Sinon, on change de page (le useEffect de FormationPage s'en occupera)
-            // On s'assure que le scroll est à 0 avant que le hash soit appliqué
             window.scrollTo(0, 0);
             setCurrentPage('formation');
         }
@@ -896,13 +992,23 @@ export default function Navbar({
         setMobileSubMenuOpen(null);
         setIsSearchOpen(false);
     };
-    // =================================================================
 
-    // Handlers pour ETUDE
+    // =====================================================================
+    // HANDLERS POUR ÉTUDES
+    // =====================================================================
     const handleEtudeThemeSelect = (theme: ThemeForOtherPages) => {
-        window.scrollTo(0, 0); 
-        setSelectedEtudeTheme(theme);
-        setCurrentPage('etude'); 
+        window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+        
+        if (currentPage === 'etude') {
+             const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+             if (element) {
+                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+             }
+        } else {
+            window.scrollTo(0, 0);
+            setCurrentPage('etude');
+        }
+        
         setActiveMegaMenu(null);
         setMobileMenuOpen(false);
         setMobileSubMenuOpen(null);
@@ -910,21 +1016,32 @@ export default function Navbar({
     };
     
     const handleEtudeModuleSelect = (module: ModuleForOtherPages, theme: ThemeForOtherPages) => {
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0);
         setSelectedEtudeTheme(theme);
         setSelectedEtudeModule(module);
-        setCurrentPage('etude-detail'); 
+        setCurrentPage('etude-detail');
         setActiveMegaMenu(null);
         setMobileMenuOpen(false);
         setMobileSubMenuOpen(null);
         setIsSearchOpen(false);
     };
 
-    // Handlers pour CONSEIL
+    // =====================================================================
+    // HANDLERS POUR CONSEIL
+    // =====================================================================
     const handleConseilThemeSelect = (theme: ThemeForOtherPages) => {
-        window.scrollTo(0, 0); 
-        setSelectedConseilTheme(theme);
-        setCurrentPage('conseil'); 
+        window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+        
+        if (currentPage === 'conseil') {
+             const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+             if (element) {
+                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+             }
+        } else {
+            window.scrollTo(0, 0);
+            setCurrentPage('conseil');
+        }
+        
         setActiveMegaMenu(null);
         setMobileMenuOpen(false);
         setMobileSubMenuOpen(null);
@@ -932,7 +1049,7 @@ export default function Navbar({
     };
     
     const handleConseilModuleSelect = (module: ModuleForOtherPages, theme: ThemeForOtherPages) => {
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0);
         setSelectedConseilTheme(theme);
         setSelectedConseilModule(module);
         setCurrentPage('conseil-detail');
@@ -942,13 +1059,22 @@ export default function Navbar({
         setIsSearchOpen(false);
     };
 
-    // =======================================================
-    // Handlers pour FINANCEMENT
-    // =======================================================
+    // =====================================================================
+    // HANDLERS POUR FINANCEMENT
+    // =====================================================================
     const handleFinancementThemeSelect = (theme: ThemeForOtherPages) => {
-        window.scrollTo(0, 0); 
-        setSelectedFinancementTheme(theme);
-        setCurrentPage('recherche'); 
+        window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+        
+        if (currentPage === 'recherche') {
+             const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+             if (element) {
+                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+             }
+        } else {
+            window.scrollTo(0, 0);
+            setCurrentPage('recherche');
+        }
+        
         setActiveMegaMenu(null);
         setMobileMenuOpen(false);
         setMobileSubMenuOpen(null);
@@ -956,18 +1082,19 @@ export default function Navbar({
     };
     
     const handleFinancementModuleSelect = (module: ModuleForOtherPages, theme: ThemeForOtherPages) => {
-        window.scrollTo(0, 0); 
-        setSelectedFinancementTheme(theme); 
-        setSelectedFinancementModule(module); 
-        setCurrentPage('financement-detail'); 
+        window.scrollTo(0, 0);
+        setSelectedFinancementTheme(theme);
+        setSelectedFinancementModule(module);
+        setCurrentPage('financement-detail');
         setActiveMegaMenu(null);
         setMobileMenuOpen(false);
         setMobileSubMenuOpen(null);
         setIsSearchOpen(false);
     };
-    // =======================================================
 
-    // ... (handlers de recherche... restent inchangés) ...
+    // =====================================================================
+    // HANDLERS POUR RECHERCHE
+    // =====================================================================
     const handleSearchClick = () => {
         setIsSearchOpen(true);
         setSearchTerm('');
@@ -992,18 +1119,112 @@ export default function Navbar({
     };
 
     const handleSearchSelect = (result: SearchResult) => {
-        // CORRECTION : Le searchSelect DOIT utiliser handleThemeSelect
-        // (qui amène à la page de détail 'theme')
-        handleThemeSelect(result.targetTheme);
+        const theme = result.targetTheme;
+        const pageType = result.pageType;
+
+        // Fermer la recherche
         setIsSearchOpen(false);
         setSearchTerm('');
+
+        // Selon le type de page, rediriger vers la section du thème
+        switch (pageType) {
+            case 'formation':
+                if (result.type === 'theme') {
+                    // Rediriger vers la section du thème dans la page formation
+                    window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+                    if (currentPage === 'formation') {
+                        const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    } else {
+                        window.scrollTo(0, 0);
+                        setCurrentPage('formation');
+                    }
+                } else {
+                    // Module sélectionné - aller à la page de détail
+                    window.scrollTo(0, 0);
+                    setSelectedTheme(theme as Theme);
+                    setCurrentPage('theme');
+                }
+                break;
+
+            case 'etude':
+                if (result.type === 'theme') {
+                    window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+                    if (currentPage === 'etude') {
+                        const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    } else {
+                        window.scrollTo(0, 0);
+                        setCurrentPage('etude');
+                    }
+                } else {
+                    window.scrollTo(0, 0);
+                    setSelectedEtudeTheme(theme);
+                    const module = (theme as ThemeForOtherPages).modules.find(m => m.code === result.moduleCode);
+                    if (module) setSelectedEtudeModule(module);
+                    setCurrentPage('etude-detail');
+                }
+                break;
+
+            case 'conseil':
+                if (result.type === 'theme') {
+                    window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+                    if (currentPage === 'conseil') {
+                        const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    } else {
+                        window.scrollTo(0, 0);
+                        setCurrentPage('conseil');
+                    }
+                } else {
+                    window.scrollTo(0, 0);
+                    setSelectedConseilTheme(theme);
+                    const module = (theme as ThemeForOtherPages).modules.find(m => m.code === result.moduleCode);
+                    if (module) setSelectedConseilModule(module);
+                    setCurrentPage('conseil-detail');
+                }
+                break;
+
+            case 'financement':
+                if (result.type === 'theme') {
+                    window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+                    if (currentPage === 'recherche') {
+                        const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    } else {
+                        window.scrollTo(0, 0);
+                        setCurrentPage('recherche');
+                    }
+                } else {
+                    window.scrollTo(0, 0);
+                    setSelectedFinancementTheme(theme);
+                    const module = (theme as ThemeForOtherPages).modules.find(m => m.code === result.moduleCode);
+                    if (module) setSelectedFinancementModule(module);
+                    setCurrentPage('financement-detail');
+                }
+                break;
+        }
+
+        setActiveMegaMenu(null);
+        setMobileMenuOpen(false);
+        setMobileSubMenuOpen(null);
     };
 
     const toggleMobileSubMenu = (page: string) => {
         setMobileSubMenuOpen(mobileSubMenuOpen === page ? null : page);
     };
 
-
+    // =====================================================================
+    // RENDER
+    // =====================================================================
     return (
         <>
             <nav 
@@ -1035,7 +1256,6 @@ export default function Navbar({
                                     onMouseEnter={() => item.hasMega ? setActiveMegaMenu(item.page) : setActiveMegaMenu(null)}
                                     className="relative group"
                                 >
-                                    {/* Bouton stylisé */}
                                     <button
                                         onClick={() => handlePageChange(item.page)}
                                         className={`text-base font-semibold transition-all duration-300 flex items-center
@@ -1046,12 +1266,12 @@ export default function Navbar({
                                                     activeMegaMenu === item.page 
                                                     ? 'bg-red-50 text-red-700'
                                                     : 'hover:bg-red-50'
-                                                    }`
+                                                  }`
                                         }
                                         `}
                                     >
                                         {item.label}
-                                        {item.hasMega && <ChevronDown className={`w-4 h-4 ml-1.5 transition-transform duration-300 ${activeMegaMenu === item.page ? 'rotate-180' : 'rotate-0'}`} />}
+                                        {item.hasMega && <ChevronDown className={`w-4 h-4 ml-1.5 transition-transform duration-300 ${activeMegaMenu === item.page ? 'rotate-180' : 'rotate-0'}`} />} {/* CORRIGÉ: className avec backticks */}
                                     </button>
                                     {activeMegaMenu === item.page && item.hasMega && (
                                         <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-red-600 rounded-full animate-pulse"></div>
@@ -1060,11 +1280,11 @@ export default function Navbar({
                             ))}
                         </div>
 
-                        {/* Actions additionnelles (Recherche et CTA) */}
+                        {/* Actions additionnelles */}
                         <div className="hidden lg:flex items-center space-x-4">
                             <button 
                                 onClick={handleSearchClick}
-                                className={`p-3 rounded-full transition-all text-gray-500 hover:text-red-600 hover:bg-gray-100`}
+                                className="p-3 rounded-full transition-all text-gray-500 hover:text-red-600 hover:bg-gray-100" // CORRIGÉ: Guillemets ajoutés
                             >
                                 <Search className="w-5 h-5" />
                             </button>
@@ -1086,12 +1306,9 @@ export default function Navbar({
                     </div>
                 </div>
                 
-                {/* Mega Menus Desktop (Pleine largeur) */}
+                {/* Mega Menus Desktop */}
                 <div className="hidden lg:block">
                     {activeMegaMenu === 'formation' && (
-                        // ================================================
-                        // MODIFICATION ICI : Utilise le nouveau handler
-                        // ================================================
                         <MegaMenuFormation onThemeSelect={handleMegaMenuFormationSelect} />
                     )}
                     
@@ -1118,13 +1335,11 @@ export default function Navbar({
                 </div>
             </nav>
 
-            {/* Menu Mobile - En dehors de la nav principale */}
+            {/* Menu Mobile */}
             {mobileMenuOpen && (
                 <div className="lg:hidden fixed inset-0 z-40 bg-white">
-                    {/* Espace pour la navbar */}
                     <div className="h-24"></div>
                     
-                    {/* Contenu du menu */}
                     <div className="h-[calc(100vh-6rem)] overflow-y-auto">
                         <div className="px-6 py-4 space-y-2">
                             {navItems.map(item => (
@@ -1154,15 +1369,12 @@ export default function Navbar({
                                         )}
                                     </button>
 
-                                    {/* Sous-menu mobile pour Formations */}
+                                    {/* Sous-menus mobiles */}
                                     {item.page === 'formation' && mobileSubMenuOpen === 'formation' && (
                                         <div className="mt-2 ml-4 space-y-1 bg-gray-50 rounded-xl p-3">
                                             {FORMATION_CATALOGUE.slice(0, 8).map(theme => (
                                                 <button
                                                     key={theme.slug}
-                                                    // ================================================
-                                                    // MODIFICATION ICI : Utilise le nouveau handler
-                                                    // ================================================
                                                     onClick={() => handleMegaMenuFormationSelect(theme)}
                                                     className="w-full text-left px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-white hover:text-red-700 transition-all flex items-center justify-between group"
                                                 >
@@ -1179,7 +1391,6 @@ export default function Navbar({
                                         </div>
                                     )}
 
-                                    {/* Sous-menu mobile pour CONSEIL */}
                                     {item.page === 'conseil' && mobileSubMenuOpen === 'conseil' && (
                                         <div className="mt-2 ml-4 space-y-1 bg-gray-50 rounded-xl p-3">
                                             {Conseil_CATALOGUE.map(theme => (
@@ -1196,12 +1407,11 @@ export default function Navbar({
                                                 onClick={() => handlePageChange('conseil')}
                                                 className="w-full text-left px-4 py-3 rounded-lg text-sm font-semibold text-red-600 hover:bg-white transition-all mt-2 border-t border-gray-200 pt-4"
                                             >
-                                                Voir tous les pôles de conseil →
+                                                Voir tous les pôles →
                                             </button>
                                         </div>
                                     )}
 
-                                    {/* Sous-menu mobile pour FINANCEMENT */}
                                     {item.page === 'recherche' && mobileSubMenuOpen === 'recherche' && (
                                         <div className="mt-2 ml-4 space-y-1 bg-gray-50 rounded-xl p-3">
                                             {Financement_CATALOGUE.map(theme => (
@@ -1223,7 +1433,6 @@ export default function Navbar({
                                         </div>
                                     )}
 
-                                    {/* Sous-menu mobile pour ETUDE */}
                                     {item.page === 'etude' && mobileSubMenuOpen === 'etude' && (
                                         <div className="mt-2 ml-4 space-y-1 bg-gray-50 rounded-xl p-3">
                                             {Etude_CATALOGUE.map(theme => (
@@ -1240,11 +1449,10 @@ export default function Navbar({
                                                 onClick={() => handlePageChange('etude')}
                                                 className="w-full text-left px-4 py-3 rounded-lg text-sm font-semibold text-red-600 hover:bg-white transition-all mt-2 border-t border-gray-200 pt-4"
                                             >
-                                                Voir tous les pôles d'étude →
+                                                Voir tous les pôles →
                                             </button>
                                         </div>
                                     )}
-
                                 </div>
                             ))}
 
@@ -1269,13 +1477,13 @@ export default function Navbar({
                 </div>
             )}
 
-            {/* Overlay de Recherche (Reste inchangé) */}
+            {/* Overlay de Recherche */}
             <SearchOverlay 
                 isOpen={isSearchOpen}
                 searchTerm={searchTerm}
                 onSearchChange={handleSearchChange}
                 searchResults={searchResults}
-                onSelect={handleSearchSelect} // Garde l'ancien handler, c'est correct
+                onSelect={handleSearchSelect}
                 onClose={handleCloseSearch}
                 isLoading={searchLoading}
             />
@@ -1284,7 +1492,7 @@ export default function Navbar({
 }
 
 // =========================================================================
-// COMPOSANT : SEARCH OVERLAY (Reste inchangé)
+// COMPOSANT : SEARCH OVERLAY
 // =========================================================================
 interface SearchOverlayProps {
     isOpen: boolean;
@@ -1296,10 +1504,16 @@ interface SearchOverlayProps {
     isLoading: boolean;
 }
 
-const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSearchChange, searchResults, onSelect, onClose, isLoading }) => {
-    // ... (code de l'overlay de recherche inchangé) ...
-     // Fermeture avec touche Escape
-     useEffect(() => {
+const SearchOverlay: React.FC<SearchOverlayProps> = ({ 
+    isOpen, 
+    searchTerm, 
+    onSearchChange, 
+    searchResults, 
+    onSelect, 
+    onClose, 
+    isLoading 
+}) => {
+    useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isOpen) {
                 onClose();
@@ -1318,6 +1532,22 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
     }, [isOpen, onClose]);
 
     if (!isOpen) return null;
+
+    // Fonction pour obtenir l'icône et la couleur selon le type de page
+    const getPageIcon = (pageType?: string) => {
+        switch (pageType) {
+            case 'formation':
+                return { icon: BookOpen, bgColor: 'from-blue-100 to-blue-200', textColor: 'text-blue-600', badge: 'bg-blue-400' };
+            case 'etude':
+                return { icon: FileText, bgColor: 'from-purple-100 to-purple-200', textColor: 'text-purple-600', badge: 'bg-purple-400' };
+            case 'conseil':
+                return { icon: Briefcase, bgColor: 'from-green-100 to-green-200', textColor: 'text-green-600', badge: 'bg-green-400' };
+            case 'financement':
+                return { icon: Zap, bgColor: 'from-orange-100 to-orange-200', textColor: 'text-orange-600', badge: 'bg-orange-400' };
+            default:
+                return { icon: LayoutGrid, bgColor: 'from-gray-100 to-gray-200', textColor: 'text-gray-600', badge: 'bg-gray-400' };
+        }
+    };
 
     return (
         <div 
@@ -1339,11 +1569,9 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
                     
                     {/* Header avec barre de recherche */}
                     <div className="relative">
-                        {/* Bande décorative */}
                         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-red-600 to-red-500"></div>
                         
                         <div className="flex items-center gap-4 p-6 pb-5">
-                            {/* Icône de recherche animée */}
                             <div className="flex-shrink-0">
                                 {isLoading ? (
                                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
@@ -1356,17 +1584,15 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
                                 )}
                             </div>
 
-                            {/* Input de recherche */}
                             <input
                                 type="text"
-                                placeholder="Rechercher une formation, un module..."
+                                placeholder="Rechercher une formation, étude, conseil..."
                                 value={searchTerm}
                                 onChange={onSearchChange}
                                 className="flex-1 bg-transparent text-gray-900 text-lg font-medium placeholder-gray-400 focus:outline-none"
                                 autoFocus
                             />
 
-                            {/* Bouton clear */}
                             {searchTerm && (
                                 <button 
                                     onClick={() => onSearchChange({ target: { value: '' } } as any)}
@@ -1377,7 +1603,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
                                 </button>
                             )}
 
-                            {/* Bouton fermer */}
                             <button 
                                 onClick={onClose}
                                 className="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-100 hover:bg-red-100 flex items-center justify-center transition-colors group"
@@ -1387,29 +1612,26 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
                             </button>
                         </div>
 
-                        {/* Ligne de séparation subtile */}
                         <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
                     </div>
 
                     {/* Contenu des résultats */}
                     <div className="max-h-[60vh] overflow-y-auto">
                         {searchTerm.length < 2 ? (
-                            // État initial
                             <div className="px-6 py-16 text-center">
                                 <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                                     <Search className="w-10 h-10 text-gray-300" />
                                 </div>
                                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                    Recherchez dans notre catalogue
+                                    Recherchez dans tous nos catalogues
                                 </h3>
                                 <p className="text-sm text-gray-500 max-w-md mx-auto">
-                                    Tapez au moins 2 caractères pour commencer la recherche
+                                    Tapez au moins 2 caractères pour rechercher dans Formations, Études, Conseil et Financement
                                 </p>
                                 
-                                {/* Suggestions rapides */}
                                 <div className="mt-8 flex flex-wrap justify-center gap-2">
                                     <span className="text-xs text-gray-400 font-medium">Essayez :</span>
-                                    {['Leadership', 'Finance', 'Management', 'Digital'].map(term => (
+                                    {['Leadership', 'Finance', 'Management', 'Digital', 'Audit'].map(term => (
                                         <button
                                             key={term}
                                             onClick={() => onSearchChange({ target: { value: term } } as any)}
@@ -1421,7 +1643,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
                                 </div>
                             </div>
                         ) : !isLoading && searchResults.length === 0 ? (
-                            // Aucun résultat
                             <div className="px-6 py-16 text-center">
                                 <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
                                     <Search className="w-10 h-10 text-red-400" />
@@ -1434,7 +1655,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
                                 </p>
                             </div>
                         ) : (
-                            // Résultats de recherche
                             <div className="p-3">
                                 <div className="mb-3 px-3">
                                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -1443,46 +1663,42 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, searchTerm, onSea
                                 </div>
                                 
                                 <div className="space-y-1">
-                                    {searchResults.map((result, index) => (
-                                        <button
-                                            key={`${result.type}-${result.moduleCode || result.targetTheme.slug}-${index}`}
-                                            onClick={() => onSelect(result)}
-                                            className="w-full text-left p-4 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-50/50 transition-all duration-200 flex items-center gap-4 group border-2 border-transparent hover:border-red-100"
-                                        >
-                                            {/* Icône */}
-                                            <div className="flex-shrink-0">
-                                                {result.type === 'module' ? (
-                                                    <div className="w-12 h-12 bg-gradient-to-br from-red-100 to-red-200 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                        <BookOpen className="w-6 h-6 text-red-600" />
+                                    {searchResults.map((result, index) => {
+                                        const pageStyle = getPageIcon(result.pageType);
+                                        const IconComponent = pageStyle.icon;
+
+                                        return (
+                                            <button
+                                                key={`${result.type}-${result.moduleCode || result.targetTheme.slug}-${index}`} // CORRIGÉ: Backticks et accolades
+                                                onClick={() => onSelect(result)}
+                                                className="w-full text-left p-4 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-50/50 transition-all duration-200 flex items-center gap-4 group border-2 border-transparent hover:border-red-100"
+                                            >
+                                                <div className="flex-shrink-0">
+                                                    <div className={`w-12 h-12 bg-gradient-to-br ${pageStyle.bgColor} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}> {/* CORRIGÉ: className avec backticks */}
+                                                        <IconComponent className={`w-6 h-6 ${pageStyle.textColor}`} /> {/* CORRIGÉ: className avec backticks */}
                                                     </div>
-                                                ) : (
-                                                    <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                        <LayoutGrid className="w-6 h-6 text-blue-600" />
-                                                    </div>
-                                                )}
-                                            </div>
-                                            
-                                            {/* Contenu */}
-                                            <div className="flex-grow min-w-0">
-                                                <h4 className="font-semibold text-gray-900 group-hover:text-red-700 text-base leading-snug mb-1 truncate">
-                                                    {result.title}
-                                                </h4>
-                                                <p className="text-sm text-gray-500 truncate flex items-center gap-2">
-                                                    <span className={`w-2 h-2 rounded-full ${result.type === 'module' ? 'bg-red-400' : 'bg-blue-400'}`}></span>
-                                                    {result.detail}
-                                                </p>
-                                            </div>
-                                            
-                                            {/* Flèche */}
-                                            <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-red-600 group-hover:translate-x-1 transition-all flex-shrink-0" />
-                                        </button>
-                                    ))}
+                                                </div>
+                                                
+                                                <div className="flex-grow min-w-0">
+                                                    <h4 className="font-semibold text-gray-900 group-hover:text-red-700 text-base leading-snug mb-1 truncate">
+                                                        {result.title}
+                                                    </h4>
+                                                    <p className="text-sm text-gray-500 truncate flex items-center gap-2">
+                                                        <span className={`w-2 h-2 rounded-full ${pageStyle.badge}`}></span> {/* CORRIGÉ: className avec backticks */}
+                                                        {result.detail}
+                                                    </p>
+                                                </div>
+                                                
+                                                <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-red-600 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Footer avec raccourci clavier */}
+                    {/* Footer */}
                     <div className="border-t border-gray-100 px-6 py-3 bg-gray-50/50">
                         <div className="flex items-center justify-between text-xs text-gray-500">
                             <span className="flex items-center gap-2">

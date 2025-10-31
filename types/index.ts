@@ -40,14 +40,22 @@ interface Session {
 }
 
 
-
-
-interface SearchResult {
-    type: 'theme' | 'module';
-    title: string;
-    detail: string;
-    targetTheme: Theme;
-    moduleCode?: string;
+ interface SearchResult {
+  type: 'theme' | 'module';
+  title: string;
+  detail: string;
+  targetTheme: Theme | ThemeForOtherPages;
+  moduleCode?: string;
+  pageType?: 'formation' | 'etude' | 'conseil' | 'financement'; // NOUVEAU
 }
+
+
+// interface SearchResult {
+//     type: 'theme' | 'module';
+//     title: string;
+//     detail: string;
+//     targetTheme: Theme;
+//     moduleCode?: string;
+// }
 
 export type { Session, Module, Theme , SearchResult, ModuleForOtherPages, ThemeForOtherPages };
