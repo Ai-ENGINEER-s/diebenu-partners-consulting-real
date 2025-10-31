@@ -735,7 +735,6 @@
 
 
 
-
 // app/components/Navbar.tsx
 'use client';
 
@@ -806,7 +805,7 @@ export default function Navbar({
                 results.push({
                     type: 'theme',
                     title: theme.title,
-                    detail: `${theme.modules.length} modules - Formation`, // CORRIGÉ: Backticks
+                    detail: `${theme.modules.length} modules - Formation`,
                     targetTheme: theme,
                     pageType: 'formation',
                 });
@@ -819,8 +818,8 @@ export default function Navbar({
                 if (matchCode || matchTitle) {
                     results.push({
                         type: 'module',
-                        title: `${module.code} : ${module.title}`, // CORRIGÉ: Backticks
-                        detail: `Thème: ${theme.title} - Formation`, // CORRIGÉ: Backticks
+                        title: `${module.code} : ${module.title}`,
+                        detail: `Thème: ${theme.title} - Formation`,
                         targetTheme: theme,
                         moduleCode: module.code,
                         pageType: 'formation',
@@ -835,7 +834,7 @@ export default function Navbar({
                 results.push({
                     type: 'theme',
                     title: theme.title,
-                    detail: `${theme.modules.length} études - Études`, // CORRIGÉ: Backticks
+                    detail: `${theme.modules.length} études - Études`,
                     targetTheme: theme,
                     pageType: 'etude',
                 });
@@ -848,8 +847,8 @@ export default function Navbar({
                 if (matchCode || matchTitle) {
                     results.push({
                         type: 'module',
-                        title: `${module.code} : ${module.title}`, // CORRIGÉ: Backticks
-                        detail: `Thème: ${theme.title} - Études`, // CORRIGÉ: Backticks
+                        title: `${module.code} : ${module.title}`,
+                        detail: `Thème: ${theme.title} - Études`,
                         targetTheme: theme,
                         moduleCode: module.code,
                         pageType: 'etude',
@@ -864,7 +863,7 @@ export default function Navbar({
                 results.push({
                     type: 'theme',
                     title: theme.title,
-                    detail: `${theme.modules.length} prestations - Conseil`, // CORRIGÉ: Backticks
+                    detail: `${theme.modules.length} prestations - Conseil`,
                     targetTheme: theme,
                     pageType: 'conseil',
                 });
@@ -877,8 +876,8 @@ export default function Navbar({
                 if (matchCode || matchTitle) {
                     results.push({
                         type: 'module',
-                        title: `${module.code} : ${module.title}`, // CORRIGÉ: Backticks
-                        detail: `Thème: ${theme.title} - Conseil`, // CORRIGÉ: Backticks
+                        title: `${module.code} : ${module.title}`,
+                        detail: `Thème: ${theme.title} - Conseil`,
                         targetTheme: theme,
                         moduleCode: module.code,
                         pageType: 'conseil',
@@ -893,7 +892,7 @@ export default function Navbar({
                 results.push({
                     type: 'theme',
                     title: theme.title,
-                    detail: `${theme.modules.length} prestations - Financement`, // CORRIGÉ: Backticks
+                    detail: `${theme.modules.length} prestations - Financement`,
                     targetTheme: theme,
                     pageType: 'financement',
                 });
@@ -906,8 +905,8 @@ export default function Navbar({
                 if (matchCode || matchTitle) {
                     results.push({
                         type: 'module',
-                        title: `${module.code} : ${module.title}`, // CORRIGÉ: Backticks
-                        detail: `Thème: ${theme.title} - Financement`, // CORRIGÉ: Backticks
+                        title: `${module.code} : ${module.title}`,
+                        detail: `Thème: ${theme.title} - Financement`,
                         targetTheme: theme,
                         moduleCode: module.code,
                         pageType: 'financement',
@@ -939,6 +938,36 @@ export default function Navbar({
             document.body.style.overflow = 'unset';
         };
     }, [mobileMenuOpen]);
+
+    // =====================================================================
+    // [NOUVEAU] EFFECT POUR SCROLL ANCRE (HASH)
+    // =====================================================================
+    useEffect(() => {
+        // Cet effet se déclenche quand la page change (via setCurrentPage)
+        // pour gérer le scroll vers une ancre (hash)
+        
+        const hash = window.location.hash;
+        
+        // S'il y a un hash (ex: #theme-management)
+        if (hash) {
+            // On attend un court instant pour que la nouvelle page (ex: 'formation')
+            // ait eu le temps de s'afficher et que l'élément (l'ID) existe dans le DOM.
+            const timer = setTimeout(() => {
+                const id = hash.substring(1); // Enlève le '#'
+                if (id) {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        // On utilise 'start' (ou 'center') au lieu de 'block: start'
+                        // pour une meilleure compatibilité et un meilleur positionnement
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }, 100); // 100ms de délai. Ajustez si nécessaire.
+
+            return () => clearTimeout(timer);
+        }
+    }, [currentPage]); // Se déclenche à chaque fois que currentPage est mis à jour
+
 
     // =====================================================================
     // NAVIGATION
@@ -975,14 +1004,18 @@ export default function Navbar({
     };
 
     const handleMegaMenuFormationSelect = (theme: Theme) => {
-        window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+        const hashId = `theme-${theme.slug}`;
+        window.location.hash = hashId;
         
         if (currentPage === 'formation') {
-             const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+             // Si déjà sur la page, le useEffect [currentPage] ne se déclenche pas
+             // On doit donc scroller manuellement
+             const element = document.getElementById(hashId);
              if (element) {
                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
              }
         } else {
+            // Si on change de page, le nouveau useEffect s'occupera du scroll
             window.scrollTo(0, 0);
             setCurrentPage('formation');
         }
@@ -997,10 +1030,11 @@ export default function Navbar({
     // HANDLERS POUR ÉTUDES
     // =====================================================================
     const handleEtudeThemeSelect = (theme: ThemeForOtherPages) => {
-        window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+        const hashId = `theme-${theme.slug}`;
+        window.location.hash = hashId;
         
         if (currentPage === 'etude') {
-             const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+             const element = document.getElementById(hashId);
              if (element) {
                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
              }
@@ -1030,10 +1064,11 @@ export default function Navbar({
     // HANDLERS POUR CONSEIL
     // =====================================================================
     const handleConseilThemeSelect = (theme: ThemeForOtherPages) => {
-        window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+        const hashId = `theme-${theme.slug}`;
+        window.location.hash = hashId;
         
         if (currentPage === 'conseil') {
-             const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+             const element = document.getElementById(hashId);
              if (element) {
                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
              }
@@ -1063,10 +1098,11 @@ export default function Navbar({
     // HANDLERS POUR FINANCEMENT
     // =====================================================================
     const handleFinancementThemeSelect = (theme: ThemeForOtherPages) => {
-        window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+        const hashId = `theme-${theme.slug}`;
+        window.location.hash = hashId;
         
         if (currentPage === 'recherche') {
-             const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+             const element = document.getElementById(hashId);
              if (element) {
                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
              }
@@ -1121,19 +1157,19 @@ export default function Navbar({
     const handleSearchSelect = (result: SearchResult) => {
         const theme = result.targetTheme;
         const pageType = result.pageType;
+        const hashId = `theme-${theme.slug}`;
 
         // Fermer la recherche
         setIsSearchOpen(false);
         setSearchTerm('');
 
-        // Selon le type de page, rediriger vers la section du thème
+        // Selon le type de page, rediriger
         switch (pageType) {
             case 'formation':
                 if (result.type === 'theme') {
-                    // Rediriger vers la section du thème dans la page formation
-                    window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+                    window.location.hash = hashId;
                     if (currentPage === 'formation') {
-                        const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+                        const element = document.getElementById(hashId);
                         if (element) {
                             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
@@ -1142,7 +1178,6 @@ export default function Navbar({
                         setCurrentPage('formation');
                     }
                 } else {
-                    // Module sélectionné - aller à la page de détail
                     window.scrollTo(0, 0);
                     setSelectedTheme(theme as Theme);
                     setCurrentPage('theme');
@@ -1151,9 +1186,9 @@ export default function Navbar({
 
             case 'etude':
                 if (result.type === 'theme') {
-                    window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+                    window.location.hash = hashId;
                     if (currentPage === 'etude') {
-                        const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+                        const element = document.getElementById(hashId);
                         if (element) {
                             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
@@ -1172,9 +1207,9 @@ export default function Navbar({
 
             case 'conseil':
                 if (result.type === 'theme') {
-                    window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+                    window.location.hash = hashId;
                     if (currentPage === 'conseil') {
-                        const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+                        const element = document.getElementById(hashId);
                         if (element) {
                             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
@@ -1193,9 +1228,9 @@ export default function Navbar({
 
             case 'financement':
                 if (result.type === 'theme') {
-                    window.location.hash = `theme-${theme.slug}`; // CORRIGÉ: Backticks
+                    window.location.hash = hashId;
                     if (currentPage === 'recherche') {
-                        const element = document.getElementById(`theme-${theme.slug}`); // CORRIGÉ: Backticks
+                        const element = document.getElementById(hashId);
                         if (element) {
                             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
@@ -1271,7 +1306,7 @@ export default function Navbar({
                                         `}
                                     >
                                         {item.label}
-                                        {item.hasMega && <ChevronDown className={`w-4 h-4 ml-1.5 transition-transform duration-300 ${activeMegaMenu === item.page ? 'rotate-180' : 'rotate-0'}`} />} {/* CORRIGÉ: className avec backticks */}
+                                        {item.hasMega && <ChevronDown className={`w-4 h-4 ml-1.5 transition-transform duration-300 ${activeMegaMenu === item.page ? 'rotate-180' : 'rotate-0'}`} />}
                                     </button>
                                     {activeMegaMenu === item.page && item.hasMega && (
                                         <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-red-600 rounded-full animate-pulse"></div>
@@ -1284,7 +1319,7 @@ export default function Navbar({
                         <div className="hidden lg:flex items-center space-x-4">
                             <button 
                                 onClick={handleSearchClick}
-                                className="p-3 rounded-full transition-all text-gray-500 hover:text-red-600 hover:bg-gray-100" // CORRIGÉ: Guillemets ajoutés
+                                className="p-3 rounded-full transition-all text-gray-500 hover:text-red-600 hover:bg-gray-100"
                             >
                                 <Search className="w-5 h-5" />
                             </button>
@@ -1669,13 +1704,13 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
 
                                         return (
                                             <button
-                                                key={`${result.type}-${result.moduleCode || result.targetTheme.slug}-${index}`} // CORRIGÉ: Backticks et accolades
+                                                key={`${result.type}-${result.moduleCode || result.targetTheme.slug}-${index}`}
                                                 onClick={() => onSelect(result)}
                                                 className="w-full text-left p-4 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-50/50 transition-all duration-200 flex items-center gap-4 group border-2 border-transparent hover:border-red-100"
                                             >
                                                 <div className="flex-shrink-0">
-                                                    <div className={`w-12 h-12 bg-gradient-to-br ${pageStyle.bgColor} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}> {/* CORRIGÉ: className avec backticks */}
-                                                        <IconComponent className={`w-6 h-6 ${pageStyle.textColor}`} /> {/* CORRIGÉ: className avec backticks */}
+                                                    <div className={`w-12 h-12 bg-gradient-to-br ${pageStyle.bgColor} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                                                        <IconComponent className={`w-6 h-6 ${pageStyle.textColor}`} />
                                                     </div>
                                                 </div>
                                                 
@@ -1684,7 +1719,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                                                         {result.title}
                                                     </h4>
                                                     <p className="text-sm text-gray-500 truncate flex items-center gap-2">
-                                                        <span className={`w-2 h-2 rounded-full ${pageStyle.badge}`}></span> {/* CORRIGÉ: className avec backticks */}
+                                                        <span className={`w-2 h-2 rounded-full ${pageStyle.badge}`}></span>
                                                         {result.detail}
                                                     </p>
                                                 </div>
