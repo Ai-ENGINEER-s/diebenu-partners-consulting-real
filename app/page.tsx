@@ -1,7 +1,7 @@
 'use client';
 
 // Ajout de 'useEffect' pour le scroll au chargement
-import React, { useState, ComponentType, useEffect } from 'react'; 
+import React, { useState, ComponentType, useEffect } from 'react';
 // === CORRECTION DES CHEMINS D'IMPORTATION ===
 import { Theme, Module, ThemeForOtherPages, ModuleForOtherPages } from '../types/index';
 import Navbar from '../components/Navbar';
@@ -148,7 +148,7 @@ export default function DiebenUPartners() {
       setSelectedFinancementModule(null);
     }
   };
-  
+
   // Effet pour remonter en haut lors du chargement initial
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -197,9 +197,12 @@ export default function DiebenUPartners() {
           />
         );
 
-      case 'theme':
+      // =================================================================
+      // CORRECTION : Renommage de 'theme' en 'formation-detail'
+      // =================================================================
+      case 'formation-detail':
         return selectedTheme && selectedModule ? (
-          <TypedThemePage
+          <TypedThemePage // C'est votre page de détail de module
             theme={selectedTheme}
             module={selectedModule}
             {...commonProps}
@@ -273,10 +276,14 @@ export default function DiebenUPartners() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* ================================================================= */}
+      {/* CORRECTION : Ajout de setSelectedModule à la Navbar               */}
+      {/* ================================================================= */}
       <Navbar
         currentPage={currentPage}
         setCurrentPage={handlePageChange}
         setSelectedTheme={setSelectedThemeSafe}
+        setSelectedModule={setSelectedModuleSafe} 
         setSelectedEtudeTheme={setSelectedEtudeThemeSafe}
         setSelectedEtudeModule={setSelectedEtudeModuleSafe}
         setSelectedConseilTheme={setSelectedConseilThemeSafe}

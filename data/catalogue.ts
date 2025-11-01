@@ -1263,9 +1263,6 @@ const FORMATION_CATALOGUE: Theme[] = [
   },
 ];
 
-
-
-
 const Etude_CATALOGUE: ThemeForOtherPages[] = [
 
   {
@@ -1413,8 +1410,6 @@ const Etude_CATALOGUE: ThemeForOtherPages[] = [
     ]
   },
 ]
-
-
 
 
 const Financement_CATALOGUE: ThemeForOtherPages[] = [
@@ -1601,6 +1596,9 @@ const Conseil_CATALOGUE: ThemeForOtherPages[] = [
   },
 
 ]
+
+
+
 export const DESTINATIONS = [
   { name: 'Casablanca', country: 'Maroc' },
   { name: 'Abidjan', country: 'Côte d\'Ivoire' },
