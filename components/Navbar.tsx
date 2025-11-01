@@ -825,7 +825,7 @@ interface NavbarProps {
   currentPage: string;
   setCurrentPage: (page: string) => void;
   setSelectedTheme: (theme: Theme) => void;
-  setSelectedModule: (module: Module) => void; // <-- PROP AJOUTÉE
+  setSelectedModule: (module: Module) => void;
   setSelectedEtudeTheme: (theme: ThemeForOtherPages) => void;
   setSelectedEtudeModule: (module: ModuleForOtherPages) => void;
   setSelectedConseilTheme: (theme: ThemeForOtherPages) => void;
@@ -840,7 +840,7 @@ export default function Navbar({
   currentPage,
   setCurrentPage,
   setSelectedTheme,
-  setSelectedModule, // <-- PROP AJOUTÉE
+  setSelectedModule,
   setSelectedEtudeTheme,
   setSelectedEtudeModule,
   setSelectedConseilTheme,
@@ -869,9 +869,6 @@ export default function Navbar({
 
     // 1. Recherche FORMATIONS (Modules SEULEMENT)
     FORMATION_CATALOGUE.forEach((theme) => {
-      // Recherche de Thème désactivée
-      // ...
-
       // Recherche de Module
       theme.modules.forEach((module) => {
         const matchCode = module.code.toLowerCase().includes(lowerSearch);
@@ -992,7 +989,6 @@ export default function Navbar({
   };
 
   // Handler pour la RECHERCHE (Module Formation)
-  // Note: Ce handler n'est plus utilisé par la recherche, mais peut être gardé
   const handleThemeSelect = (theme: Theme) => {
     window.scrollTo(0, 0);
     setSelectedTheme(theme);
@@ -1123,44 +1119,34 @@ export default function Navbar({
   };
 
   // =========================================================================
-  // HANDLER DE SÉLECTION DE RECHERCHE (CORRIGÉ)
-  // Gère tous les types de résultats (thèmes, modules, et de toutes les pages)
+  // HANDLER DE SÉLECTION DE RECHERCHE
   // =========================================================================
   const handleSearchSelect = (result: GenericSearchResult) => {
     switch (result.page) {
       case 'formation':
         if (result.type === 'theme') {
-          // Clic sur un THÈME de formation -> scroll vers la section
           handleMegaMenuFormationSelect(result.theme);
         } else if (result.type === 'module') {
-          // =======================================================
-          // CORRECTION PRINCIPALE (Comportement du clic sur un module)
-          // =======================================================
           window.scrollTo(0, 0);
-          setSelectedTheme(result.theme); // Définit le thème parent
-          setSelectedModule(result.module); // Définit le module spécifique
-          setCurrentPage('formation-detail'); // Va à la page de détail
+          setSelectedTheme(result.theme);
+          setSelectedModule(result.module);
+          setCurrentPage('formation-detail');
           setActiveMegaMenu(null);
           setMobileMenuOpen(false);
           setMobileSubMenuOpen(null);
-          // =======================================================
         }
         break;
       case 'conseil':
-        // Clic sur un module CONSEIL -> page détail
         handleConseilModuleSelect(result.module, result.theme);
         break;
       case 'etude':
-        // Clic sur un module ETUDE -> page détail
         handleEtudeModuleSelect(result.module, result.theme);
         break;
       case 'financement':
-        // Clic sur un module FINANCEMENT -> page détail
         handleFinancementModuleSelect(result.module, result.theme);
         break;
     }
 
-    // On ferme la recherche dans tous les cas
     setIsSearchOpen(false);
     setSearchTerm('');
   };
@@ -1175,7 +1161,7 @@ export default function Navbar({
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-700 ease-in-out ${
           scrolled
-            ? 'bg-white/70 backdrop-blur-3xl shadow-xl border-b border-white/50'
+            ? 'bg-white/70 backdrop-blur-3xl shadow-xl'
             : 'bg-white/90 backdrop-blur-md'
         }`}
         onMouseLeave={() => setActiveMegaMenu(null)}

@@ -197,12 +197,9 @@ export default function DiebenUPartners() {
           />
         );
 
-      // =================================================================
-      // CORRECTION : Renommage de 'theme' en 'formation-detail'
-      // =================================================================
       case 'formation-detail':
         return selectedTheme && selectedModule ? (
-          <TypedThemePage // C'est votre page de détail de module
+          <TypedThemePage
             theme={selectedTheme}
             module={selectedModule}
             {...commonProps}
@@ -276,9 +273,6 @@ export default function DiebenUPartners() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* ================================================================= */}
-      {/* CORRECTION : Ajout de setSelectedModule à la Navbar               */}
-      {/* ================================================================= */}
       <Navbar
         currentPage={currentPage}
         setCurrentPage={handlePageChange}
@@ -292,7 +286,8 @@ export default function DiebenUPartners() {
         setSelectedFinancementModule={setSelectedFinancementModuleSafe}
       />
 
-      <main className="pt-20">{renderPage()}</main>
+      {/* === CORRECTION : Suppression du padding-top qui créait le trait === */}
+      <main>{renderPage()}</main>
 
       <Footer setCurrentPage={handlePageChange} />
     </div>
