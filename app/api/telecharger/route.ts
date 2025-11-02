@@ -1,7 +1,8 @@
-// app/api/contact/route.ts
+// app/api/telecharger/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
+// Initialisation de Resend avec votre clé API
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
@@ -16,6 +17,8 @@ export async function POST(request: NextRequest) {
       submissionTime,
       sendThankYouEmail = false 
     } = body;
+
+    console.log('📥 Requête reçue:', { fullName, email, subject });
 
     // =========================================================================
     // VALIDATION ET ANTI-SPAM
@@ -32,6 +35,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Validation des champs requis
     if (!fullName || !email || !subject || !message) {
+      console.error('❌ Champs manquants');
       return NextResponse.json(
         { error: 'Tous les champs sont requis' },
         { status: 400 }
@@ -41,20 +45,14 @@ export async function POST(request: NextRequest) {
     // 3. Validation de l'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.error('❌ Email invalide:', email);
       return NextResponse.json(
         { error: 'Format d\'email invalide' },
         { status: 400 }
       );
     }
 
-    // 4. Protection contre la soumission trop rapide (moins de 3 secondes)
-    if (submissionTime && submissionTime < 3000) {
-      console.warn('⚠️ Soumission trop rapide - possible bot');
-      return NextResponse.json(
-        { error: 'Veuillez prendre le temps de remplir le formulaire' },
-        { status: 429 }
-      );
-    }
+    console.log('✅ Validation passée, envoi des emails...');
 
     // =========================================================================
     // ENVOI DE L'EMAIL DE NOTIFICATION (vers Diebenu)
@@ -65,31 +63,38 @@ export async function POST(request: NextRequest) {
       <html>
         <head>
           <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
             body {
-              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
               line-height: 1.6;
               color: #333;
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
+              background-color: #f5f5f5;
+            }
+            .container {
+              background: white;
+              border-radius: 12px;
+              overflow: hidden;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             .header {
               background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
               color: white;
               padding: 30px;
-              border-radius: 10px 10px 0 0;
               text-align: center;
             }
+            .header h1 {
+              margin: 0;
+              font-size: 24px;
+            }
             .content {
-              background: #f9fafb;
               padding: 30px;
-              border: 1px solid #e5e7eb;
-              border-top: none;
-              border-radius: 0 0 10px 10px;
             }
             .info-row {
-              background: white;
+              background: #f9fafb;
               padding: 15px;
               margin-bottom: 15px;
               border-radius: 8px;
@@ -109,10 +114,9 @@ export async function POST(request: NextRequest) {
               font-size: 15px;
             }
             .message-box {
-              background: white;
+              background: #f9fafb;
               padding: 20px;
               border-radius: 8px;
-              border: 1px solid #e5e7eb;
               margin-top: 15px;
             }
             .footer {
@@ -120,6 +124,7 @@ export async function POST(request: NextRequest) {
               padding: 20px;
               color: #6b7280;
               font-size: 12px;
+              background: #f9fafb;
             }
             .badge {
               display: inline-block;
@@ -134,51 +139,59 @@ export async function POST(request: NextRequest) {
           </style>
         </head>
         <body>
-          <div class="header">
-            <h1 style="margin: 0; font-size: 24px;">📬 Nouveau Message</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Formulaire de contact Diebenu & Partners</p>
-          </div>
-          
-          <div class="content">
-            <div class="info-row">
-              <span class="label">👤 Nom complet</span>
-              <span class="value">${fullName}</span>
+          <div class="container">
+            <div class="header">
+              <h1>📬 Nouveau Message</h1>
+              <p style="margin: 10px 0 0 0; opacity: 0.9;">Formulaire de téléchargement du catalogue</p>
             </div>
             
-            <div class="info-row">
-              <span class="label">📧 Email</span>
-              <span class="value">${email}</span>
-            </div>
-            
-            <div class="info-row">
-              <span class="label">📋 Sujet</span>
-              <span class="value">${subject}</span>
-            </div>
-            
-            <div class="message-box">
-              <span class="label">💬 Message</span>
-              <p class="value">${message.replace(/\n/g, '<br>')}</p>
-            </div>
+            <div class="content">
+              <div class="info-row">
+                <span class="label">👤 Nom complet</span>
+                <span class="value">${fullName}</span>
+              </div>
+              
+              <div class="info-row">
+                <span class="label">📧 Email</span>
+                <span class="value">${email}</span>
+              </div>
+              
+              <div class="info-row">
+                <span class="label">📋 Sujet</span>
+                <span class="value">${subject}</span>
+              </div>
+              
+              <div class="message-box">
+                <span class="label">💬 Message</span>
+                <p class="value">${message.replace(/\n/g, '<br>')}</p>
+              </div>
 
-            ${sendThankYouEmail ? '<div class="badge">📥 Téléchargement de catalogue</div>' : ''}
-          </div>
-          
-          <div class="footer">
-            <p>Ce message a été envoyé depuis le formulaire de contact de votre site web.</p>
-            <p style="margin-top: 10px;">© ${new Date().getFullYear()} Diebenu & Partners</p>
+              ${sendThankYouEmail ? '<div class="badge">📥 Téléchargement de catalogue</div>' : ''}
+            </div>
+            
+            <div class="footer">
+              <p>Ce message a été envoyé depuis le formulaire de téléchargement de votre site web.</p>
+              <p style="margin-top: 10px;">© ${new Date().getFullYear()} Diebenu & Partners</p>
+            </div>
           </div>
         </body>
       </html>
     `;
 
-    // Envoi vers l'équipe Diebenu
-    await resend.emails.send({
-      from: 'Contact Diebenu <noreply@votre-domaine.com>', // À remplacer par votre domaine vérifié
-      to: ['contact@diebenu.com'], // Email de réception
-      replyTo: email,
-      subject: `[Site Web] ${subject}`,
-      html: notificationHtml,
-    });
+    try {
+      // Envoi vers l'équipe Diebenu
+      const notificationResult = await resend.emails.send({
+        from: 'Diebenu Contact <onboarding@resend.dev>', // Utilisez onboarding@resend.dev pour les tests
+        to: ['contact@diebenu.com'],
+        replyTo: email,
+        subject: `[Site Web] ${subject}`,
+        html: notificationHtml,
+      });
+
+      console.log('✅ Email de notification envoyé:', notificationResult);
+    } catch (emailError: any) {
+      console.error('❌ Erreur envoi notification:', emailError);
+    }
 
     // =========================================================================
     // ENVOI DE L'EMAIL DE REMERCIEMENT (vers l'utilisateur)
@@ -190,21 +203,23 @@ export async function POST(request: NextRequest) {
         <html>
           <head>
             <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
               body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
                 line-height: 1.6;
                 color: #333;
-                max-width: 600px;
-                margin: 0 auto;
+                margin: 0;
                 padding: 20px;
-                background-color: #f9fafb;
+                background-color: #f5f5f5;
               }
               .container {
+                max-width: 600px;
+                margin: 0 auto;
                 background: white;
                 border-radius: 16px;
                 overflow: hidden;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
               }
               .header {
                 background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
@@ -229,17 +244,7 @@ export async function POST(request: NextRequest) {
                 color: #4b5563;
                 font-size: 16px;
                 margin-bottom: 15px;
-              }
-              .cta-button {
-                display: inline-block;
-                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                color: white;
-                padding: 16px 32px;
-                text-decoration: none;
-                border-radius: 10px;
-                font-weight: bold;
-                margin: 25px 0;
-                font-size: 16px;
+                line-height: 1.6;
               }
               .info-box {
                 background: #f3f4f6;
@@ -261,28 +266,8 @@ export async function POST(request: NextRequest) {
               .info-box li {
                 margin: 8px 0;
               }
-              .footer {
-                background: #f9fafb;
-                padding: 30px;
-                text-align: center;
-                border-top: 1px solid #e5e7eb;
-              }
-              .footer p {
-                color: #6b7280;
-                font-size: 14px;
-                margin: 5px 0;
-              }
-              .social-links {
-                margin: 20px 0;
-              }
-              .social-links a {
-                color: #2563eb;
-                text-decoration: none;
-                margin: 0 10px;
-                font-weight: 600;
-              }
               .contact-info {
-                background: white;
+                background: #f9fafb;
                 border: 1px solid #e5e7eb;
                 border-radius: 8px;
                 padding: 20px;
@@ -294,6 +279,17 @@ export async function POST(request: NextRequest) {
               }
               .contact-info strong {
                 color: #1f2937;
+              }
+              .footer {
+                background: #f9fafb;
+                padding: 30px;
+                text-align: center;
+                border-top: 1px solid #e5e7eb;
+              }
+              .footer p {
+                color: #6b7280;
+                font-size: 14px;
+                margin: 5px 0;
               }
             </style>
           </head>
@@ -350,13 +346,7 @@ export async function POST(request: NextRequest) {
               </div>
               
               <div class="footer">
-                <p style="font-size: 16px; color: #374151; font-weight: 600;">Suivez-nous</p>
-                <div class="social-links">
-                  <a href="#">LinkedIn</a> •
-                  <a href="#">Facebook</a> •
-                  <a href="#">Twitter</a>
-                </div>
-                <p style="margin-top: 20px;">© ${new Date().getFullYear()} Diebenu & Partners - Tous droits réservés</p>
+                <p>© ${new Date().getFullYear()} Diebenu & Partners - Tous droits réservés</p>
                 <p style="font-size: 12px; color: #9ca3af; margin-top: 10px;">
                   Vous recevez cet email car vous avez téléchargé notre catalogue de formations.
                 </p>
@@ -366,18 +356,27 @@ export async function POST(request: NextRequest) {
         </html>
       `;
 
-      // Envoi de l'email de remerciement à l'utilisateur
-      await resend.emails.send({
-        from: 'Diebenu & Partners <noreply@votre-domaine.com>', // À remplacer
-        to: [email],
-        subject: '📚 Votre catalogue de formations Diebenu & Partners',
-        html: thankYouHtml,
-      });
+      try {
+        // Envoi de l'email de remerciement à l'utilisateur
+        const thankYouResult = await resend.emails.send({
+          from: 'Diebenu & Partners <onboarding@resend.dev>', // Utilisez onboarding@resend.dev pour les tests
+          to: [email],
+          subject: '📚 Votre catalogue de formations Diebenu & Partners',
+          html: thankYouHtml,
+        });
+
+        console.log('✅ Email de remerciement envoyé:', thankYouResult);
+      } catch (emailError: any) {
+        console.error('❌ Erreur envoi remerciement:', emailError);
+        // On ne fait pas échouer la requête si l'email de remerciement échoue
+      }
     }
 
     // =========================================================================
     // RÉPONSE DE SUCCÈS
     // =========================================================================
+    
+    console.log('✅ Processus terminé avec succès');
     
     return NextResponse.json(
       { 
@@ -390,10 +389,14 @@ export async function POST(request: NextRequest) {
     );
 
   } catch (error: any) {
-    console.error('❌ Erreur lors de l\'envoi de l\'email:', error);
+    console.error('❌ ERREUR GLOBALE:', error);
+    console.error('Stack trace:', error.stack);
     
     return NextResponse.json(
-      { error: 'Erreur lors de l\'envoi du message. Veuillez réessayer.' },
+      { 
+        error: 'Erreur lors de l\'envoi du message. Veuillez réessayer.',
+        details: error.message 
+      },
       { status: 500 }
     );
   }
