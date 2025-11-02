@@ -755,8 +755,8 @@ import {
   Award,
   Loader2,
   Download,
-  CheckCircle,
   Send,
+  CheckCircle,
 } from 'lucide-react';
 import Image from 'next/image';
 import { FORMATION_CATALOGUE } from '@/data/catalogue';
@@ -876,7 +876,6 @@ export default function Navbar({
 
     // 1. Recherche FORMATIONS (Modules SEULEMENT)
     FORMATION_CATALOGUE.forEach((theme) => {
-      // Recherche de Module
       theme.modules.forEach((module) => {
         const matchCode = module.code.toLowerCase().includes(lowerSearch);
         const matchTitle = module.title.toLowerCase().includes(lowerSearch);
@@ -946,7 +945,6 @@ export default function Navbar({
       });
     });
 
-    // Dédoublonnage et limitation des résultats
     const uniqueResults = Array.from(
       new Map(results.map((item) => [item.title, item])).values()
     );
@@ -960,7 +958,6 @@ export default function Navbar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Empêcher le scroll du body quand le menu mobile est ouvert
   useEffect(() => {
     if (mobileMenuOpen || isSearchOpen || showPdfModal) {
       document.body.style.overflow = 'hidden';
@@ -995,7 +992,6 @@ export default function Navbar({
     setIsSearchOpen(false);
   };
 
-  // Handler pour la RECHERCHE (Module Formation)
   const handleThemeSelect = (theme: Theme) => {
     window.scrollTo(0, 0);
     setSelectedTheme(theme);
@@ -1006,7 +1002,6 @@ export default function Navbar({
     setIsSearchOpen(false);
   };
 
-  // Handler pour le Mega Menu (Thème Formation)
   const handleMegaMenuFormationSelect = (theme: Theme) => {
     window.location.hash = `theme-${theme.slug}`;
 
@@ -1026,7 +1021,6 @@ export default function Navbar({
     setIsSearchOpen(false);
   };
 
-  // Handlers pour ETUDE
   const handleEtudeThemeSelect = (theme: ThemeForOtherPages) => {
     window.scrollTo(0, 0);
     setSelectedEtudeTheme(theme);
@@ -1051,7 +1045,6 @@ export default function Navbar({
     setIsSearchOpen(false);
   };
 
-  // Handlers pour CONSEIL
   const handleConseilThemeSelect = (theme: ThemeForOtherPages) => {
     window.scrollTo(0, 0);
     setSelectedConseilTheme(theme);
@@ -1076,7 +1069,6 @@ export default function Navbar({
     setIsSearchOpen(false);
   };
 
-  // Handlers pour FINANCEMENT
   const handleFinancementThemeSelect = (theme: ThemeForOtherPages) => {
     window.scrollTo(0, 0);
     setSelectedFinancementTheme(theme);
@@ -1101,7 +1093,6 @@ export default function Navbar({
     setIsSearchOpen(false);
   };
 
-  // Handlers de recherche
   const handleSearchClick = () => {
     setIsSearchOpen(true);
     setSearchTerm('');
@@ -1125,9 +1116,6 @@ export default function Navbar({
     }
   };
 
-  // =========================================================================
-  // HANDLER DE SÉLECTION DE RECHERCHE
-  // =========================================================================
   const handleSearchSelect = (result: GenericSearchResult) => {
     switch (result.page) {
       case 'formation':
@@ -1157,7 +1145,6 @@ export default function Navbar({
     setIsSearchOpen(false);
     setSearchTerm('');
   };
-  // =========================================================================
 
   const toggleMobileSubMenu = (page: string) => {
     setMobileSubMenuOpen(mobileSubMenuOpen === page ? null : page);
@@ -1181,10 +1168,8 @@ export default function Navbar({
   };
 
   const handleDownloadPdf = () => {
-    // Chemin vers votre PDF (à adapter selon votre structure)
     const pdfPath = '/documents/catalogue-formations.pdf';
     
-    // Créer un lien temporaire et déclencher le téléchargement
     const link = document.createElement('a');
     link.href = pdfPath;
     link.download = 'Catalogue_Formations_Diebenu.pdf';
@@ -1192,7 +1177,6 @@ export default function Navbar({
     link.click();
     document.body.removeChild(link);
     
-    // Fermer la modale après un court délai
     setTimeout(() => {
       handleClosePdfModal();
     }, 500);
@@ -1225,8 +1209,8 @@ export default function Navbar({
               />
             </button>
 
-            {/* Menu Desktop */}
-            <div className="hidden lg:flex items-center space-x-2">
+            {/* Menu Desktop - ESPACEMENT AMÉLIORÉ */}
+            <div className="hidden lg:flex items-center space-x-1">
               {navItems.map((item) => (
                 <div
                   key={item.page}
@@ -1239,10 +1223,10 @@ export default function Navbar({
                 >
                   <button
                     onClick={() => handlePageChange(item.page)}
-                    className={`text-base font-semibold transition-all duration-300 flex items-center
+                    className={`text-sm font-semibold transition-all duration-300 flex items-center whitespace-nowrap
                       ${
                         currentPage === item.page
-                          ? 'px-5 py-2.5 rounded-full text-white bg-red-600 shadow-md shadow-red-300'
+                          ? 'px-4 py-2.5 rounded-full text-white bg-red-600 shadow-md shadow-red-300'
                           : `px-3 py-2 rounded-lg text-gray-700 ${
                               activeMegaMenu === item.page
                                 ? 'bg-red-50 text-red-700'
@@ -1269,12 +1253,12 @@ export default function Navbar({
               ))}
             </div>
 
-            {/* Actions additionnelles */}
-            <div className="hidden lg:flex items-center space-x-3">
-              {/* Bouton PDF */}
+            {/* Actions additionnelles - ESPACEMENT AMÉLIORÉ */}
+            <div className="hidden lg:flex items-center space-x-4">
+              {/* Bouton PDF - Couleur différente */}
               <button
                 onClick={handlePdfDownloadClick}
-                className="px-4 py-2.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-base font-semibold rounded-full shadow-lg hover:shadow-orange-500/50 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold rounded-full shadow-lg hover:shadow-blue-500/50 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
                 <span>Catalogue PDF</span>
@@ -1289,7 +1273,7 @@ export default function Navbar({
               
               <button
                 onClick={() => handlePageChange('contact')}
-                className="px-6 py-2.5 bg-gray-900 text-white text-base font-semibold rounded-full shadow-lg hover:bg-red-600 hover:shadow-red-500/50 transition-all duration-300 transform hover:-translate-y-0.5"
+                className="px-6 py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-full shadow-lg hover:bg-red-600 hover:shadow-red-500/50 transition-all duration-300 transform hover:-translate-y-0.5"
               >
                 Contact
               </button>
@@ -1477,7 +1461,7 @@ export default function Navbar({
               <div className="pt-4 space-y-3 border-t border-gray-200 mt-4">
                 <button
                   onClick={handlePdfDownloadClick}
-                  className="w-full flex items-center justify-center px-5 py-4 rounded-xl text-lg font-medium text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 transition-all shadow-lg"
+                  className="w-full flex items-center justify-center px-5 py-4 rounded-xl text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg"
                 >
                   <Download className="w-5 h-5 mr-3" />
                   Télécharger le catalogue PDF
@@ -1557,7 +1541,6 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) {
-      // Reset du formulaire quand la modal se ferme
       setFormData({
         name: '',
         email: '',
@@ -1596,7 +1579,6 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
     
     if (!validateForm()) return;
     
-    // Protection anti-spam honeypot
     if (formData.honeypot) {
       console.warn('Spam detected');
       return;
@@ -1605,7 +1587,7 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('/api/telecharger', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1615,6 +1597,7 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
           message: formData.message,
           honeypot: formData.honeypot,
           submissionTime: Date.now(),
+          sendThankYouEmail: true, // Flag pour déclencher l'email de remerciement
         }),
       });
 
@@ -1624,7 +1607,6 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
         throw new Error(data.error || 'Erreur serveur');
       }
 
-      // Succès - autoriser le téléchargement
       onFormSuccess();
       
     } catch (error: any) {
@@ -1639,19 +1621,17 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-in fade-in duration-200">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       ></div>
 
-      {/* Modal Content */}
       <div
         className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-orange-500 to-red-600 px-8 py-6">
+        <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
           
           <button
@@ -1679,9 +1659,7 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
         {/* Body */}
         <div className="p-8">
           {!isAuthorized ? (
-            // Formulaire
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Honeypot */}
               <div className="absolute -left-[5000px]" aria-hidden="true">
                 <input
                   type="text"
@@ -1693,7 +1671,6 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
                 />
               </div>
 
-              {/* Nom */}
               <div>
                 <label htmlFor="pdf-name" className="block text-sm font-semibold text-gray-700 mb-2">
                   Nom complet *
@@ -1707,7 +1684,7 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
                     errors.name
                       ? 'border-red-400 focus:border-red-500'
-                      : 'border-gray-200 focus:border-red-500'
+                      : 'border-gray-200 focus:border-blue-500'
                   }`}
                   placeholder="Votre nom et prénom"
                   required
@@ -1717,7 +1694,6 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
                 )}
               </div>
 
-              {/* Email */}
               <div>
                 <label htmlFor="pdf-email" className="block text-sm font-semibold text-gray-700 mb-2">
                   Email professionnel *
@@ -1731,7 +1707,7 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
                     errors.email
                       ? 'border-red-400 focus:border-red-500'
-                      : 'border-gray-200 focus:border-red-500'
+                      : 'border-gray-200 focus:border-blue-500'
                   }`}
                   placeholder="votre.email@entreprise.com"
                   required
@@ -1741,7 +1717,6 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
                 )}
               </div>
 
-              {/* Info */}
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3">
                 <FileText className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-blue-900">
@@ -1754,11 +1729,10 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
                 </div>
               </div>
 
-              {/* Bouton Submit */}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold rounded-xl hover:from-orange-600 hover:to-red-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>
@@ -1778,7 +1752,6 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
               </p>
             </form>
           ) : (
-            // Écran de téléchargement
             <div className="text-center py-8">
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
                 <CheckCircle className="w-10 h-10 text-green-600" />
@@ -1788,8 +1761,12 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
                 Merci pour votre demande !
               </h3>
               
-              <p className="text-gray-600 mb-8">
+              <p className="text-gray-600 mb-2">
                 Vous pouvez maintenant télécharger le catalogue de formations
+              </p>
+
+              <p className="text-sm text-gray-500 mb-8">
+                📧 Un email de confirmation a été envoyé à votre adresse
               </p>
 
               <button
@@ -1898,26 +1875,20 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-start justify-center animate-in fade-in duration-200">
-      {/* Backdrop avec blur */}
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/60 backdrop-blur-md"
         onClick={onClose}
       ></div>
 
-      {/* Conteneur de recherche */}
       <div
         className="relative w-full max-w-3xl mx-4 mt-[12vh] animate-in slide-in-from-top-4 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Carte principale */}
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-          {/* Header avec barre de recherche */}
           <div className="relative">
-            {/* Bande décorative */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-red-600 to-red-500"></div>
 
             <div className="flex items-center gap-4 p-6 pb-5">
-              {/* Icône de recherche animée */}
               <div className="flex-shrink-0">
                 {isLoading ? (
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
@@ -1930,7 +1901,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                 )}
               </div>
 
-              {/* Input de recherche */}
               <input
                 type="text"
                 placeholder="Rechercher une formation, un pôle, un module..."
@@ -1940,7 +1910,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                 autoFocus
               />
 
-              {/* Bouton clear */}
               {searchTerm && (
                 <button
                   onClick={() =>
@@ -1953,7 +1922,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                 </button>
               )}
 
-              {/* Bouton fermer */}
               <button
                 onClick={onClose}
                 className="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-100 hover:bg-red-100 flex items-center justify-center transition-colors group"
@@ -1963,14 +1931,11 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
               </button>
             </div>
 
-            {/* Ligne de séparation subtile */}
             <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
           </div>
 
-          {/* Contenu des résultats */}
           <div className="max-h-[60vh] overflow-y-auto">
             {searchTerm.length < 2 ? (
-              // État initial
               <div className="px-6 py-16 text-center">
                 <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                   <Search className="w-10 h-10 text-gray-300" />
@@ -1982,7 +1947,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                   Tapez au moins 2 caractères pour commencer la recherche
                 </p>
 
-                {/* Suggestions rapides */}
                 <div className="mt-8 flex flex-wrap justify-center gap-2">
                   <span className="text-xs text-gray-400 font-medium">
                     Essayez :
@@ -2006,7 +1970,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                 </div>
               </div>
             ) : !isLoading && searchResults.length === 0 ? (
-              // Aucun résultat
               <div className="px-6 py-16 text-center">
                 <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
                   <Search className="w-10 h-10 text-red-400" />
@@ -2019,7 +1982,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                 </p>
               </div>
             ) : (
-              // Résultats de recherche
               <div className="p-3">
                 <div className="mb-3 px-3">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -2036,7 +1998,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                       onClick={() => onSelect(result)}
                       className="w-full text-left p-4 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-50/50 transition-all duration-200 flex items-center gap-4 group border-2 border-transparent hover:border-red-100"
                     >
-                      {/* Icône */}
                       <div className="flex-shrink-0">
                         <div
                           className={`w-12 h-12 ${getIconBg(
@@ -2047,7 +2008,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                         </div>
                       </div>
 
-                      {/* Contenu */}
                       <div className="flex-grow min-w-0">
                         <h4 className="font-semibold text-gray-900 group-hover:text-red-700 text-base leading-snug mb-1 truncate">
                           {result.title}
@@ -2062,7 +2022,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                         </p>
                       </div>
 
-                      {/* Flèche */}
                       <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-red-600 group-hover:translate-x-1 transition-all flex-shrink-0" />
                     </button>
                   ))}
@@ -2071,7 +2030,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
             )}
           </div>
 
-          {/* Footer avec raccourci clavier */}
           <div className="border-t border-gray-100 px-6 py-3 bg-gray-50/50">
             <div className="flex items-center justify-between text-xs text-gray-500">
               <span className="flex items-center gap-2">
