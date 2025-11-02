@@ -1197,9 +1197,10 @@ export default function Navbar({
           {/* Suppression de 'justify-between' et 'flex-1' */}
           <div className="flex items-center h-24">
             {/* Logo - 'mr-auto' le pousse à gauche et tout le reste à droite */}
+          {/* Logo - espacé à gauche avec 'mr-12' pour séparer des éléments du menu */}
             <button
               onClick={() => handlePageChange('home')}
-              className="flex-shrink-0 flex items-center group transition-transform hover:scale-[1.02] duration-300 relative z-50 mr-auto"
+              className="flex-shrink-0 flex items-center group transition-transform hover:scale-[1.02] duration-300 relative z-50 mr-auto pr-12"
             >
               <Image
                 src="/images/logo/logotrans.png"
