@@ -336,6 +336,8 @@
 
 
 
+
+
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
@@ -437,7 +439,7 @@ function validateInput(data: any): { valid: boolean; error?: string } {
 }
 
 /**
- * Nettoyer HTML
+ * Nettoyer HTML (votre fonction)
  */
 function sanitizeHTML(text: string): string {
   return text
@@ -467,33 +469,50 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, message: 'Soumission reçue et filtrée' });
     }
 
-    // Sanitize
+    // Sanitize (On garde votre fonction de nettoyage)
     const sanitizedName = sanitizeHTML(fullName);
     const sanitizedEmail = sanitizeHTML(email);
+    const currentYear = new Date().getFullYear();
 
-    // Email au boss
-    const emailToBoss = `
-      Nouveau Contact (Nom & Email)
-      Nom complet: ${sanitizedName}
-      Email: ${sanitizedEmail}
-      Score de confiance: ${100 - spamCheck.score}%
-    `;
 
-    // Email au client
-    const emailToClient = `
-      Bonjour ${sanitizedName},
+    const logoAltText = 'DIEBENU & PARTNERS Logo';
+    const logoWidth = '150'; // Largeur désirée en pixels
+    const logoHeight = 'auto'; // Hauteur automatique pour conserver les proportions
 
-      Merci d'avoir téléchargé notre Catalogue de Formation 2026 - Building a better world, together.
-      Cordialement,
-      L'équipe DIEBENU & PARTNERS
-    `;
+    // --- Email HTML au boss ---
+    const emailHtmlToBoss = `
+<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.5; color: #333; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+  
+  <h2 style="font-size: 18px; color: #111; margin-top: 0; text-align: center;">Nouveau Téléchargement de Catalogue</h2>
+  <p style="text-align: center;">Un nouveau prospect s'est inscrit pour le catalogue.</p>
+  <br>
+  <p><strong>Nom complet:</strong> ${sanitizedName}</p>
+  <p><strong>Email:</strong> ${sanitizedEmail}</p>
+  <br>
+  <p style="font-size: 14px; color: #555;">Score de confiance: ${100 - spamCheck.score}%</p>
+</div>`;
+
+    // --- Email HTML au client ---
+    const emailHtmlToClient = `
+<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.5; color: #333; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+  
+  <h2 style="font-size: 18px; color: #111; margin-top: 0; text-align: center;">Confirmation de téléchargement</h2>
+  <p>Bonjour ${sanitizedName},</p>
+  <p>Merci d'avoir téléchargé notre <strong>Catalogue de Formation 2026 - Building a better world, together.</strong></p>
+  <p>Nous espérons que vous y trouverez toutes les informations que vous recherchez.</p>
+  <br>
+  <p>Cordialement,<br>
+  L'équipe DIEBENU & PARTNERS</p>
+  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+  <p style="font-size: 12px; color: #777; text-align: center;">&copy; ${currentYear} DIEBENU & PARTNERS. Tous droits réservés.</p>
+</div>`;
 
     // Envoi des emails
     await resend.emails.send({
       from: 'DIEBENU & PARTNERS <contact@diebenu.com>',
       to: ['contact@diebenu.com'],
-      subject: `✅ [NOUVEAU CONTACT] ${fullName} (${email}) - Téléchargement Catalogue`,
-      html: emailToBoss,
+      subject: `✅ [NOUVEAU CONTACT] ${fullName} (${email}) - TéléchargEMENT Catalogue`,
+      html: emailHtmlToBoss,
       replyTo: email
     });
 
@@ -501,7 +520,7 @@ export async function POST(request: NextRequest) {
       from: 'DIEBENU & PARTNERS <contact@diebenu.com>',
       to: [email],
       subject: '📩 Confirmation téléchargement - DIEBENU & PARTNERS',
-      html: emailToClient
+      html: emailHtmlToClient
     });
 
     console.log('✅ Email légitime envoyé:', { email, spamScore: spamCheck.score, confidence: 100 - spamCheck.score });

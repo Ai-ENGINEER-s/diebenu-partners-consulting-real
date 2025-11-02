@@ -592,45 +592,52 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, message: 'Message reçu' });
     }
 
-    const emailTextToBoss = `
-Nouveau message de contact - DIEBENU & PARTNERS
+    // --- NOUVEAU : Email HTML pour l'administrateur ---
+    // Remplace les sauts de ligne (\n) par des <br> pour un affichage HTML correct
+    const messageHtml = message.replace(/\n/g, '<br>');
+    const currentYear = new Date().getFullYear();
 
-Nom: ${fullName}
-Email: ${email}
-Sujet: ${subject}
-Message:
-${message}
+    const emailHtmlToBoss = `
+<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.5; color: #333; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+  <h2 style="font-size: 18px; color: #111; margin-top: 0;">Nouveau message (Score: ${100 - spamCheck.score}%)</h2>
+  <p><strong>De:</strong> ${fullName}</p>
+  <p><strong>Email:</strong> ${email}</p>
+  <p><strong>Sujet:</strong> ${subject}</p>
+  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+  <p><strong>Message:</strong></p>
+  <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px;">
+    ${messageHtml}
+  </div>
+</div>`;
 
-Score de confiance: ${100 - spamCheck.score}%
-`;
+    // --- NOUVEAU : Email HTML pour l'utilisateur ---
+    const emailHtmlToClient = `
+<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.5; color: #333; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+  <h2 style="font-size: 18px; color: #111; margin-top: 0;">Merci pour votre message - DIEBENU & PARTNERS</h2>
+  <p>Bonjour ${fullName},</p>
+  <p>Nous avons bien reçu votre message et notre équipe reviendra vers vous dans les plus brefs délais.</p>
+  <br>
+  <p>Cordialement,<br>
+  L'équipe DIEBENU & PARTNERS</p>
+  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+  <p style="font-size: 12px; color: #777; text-align: center;">&copy; ${currentYear} DIEBENU & PARTNERS. Tous droits réservés.</p>
+</div>`;
 
-    const emailTextToClient = `
-Merci pour votre message - DIEBENU & PARTNERS
-
-Bonjour ${fullName},
-
-Nous avons bien reçu votre message et reviendrons vers vous rapidement.
-
-Votre message:
-${message}
-
-Cordialement,
-L'équipe DIEBENU & PARTNERS
-`;
-
+    // --- MODIFIÉ : Envoi de l'email à l'administrateur ---
     await resend.emails.send({
       from: 'DIEBENU & PARTNERS <contact@diebenu.com>',
       to: ['contact@diebenu.com'],
       subject: `✅ [LÉGITIME] ${subject} - De ${fullName}`,
-      text: emailTextToBoss,
+      html: emailHtmlToBoss, // Utilise HTML
       replyTo: email
     });
 
+    // --- MODIFIÉ : Envoi de l'email de confirmation à l'utilisateur ---
     await resend.emails.send({
       from: 'DIEBENU & PARTNERS <contact@diebenu.com>',
       to: [email],
       subject: '📩 Merci de votre message - DIEBENU & PARTNERS',
-      text: emailTextToClient
+      html: emailHtmlToClient // Utilise HTML
     });
 
     console.log('✅ Email légitime envoyé:', { email, spamScore: spamCheck.score, confidence: 100 - spamCheck.score });
