@@ -736,7 +736,6 @@
 
 
 
-
 // app/components/Navbar.tsx
 'use client';
 
@@ -860,7 +859,7 @@ export default function Navbar({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchLoading, setSearchLoading] = useState(false);
-  
+
   // États pour le téléchargement du PDF
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [pdfDownloadAuthorized, setPdfDownloadAuthorized] = useState(false);
@@ -1169,14 +1168,14 @@ export default function Navbar({
 
   const handleDownloadPdf = () => {
     const pdfPath = '/documents/catalogue-formations.pdf';
-    
+
     const link = document.createElement('a');
     link.href = pdfPath;
     link.download = 'Catalogue_Formations_Diebenu.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     setTimeout(() => {
       handleClosePdfModal();
     }, 500);
@@ -1194,23 +1193,26 @@ export default function Navbar({
         onMouseLeave={() => setActiveMegaMenu(null)}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
+          {/* ========== CORRECTION LAYOUT ========== */}
+          {/* Suppression de 'justify-between' et 'flex-1' */}
+          <div className="flex items-center h-24">
+            {/* Logo - 'mr-auto' le pousse à gauche et tout le reste à droite */}
             <button
               onClick={() => handlePageChange('home')}
-              className="flex items-center group transition-transform hover:scale-[1.02] duration-300 relative z-50"
+              className="flex-shrink-0 flex items-center group transition-transform hover:scale-[1.02] duration-300 relative z-50 mr-auto"
             >
               <Image
                 src="/images/logo/logotrans.png"
                 alt="Diebenu & Partners Logo"
-                width={180}
-                height={45}
+                width={220} // Garde de votre nouvelle taille
+                height={55} // Garde de votre nouvelle taille
                 priority
+                className="object-contain"
               />
             </button>
 
-            {/* Menu Desktop - ESPACEMENT AMÉLIORÉ */}
-            <div className="hidden lg:flex items-center space-x-1">
+            {/* Menu Desktop */}
+            <div className="hidden lg:flex items-center space-x-2">
               {navItems.map((item) => (
                 <div
                   key={item.page}
@@ -1224,16 +1226,16 @@ export default function Navbar({
                   <button
                     onClick={() => handlePageChange(item.page)}
                     className={`text-sm font-semibold transition-all duration-300 flex items-center whitespace-nowrap
-                      ${
-                        currentPage === item.page
-                          ? 'px-4 py-2.5 rounded-full text-white bg-red-600 shadow-md shadow-red-300'
-                          : `px-3 py-2 rounded-lg text-gray-700 ${
-                              activeMegaMenu === item.page
-                                ? 'bg-red-50 text-red-700'
-                                : 'hover:bg-red-50'
-                            }`
-                      }
-                    `}
+                        ${
+                          currentPage === item.page
+                            ? 'px-4 py-2.5 rounded-full text-white bg-red-600 shadow-md shadow-red-300'
+                            : `px-3 py-2 rounded-lg text-gray-700 ${
+                                activeMegaMenu === item.page
+                                  ? 'bg-red-50 text-red-700'
+                                  : 'hover:bg-red-50'
+                              }`
+                        }
+                      `}
                   >
                     {item.label}
                     {item.hasMega && (
@@ -1253,20 +1255,16 @@ export default function Navbar({
               ))}
             </div>
 
-            {/* Actions additionnelles - ESPACEMENT AMÉLIORÉ */}
-            <div className="hidden lg:flex items-center space-x-4">
+            {/* Actions additionnelles - 'ml-6' pour espacer du menu */}
+            <div className="hidden lg:flex items-center space-x-4 ml-6">
               {/* Bouton PDF - Couleur différente */}
-            <button
-  onClick={handlePdfDownloadClick}
-  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold rounded-full shadow-lg hover:shadow-blue-500/50 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2"
->
-  <Download className="w-4 h-4" />
-  <span className="whitespace-nowrap">Catalogue 2025</span>
-</button>
-
-
-
-
+              <button
+                onClick={handlePdfDownloadClick}
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold rounded-full shadow-lg hover:shadow-blue-500/50 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                <span className="whitespace-nowrap">Catalogue 2026</span>
+              </button>
 
               <button
                 onClick={handleSearchClick}
@@ -1274,7 +1272,7 @@ export default function Navbar({
               >
                 <Search className="w-5 h-5" />
               </button>
-              
+
               <button
                 onClick={() => handlePageChange('contact')}
                 className="px-6 py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-full shadow-lg hover:bg-red-600 hover:shadow-red-500/50 transition-all duration-300 transform hover:-translate-y-0.5"
@@ -1470,7 +1468,7 @@ export default function Navbar({
                   <Download className="w-5 h-5 mr-3" />
                   Télécharger le catalogue PDF
                 </button>
-                
+
                 <button
                   onClick={handleSearchClick}
                   className="w-full flex items-center justify-center px-5 py-4 rounded-xl text-lg font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all"
@@ -1478,7 +1476,7 @@ export default function Navbar({
                   <Search className="w-5 h-5 mr-3" />
                   Rechercher
                 </button>
-                
+
                 <button
                   onClick={() => handlePageChange('contact')}
                   className="w-full px-5 py-4 bg-gray-900 text-white text-lg font-semibold rounded-xl shadow-lg hover:bg-red-600 transition-all"
@@ -1517,6 +1515,9 @@ export default function Navbar({
 // =========================================================================
 // COMPOSANT : PDF DOWNLOAD MODAL
 // =========================================================================
+// =========================================================================
+// COMPOSANT : PDF DOWNLOAD MODAL
+// =========================================================================
 interface PdfDownloadModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -1539,7 +1540,7 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
     message: 'Je souhaite télécharger le catalogue de formations Diebenu & Partners.',
     honeypot: '',
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
 
@@ -1559,15 +1560,15 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
 
   const validateForm = (): boolean => {
     const newErrors: {[key: string]: string} = {};
-    
+
     if (!formData.name.trim() || formData.name.trim().length < 2) {
       newErrors.name = 'Nom requis (minimum 2 caractères)';
     }
-    
+
     if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Email valide requis';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -1580,18 +1581,18 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     if (formData.honeypot) {
       console.warn('Spam detected');
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
-      const response = await fetch('/api/telecharger', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1601,21 +1602,19 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
           message: formData.message,
           honeypot: formData.honeypot,
           submissionTime: Date.now(),
-          sendThankYouEmail: true, // Flag pour déclencher l'email de remerciement
         }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
+        const data = await response.json();
         throw new Error(data.error || 'Erreur serveur');
       }
 
       onFormSuccess();
-      
+
     } catch (error: any) {
       console.error('Erreur:', error);
-      alert('Une erreur est survenue. Veuillez réessayer.');
+      alert(`Une erreur est survenue : ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -1637,10 +1636,12 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
         {/* Header */}
         <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-          
+
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors group"
+            type="button"
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors group z-10"
+            aria-label="Fermer"
           >
             <X className="w-5 h-5 text-white" />
           </button>
@@ -1760,11 +1761,11 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
                 <CheckCircle className="w-10 h-10 text-green-600" />
               </div>
-              
+
               <h3 className="text-2xl font-bold text-gray-900 mb-3">
                 Merci pour votre demande !
               </h3>
-              
+
               <p className="text-gray-600 mb-2">
                 Vous pouvez maintenant télécharger le catalogue de formations
               </p>
@@ -1775,6 +1776,7 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
 
               <button
                 onClick={onDownload}
+                type="button"
                 className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl"
               >
                 <Download className="w-6 h-6" />
@@ -1791,6 +1793,9 @@ const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
     </div>
   );
 };
+
+
+
 
 // =========================================================================
 // COMPOSANT : SEARCH OVERLAY

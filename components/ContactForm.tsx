@@ -267,20 +267,18 @@
 
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ChangeEvent, FormEvent, FC } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle, Loader, AlertCircle } from 'lucide-react';
 
-// Interface pour l'état du formulaire avec anti-spam
 interface FormDataState {
   name: string;
   email: string;
   subject: string;
   message: string;
-  honeypot: string; // Champ anti-spam invisible
+  honeypot: string;
 }
 
-// Interface pour les erreurs de validation
 interface FormErrors {
   name?: string;
   email?: string;
@@ -289,13 +287,12 @@ interface FormErrors {
 }
 
 const ContactForm: FC = () => {
-  // État du formulaire avec honeypot
   const [formData, setFormData] = useState<FormDataState>({
     name: '',
     email: '',
     subject: '',
     message: '',
-    honeypot: '' // Pot de miel pour piéger les bots
+    honeypot: ''
   });
   
   const [focusedField, setFocusedField] = useState<string>('');
@@ -305,85 +302,48 @@ const ContactForm: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [errors, setErrors] = useState<FormErrors>({});
   
-  // ANTI-SPAM: Tracker le temps de début du formulaire
   const [formStartTime, setFormStartTime] = useState<number>(0);
-  const [interactionCount, setInteractionCount] = useState<number>(0);
 
-  // Initialiser le temps au chargement du composant
   useEffect(() => {
     setFormStartTime(Date.now());
   }, []);
 
-  // Fonction de détection de gibberish (texte aléatoire)
-  const isGibberish = useCallback((text: string): boolean => {
-    const cleanText = text.replace(/[^a-zA-Z]/g, '').toLowerCase();
-    if (cleanText.length < 3) return false;
-    
-    const vowels = cleanText.match(/[aeiouy]/g) || [];
-    const consonants = cleanText.match(/[bcdfghjklmnpqrstvwxz]/g) || [];
-    const vowelRatio = vowels.length / cleanText.length;
-    
-    // Ratio anormal de voyelles/consonnes
-    if (vowelRatio < 0.15 || vowelRatio > 0.7) return true;
-    
-    // Trop de consonnes consécutives (ex: "XjKmRpQw")
-    if (/[bcdfghjklmnpqrstvwxz]{4,}/i.test(cleanText)) return true;
-    
-    // Alternance bizarre majuscules/minuscules
-    if (/[A-Z][a-z][A-Z][a-z][A-Z]/.test(text)) return true;
-    
-    return false;
-  }, []);
-
-  // Validation stricte du formulaire
-  const validateForm = useCallback((): boolean => {
+  // Validation ultra-simplifiée
+  const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
     
-    // Validation du nom
+    // Nom - validation minimale
     if (!formData.name.trim()) {
       newErrors.name = 'Le nom est requis';
     } else if (formData.name.trim().length < 2) {
       newErrors.name = 'Le nom est trop court';
-    } else if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(formData.name)) {
-      newErrors.name = 'Le nom contient des caractères invalides';
-    } else if (isGibberish(formData.name)) {
-      newErrors.name = 'Veuillez entrer un nom valide';
-    } else if (formData.name.trim().split(/\s+/).length < 2) {
-      newErrors.name = 'Veuillez entrer votre nom complet (prénom et nom)';
     }
     
-    // Validation de l'email
+    // Email - format basique uniquement
     if (!formData.email.trim()) {
       newErrors.email = 'L\'email est requis';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Format d\'email invalide';
     }
     
-    // Validation du sujet
+    // Sujet - validation minimale
     if (!formData.subject.trim()) {
       newErrors.subject = 'Le sujet est requis';
-    } else if (formData.subject.trim().length < 3) {
+    } else if (formData.subject.trim().length < 2) {
       newErrors.subject = 'Le sujet est trop court';
-    } else if (formData.subject.trim().length > 200) {
-      newErrors.subject = 'Le sujet est trop long (max 200 caractères)';
     }
     
-    // Validation du message
+    // Message - validation minimale (5 caractères minimum)
     if (!formData.message.trim()) {
       newErrors.message = 'Le message est requis';
-    } else if (formData.message.trim().length < 50) {
-      newErrors.message = 'Le message doit contenir au moins 50 caractères';
-    } else if (formData.message.trim().length > 5000) {
-      newErrors.message = 'Le message est trop long (max 5000 caractères)';
-    } else if (isGibberish(formData.message)) {
-      newErrors.message = 'Veuillez entrer un message significatif';
+    } else if (formData.message.trim().length < 5) {
+      newErrors.message = 'Le message est trop court';
     }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData, isGibberish]);
+  };
 
-  // Handler pour les changements de champs
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
@@ -392,38 +352,21 @@ const ContactForm: FC = () => {
       [name]: value
     }));
     
-    // Effacer l'erreur du champ modifié
     setErrors(prev => ({
       ...prev,
       [name]: undefined
     }));
-
-    // ANTI-SPAM: Compter les interactions utilisateur
-    setInteractionCount(prev => prev + 1);
   };
 
-  // ANTI-SPAM: Détection de copier-coller massif
-  const handlePaste = useCallback((e: React.ClipboardEvent) => {
-    const pastedText = e.clipboardData.getData('text');
-    
-    // Si plus de 1000 caractères collés d'un coup = suspect
-    if (pastedText.length > 1000) {
-      console.warn('⚠️ Large paste detected, possible spam');
-    }
-  }, []);
-
-  // Soumission du formulaire
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage('');
     setIsError(false);
     
-    // Valider le formulaire
     if (!validateForm()) {
       return;
     }
 
-    // ANTI-SPAM: Calculer le temps de soumission
     const submissionTime = Date.now() - formStartTime;
 
     setIsSubmitting(true);
@@ -450,10 +393,8 @@ const ContactForm: FC = () => {
         throw new Error(data.error || 'Erreur serveur');
       }
 
-      // Succès
       setIsSuccess(true);
       
-      // Reset après 5 secondes
       setTimeout(() => {
         setFormData({
           name: '',
@@ -463,7 +404,6 @@ const ContactForm: FC = () => {
           honeypot: ''
         });
         setIsSuccess(false);
-        setInteractionCount(0);
         setFormStartTime(Date.now());
       }, 5000);
 
@@ -485,11 +425,9 @@ const ContactForm: FC = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
       {/* Formulaire */}
       <div className="relative">
-        {/* Effet de fond animé */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-pink-50 rounded-3xl transform rotate-1 opacity-50"></div>
         
         <div className="relative bg-white rounded-3xl shadow-2xl p-8 md:p-10 border border-gray-100 overflow-hidden">
-          {/* Effet de lumière */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-red-200 to-orange-200 rounded-full blur-3xl opacity-20 -z-10"></div>
           
           <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-gray-900 via-red-900 to-orange-900 bg-clip-text text-transparent">
@@ -497,7 +435,6 @@ const ContactForm: FC = () => {
           </h2>
           <p className="text-gray-500 mb-8">Remplissez le formulaire et nous vous répondrons rapidement</p>
           
-          {/* Message de succès */}
           {isSuccess && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-2xl flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
@@ -508,7 +445,6 @@ const ContactForm: FC = () => {
             </div>
           )}
 
-          {/* Message d'erreur */}
           {isError && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
               <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
@@ -544,7 +480,7 @@ const ContactForm: FC = () => {
                     : 'top-4 text-gray-500'
                 }`}
               >
-                Nom complet *
+                Nom *
               </label>
               <input
                 type="text"
@@ -639,7 +575,7 @@ const ContactForm: FC = () => {
               )}
             </div>
 
-            {/* Champ Message */}
+            {/* Champ Message - ULTRA SIMPLIFIÉ */}
             <div className="relative group">
               <label 
                 htmlFor="message" 
@@ -649,14 +585,13 @@ const ContactForm: FC = () => {
                     : 'top-4 text-gray-500'
                 }`}
               >
-                Votre message * <span className="text-gray-400">(minimum 50 caractères)</span>
+                Votre message *
               </label>
               <textarea
                 id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
-                onPaste={handlePaste}
                 onFocus={() => setFocusedField('message')}
                 onBlur={() => setFocusedField('')}
                 rows={5}
