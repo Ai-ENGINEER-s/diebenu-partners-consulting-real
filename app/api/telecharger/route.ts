@@ -267,23 +267,28 @@ export async function POST(request: NextRequest) {
       </div>
     `;
 
-    // Email de confirmation pour le client
+    // Email de confirmation pour le client (ADAPTÉ AU TÉLÉCHARGEMENT DU PDF)
     const emailToClient = `
       <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;padding:20px;background:#ffffff;color:#333;font-size:16px;line-height:1.6;">
-        <h2 style="color:#ff5722;margin-bottom:10px;">Merci de votre intérêt !</h2>
+        <h2 style="color:#ff5722;margin-bottom:10px;">Votre Catalogue de Formation DIEBENU & PARTNERS 2026</h2>
         <p>Cher(e) ${sanitizedName},</p>
-        <p>Merci de nous avoir laissé vos coordonnées. Nous avons bien reçu votre demande et vous recontacterons personnellement à l'adresse **${sanitizedEmail}** dans les plus brefs délais pour faire le point.</p>
+        <p>Nous vous remercions sincèrement d'avoir téléchargé notre Catalogue de Formation 2026 - *Building a better world, together*.</p>
+        
+        <p>Votre intérêt pour nos domaines d'expertise (Gouvernance, Finance, Digitalisation, Gestion de Projets et Financements) est important pour nous.</p>
 
-        <div style="margin:20px 0;padding:15px;background:#f5f5f5;border-radius:8px;">
+        <p>Un de nos experts va analyser vos coordonnées et vous recontactera personnellement à l'adresse ${sanitizedEmail} dans les plus brefs délais pour échanger sur vos priorités de formation pour 2026.</p>
+
+        <div style="margin:20px 0;padding:15px;background:#f5f5f5;border-radius:8px;font-size:14px;">
           <p style="margin:0;">
-            <strong>Vos informations :</strong><br/>
+            <strong>Vos informations de contact :</strong><br/>
             Nom : ${sanitizedName}<br/>
             Email : ${sanitizedEmail}
           </p>
         </div>
 
-        <p>Nous apprécions votre intérêt.</p>
-        <p style="margin-top:25px;">Cordialement,<br/><strong>L'équipe Diebenu Consulting</strong></p>
+        <p>Nous sommes engagés à vous aider à co-construire un avenir plus solide et plus ambitieux, avec engagement et détermination.</p>
+        
+        <p style="margin-top:25px;">Cordialement,<br/><strong>L'équipe DIEBENU & PARTNERS</strong></p>
       </div>
     `;
 
@@ -291,7 +296,7 @@ export async function POST(request: NextRequest) {
     await resend.emails.send({
       from: 'Diebenu Consulting <contact@diebenu.com>',
       to: ['contact@diebenu.com'], // Remplacez par votre adresse
-      subject: `✅ [NOUVEAU CONTACT LÉGITIME] De ${fullName} (${email})`,
+      subject: `✅ [NOUVEAU CONTACT LÉGITIME] De ${fullName} (${email}) - Téléchargement Catalogue`,
       html: emailToBoss,
       replyTo: email
     });
@@ -299,7 +304,7 @@ export async function POST(request: NextRequest) {
     await resend.emails.send({
       from: 'Diebenu Consulting <contact@diebenu.com>',
       to: [email],
-      subject: '📩 Confirmation de réception de vos coordonnées - Diebenu Consulting',
+      subject: '📩 Confirmation de réception de vos coordonnées - DIEBENU & PARTNERS',
       html: emailToClient
     });
 
