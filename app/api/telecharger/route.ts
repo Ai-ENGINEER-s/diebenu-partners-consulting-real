@@ -1,403 +1,329 @@
-// app/api/telecharger/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-// Initialisation de Resend avec votre clé API
+// Initialisation de Resend (la clé doit être dans process.env.RESEND_API_KEY)
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// ============================================
+// SYSTÈME ANTI-SPAM ULTRA-RENFORCÉ (Adapté au nom et email)
+// ============================================
+
+interface SpamCheckResult {
+  isSpam: boolean;
+  reason?: string;
+  score: number;
+}
+
+interface SpamData {
+  fullName: string;
+  email: string;
+  honeypot?: string;
+  submissionTime?: number;
+}
+
+// Domaines email suspects
+const SUSPICIOUS_EMAIL_DOMAINS = [
+  'tempmail', 'guerrillamail', '10minutemail', 'throwaway',
+  'mailinator', 'maildrop', 'yopmail', 'trashmail',
+  'fakeinbox', 'dispostable', 'getnada', 'sharklasers'
+];
+
+/**
+ * Détecte si une chaîne est aléatoire/gibberish
+ */
+function isGibberish(text: string): boolean {
+  const cleanText = text.replace(/[^a-zA-Z]/g, '').toLowerCase();
+
+  if (cleanText.length < 3) return false;
+
+  const vowels = cleanText.match(/[aeiouy]/g) || [];
+  const consonants = cleanText.match(/[bcdfghjklmnpqrstvwxz]/g) || [];
+
+  const vowelRatio = vowels.length / cleanText.length;
+  const consonantRatio = consonants.length / cleanText.length;
+
+  // Trop de voyelles ou trop de consonnes
+  if (vowelRatio < 0.15 || vowelRatio > 0.7) return true;
+  if (consonantRatio > 0.85) return true;
+
+  // Trop de répétitions de caractères similaires
+  if (/[bcdfghjklmnpqrstvwxz]{4,}/i.test(cleanText)) return true;
+  if (/[aeiouy]{4,}/i.test(cleanText)) return true;
+
+  // Mélange de majuscules/minuscules suspect
+  const hasWeirdCase = /([A-Z][a-z]){4,}|([a-z][A-Z]){4,}/.test(text);
+  if (hasWeirdCase) return true;
+
+  // Pattern aléatoire (ex: AbCdEf)
+  const randomPattern = /[A-Z]{2}[a-z]{2}[A-Z]{2}/;
+  if (randomPattern.test(text) && text.length < 30) return true;
+
+  return false;
+}
+
+/**
+ * Analyse anti-spam ULTRA-RENFORCÉE pour Nom et Email
+ */
+function analyzeSpam(data: SpamData): SpamCheckResult {
+  let spamScore = 0;
+  const reasons: string[] = [];
+
+  // 1. HONEYPOT
+  if (data.honeypot && data.honeypot.trim().length > 0) {
+    return {
+      isSpam: true,
+      reason: 'Honeypot field filled (bot detected)',
+      score: 100
+    };
+  }
+
+  // 2. DÉTECTION DE GIBBERISH DANS LE NOM
+  if (isGibberish(data.fullName)) {
+    spamScore += 70;
+    reasons.push('Name appears to be random gibberish');
+  }
+
+  const nameWords = data.fullName.trim().split(/\s+/);
+  // Nom à un seul mot long (souvent un bot)
+  if (nameWords.length === 1 && data.fullName.length > 8) {
+    spamScore += 40;
+    reasons.push('Single-word name (suspicious)');
+  }
+
+  // Mélange de majuscules/minuscules dans le nom
+  if (/[a-z][A-Z]/.test(data.fullName) && data.fullName.length > 10) {
+    spamScore += 35;
+    reasons.push('Random case mixing in name');
+  }
+
+  // Chiffres dans le nom
+  if (/\d{3,}/.test(data.fullName)) {
+    spamScore += 30;
+    reasons.push('Name contains too many numbers');
+  }
+
+  // Caractères invalides
+  if (/[^a-zA-ZÀ-ÿ\s'-]/.test(data.fullName)) {
+    spamScore += 25;
+    reasons.push('Name contains invalid characters');
+  }
+
+  // 3. VALIDATION EMAIL
+  const emailDomain = data.email.split('@')[1]?.toLowerCase() || '';
+
+  if (SUSPICIOUS_EMAIL_DOMAINS.some(domain => emailDomain.includes(domain))) {
+    spamScore += 50;
+    reasons.push('Disposable email domain');
+  }
+
+  if (/[^a-zA-Z0-9@.\-_+]/.test(data.email)) {
+    spamScore += 30;
+    reasons.push('Invalid characters in email');
+  }
+
+  // 4. TEMPS DE SOUMISSION
+  if (data.submissionTime && data.submissionTime < 3000) {
+    spamScore += 40;
+    reasons.push('Form submitted too quickly');
+  }
+
+  // 5. COHÉRENCE NOM/EMAIL
+  const nameParts = data.fullName.toLowerCase().split(/\s+/);
+  const emailUsername = data.email.split('@')[0].toLowerCase();
+  const hasNameInEmail = nameParts.some(part =>
+    part.length > 2 && emailUsername.includes(part)
+  );
+
+  // Le nom n'est pas dans l'email (si l'email n'est pas lui-même du gibberish)
+  if (!hasNameInEmail && !isGibberish(emailUsername)) {
+    spamScore += 10;
+    reasons.push('Name and email mismatch');
+  }
+
+  // DÉCISION FINALE
+  const isSpam = spamScore >= 40;
+
+  return {
+    isSpam,
+    reason: reasons.join(' | '),
+    score: Math.min(spamScore, 100)
+  };
+}
+
+/**
+ * Validation stricte des données
+ */
+function validateInput(data: any): { valid: boolean; error?: string } {
+  if (!data.fullName || !data.email) {
+    return { valid: false, error: 'Champs requis manquants: Nom complet et Email' };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(data.email)) {
+    return { valid: false, error: 'Format d\'email invalide' };
+  }
+
+  if (data.fullName.trim().length < 2 || data.fullName.trim().length > 100) {
+    return { valid: false, error: 'Longueur du nom invalide (2-100 caractères)' };
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Nettoyer le HTML
+ */
+function sanitizeHTML(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+    .replace(/\n/g, '<br/>');
+}
+
+// ============================================
+// API ROUTE HANDLER
+// ============================================
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { 
-      fullName, 
-      email, 
-      subject, 
-      message, 
-      honeypot, 
-      submissionTime,
-      sendThankYouEmail = false 
-    } = body;
+    // Seuls les champs Nom complet et Email sont attendus
+    const { fullName, email, honeypot, submissionTime } = body;
 
-    console.log('📥 Requête reçue:', { fullName, email, subject });
-
-    // =========================================================================
-    // VALIDATION ET ANTI-SPAM
-    // =========================================================================
-    
-    // 1. Vérification du honeypot
-    if (honeypot) {
-      console.warn('🚫 Spam détecté via honeypot');
+    // 1. VALIDATION
+    const validation = validateInput({ fullName, email });
+    if (!validation.valid) {
+      console.log('⚠️ Validation échouée:', validation.error);
       return NextResponse.json(
-        { error: 'Invalid submission' },
+        { error: validation.error },
         { status: 400 }
       );
     }
 
-    // 2. Validation des champs requis
-    if (!fullName || !email || !subject || !message) {
-      console.error('❌ Champs manquants');
-      return NextResponse.json(
-        { error: 'Tous les champs sont requis' },
-        { status: 400 }
-      );
-    }
+    // 2. ANALYSE ANTI-SPAM
+    const spamCheck = analyzeSpam({
+      fullName,
+      email,
+      honeypot,
+      submissionTime
+    });
 
-    // 3. Validation de l'email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      console.error('❌ Email invalide:', email);
-      return NextResponse.json(
-        { error: 'Format d\'email invalide' },
-        { status: 400 }
-      );
-    }
+    // Log détaillé
+    console.log('🔍 Analyse Spam:', {
+      email,
+      score: spamCheck.score,
+      isSpam: spamCheck.isSpam,
+      reason: spamCheck.reason
+    });
 
-    console.log('✅ Validation passée, envoi des emails...');
-
-    // =========================================================================
-    // ENVOI DE L'EMAIL DE NOTIFICATION (vers Diebenu)
-    // =========================================================================
-    
-    const notificationHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <style>
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-              line-height: 1.6;
-              color: #333;
-              max-width: 600px;
-              margin: 0 auto;
-              padding: 20px;
-              background-color: #f5f5f5;
-            }
-            .container {
-              background: white;
-              border-radius: 12px;
-              overflow: hidden;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-            .header {
-              background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
-              color: white;
-              padding: 30px;
-              text-align: center;
-            }
-            .header h1 {
-              margin: 0;
-              font-size: 24px;
-            }
-            .content {
-              padding: 30px;
-            }
-            .info-row {
-              background: #f9fafb;
-              padding: 15px;
-              margin-bottom: 15px;
-              border-radius: 8px;
-              border-left: 4px solid #dc2626;
-            }
-            .label {
-              font-weight: bold;
-              color: #dc2626;
-              display: block;
-              margin-bottom: 5px;
-              font-size: 12px;
-              text-transform: uppercase;
-              letter-spacing: 0.5px;
-            }
-            .value {
-              color: #374151;
-              font-size: 15px;
-            }
-            .message-box {
-              background: #f9fafb;
-              padding: 20px;
-              border-radius: 8px;
-              margin-top: 15px;
-            }
-            .footer {
-              text-align: center;
-              padding: 20px;
-              color: #6b7280;
-              font-size: 12px;
-              background: #f9fafb;
-            }
-            .badge {
-              display: inline-block;
-              background: #dcfce7;
-              color: #166534;
-              padding: 5px 12px;
-              border-radius: 20px;
-              font-size: 12px;
-              font-weight: 600;
-              margin-top: 10px;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>📬 Nouveau Message</h1>
-              <p style="margin: 10px 0 0 0; opacity: 0.9;">Formulaire de téléchargement du catalogue</p>
-            </div>
-            
-            <div class="content">
-              <div class="info-row">
-                <span class="label">👤 Nom complet</span>
-                <span class="value">${fullName}</span>
-              </div>
-              
-              <div class="info-row">
-                <span class="label">📧 Email</span>
-                <span class="value">${email}</span>
-              </div>
-              
-              <div class="info-row">
-                <span class="label">📋 Sujet</span>
-                <span class="value">${subject}</span>
-              </div>
-              
-              <div class="message-box">
-                <span class="label">💬 Message</span>
-                <p class="value">${message.replace(/\n/g, '<br>')}</p>
-              </div>
-
-              ${sendThankYouEmail ? '<div class="badge">📥 Téléchargement de catalogue</div>' : ''}
-            </div>
-            
-            <div class="footer">
-              <p>Ce message a été envoyé depuis le formulaire de téléchargement de votre site web.</p>
-              <p style="margin-top: 10px;">© ${new Date().getFullYear()} Diebenu & Partners</p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `;
-
-    try {
-      // Envoi vers l'équipe Diebenu
-      const notificationResult = await resend.emails.send({
-        from: 'Diebenu Contact <onboarding@resend.dev>', // Utilisez onboarding@resend.dev pour les tests
-        to: ['contact@diebenu.com'],
-        replyTo: email,
-        subject: `[Site Web] ${subject}`,
-        html: notificationHtml,
+    // SI SPAM DÉTECTÉ
+    if (spamCheck.isSpam) {
+      console.log('🚫 SPAM BLOQUÉ:', {
+        name: fullName,
+        email,
+        score: spamCheck.score,
+        reason: spamCheck.reason
       });
 
-      console.log('✅ Email de notification envoyé:', notificationResult);
-    } catch (emailError: any) {
-      console.error('❌ Erreur envoi notification:', emailError);
+      // Retourner succès fictif pour tromper les bots
+      return NextResponse.json({
+        success: true,
+        message: 'Soumission reçue et filtrée'
+      });
     }
 
-    // =========================================================================
-    // ENVOI DE L'EMAIL DE REMERCIEMENT (vers l'utilisateur)
-    // =========================================================================
-    
-    if (sendThankYouEmail) {
-      const thankYouHtml = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style>
-              body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                line-height: 1.6;
-                color: #333;
-                margin: 0;
-                padding: 20px;
-                background-color: #f5f5f5;
-              }
-              .container {
-                max-width: 600px;
-                margin: 0 auto;
-                background: white;
-                border-radius: 16px;
-                overflow: hidden;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-              }
-              .header {
-                background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-                color: white;
-                padding: 40px 30px;
-                text-align: center;
-              }
-              .logo {
-                font-size: 48px;
-                margin-bottom: 10px;
-              }
-              .content {
-                padding: 40px 30px;
-              }
-              .greeting {
-                font-size: 24px;
-                font-weight: bold;
-                color: #1f2937;
-                margin-bottom: 20px;
-              }
-              .text {
-                color: #4b5563;
-                font-size: 16px;
-                margin-bottom: 15px;
-                line-height: 1.6;
-              }
-              .info-box {
-                background: #f3f4f6;
-                border-left: 4px solid #2563eb;
-                padding: 20px;
-                border-radius: 8px;
-                margin: 25px 0;
-              }
-              .info-box h3 {
-                color: #2563eb;
-                margin-top: 0;
-                font-size: 18px;
-              }
-              .info-box ul {
-                margin: 10px 0;
-                padding-left: 20px;
-                color: #4b5563;
-              }
-              .info-box li {
-                margin: 8px 0;
-              }
-              .contact-info {
-                background: #f9fafb;
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                padding: 20px;
-                margin: 20px 0;
-              }
-              .contact-info p {
-                margin: 8px 0;
-                color: #374151;
-              }
-              .contact-info strong {
-                color: #1f2937;
-              }
-              .footer {
-                background: #f9fafb;
-                padding: 30px;
-                text-align: center;
-                border-top: 1px solid #e5e7eb;
-              }
-              .footer p {
-                color: #6b7280;
-                font-size: 14px;
-                margin: 5px 0;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <div class="header">
-                <div class="logo">📚</div>
-                <h1 style="margin: 0; font-size: 28px;">Merci pour votre intérêt !</h1>
-                <p style="margin: 10px 0 0 0; opacity: 0.95; font-size: 16px;">Votre catalogue est prêt</p>
-              </div>
-              
-              <div class="content">
-                <div class="greeting">Bonjour ${fullName.split(' ')[0]},</div>
-                
-                <p class="text">
-                  Nous vous remercions d'avoir téléchargé notre catalogue de formations.
-                  Nous sommes ravis de votre intérêt pour nos programmes de développement professionnel.
-                </p>
+    // 3. SOUMISSION LÉGITIME - ENVOYER LES EMAILS
+    const sanitizedName = sanitizeHTML(fullName);
+    const sanitizedEmail = sanitizeHTML(email);
 
-                <p class="text">
-                  Le fichier PDF contient l'intégralité de nos offres de formation avec les détails suivants :
-                </p>
+    // Email d'alerte pour le propriétaire du site
+    const emailToBoss = `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;padding:20px;background:#ffffff;color:#333;font-size:16px;line-height:1.6;">
+        <div style="background:#e8f5e9;border-left:4px solid #4caf50;padding:15px;margin-bottom:20px;">
+          <h2 style="color:#2e7d32;margin:0 0 10px 0;">✅ Nouvelle Soumission - Légitime</h2>
+          <p style="margin:0;font-size:13px;color:#555;">Score de confiance: ${100 - spamCheck.score}% | Tous les contrôles anti-spam passés</p>
+        </div>
 
-                <div class="info-box">
-                  <h3>📖 Contenu du catalogue</h3>
-                  <ul>
-                    <li>Plus de 200 formations certifiantes</li>
-                    <li>Descriptions détaillées et objectifs pédagogiques</li>
-                    <li>Informations sur les durées et modalités</li>
-                    <li>Tarifs et possibilités de financement</li>
-                    <li>Profils des formateurs experts</li>
-                  </ul>
-                </div>
+        <h2 style="color:#222;margin-bottom:10px;">👤 Nouveau Contact (Nom & Email)</h2>
 
-                <p class="text">
-                  <strong>Besoin d'aide ?</strong> Notre équipe est à votre disposition pour vous conseiller 
-                  et vous accompagner dans le choix de la formation la plus adaptée à vos besoins.
-                </p>
+        <table style="margin-top:15px;margin-bottom:15px;border-collapse:collapse;width:100%;">
+          <tr><td style="padding:10px;background:#f5f5f5;font-weight:bold;width:30%;">Nom complet:</td><td style="padding:10px;border-bottom:1px solid #ddd;">${sanitizedName}</td></tr>
+          <tr><td style="padding:10px;background:#f5f5f5;font-weight:bold;">Email:</td><td style="padding:10px;border-bottom:1px solid #ddd;">${sanitizedEmail}</td></tr>
+        </table>
 
-                <div class="contact-info">
-                  <p><strong>📞 Téléphone :</strong> +212 606 698 210 / +212 665 288 522</p>
-                  <p><strong>📧 Email :</strong> contact@diebenu.com</p>
-                  <p><strong>📍 Adresse :</strong> 59, Bd Zerktouni Étage 11, N°32, Casablanca</p>
-                </div>
+        <p style="margin-top:20px;font-size:15px;color:#ff5722;font-weight:bold;">
+            Action requise : Contacter cette personne directement.
+        </p>
 
-                <p class="text" style="margin-top: 25px;">
-                  Nous restons à votre écoute pour toute question ou demande de devis personnalisé.
-                </p>
+        <div style="margin-top:30px;padding:15px;background:#fff3e0;border-radius:8px;">
+          <p style="margin:0;font-size:13px;color:#e65100;">
+            <strong>🛡️ Protection Anti-Spam Active</strong><br/>
+            Ce contact est considéré comme légitime par le système de filtrage.
+          </p>
+        </div>
+      </div>
+    `;
 
-                <p class="text">
-                  Cordialement,<br>
-                  <strong>L'équipe Diebenu & Partners</strong>
-                </p>
-              </div>
-              
-              <div class="footer">
-                <p>© ${new Date().getFullYear()} Diebenu & Partners - Tous droits réservés</p>
-                <p style="font-size: 12px; color: #9ca3af; margin-top: 10px;">
-                  Vous recevez cet email car vous avez téléchargé notre catalogue de formations.
-                </p>
-              </div>
-            </div>
-          </body>
-        </html>
-      `;
+    // Email de confirmation pour le client
+    const emailToClient = `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;padding:20px;background:#ffffff;color:#333;font-size:16px;line-height:1.6;">
+        <h2 style="color:#ff5722;margin-bottom:10px;">Merci de votre intérêt !</h2>
+        <p>Cher(e) ${sanitizedName},</p>
+        <p>Merci de nous avoir laissé vos coordonnées. Nous avons bien reçu votre demande et vous recontacterons personnellement à l'adresse **${sanitizedEmail}** dans les plus brefs délais pour faire le point.</p>
 
-      try {
-        // Envoi de l'email de remerciement à l'utilisateur
-        const thankYouResult = await resend.emails.send({
-          from: 'Diebenu & Partners <onboarding@resend.dev>', // Utilisez onboarding@resend.dev pour les tests
-          to: [email],
-          subject: '📚 Votre catalogue de formations Diebenu & Partners',
-          html: thankYouHtml,
-        });
+        <div style="margin:20px 0;padding:15px;background:#f5f5f5;border-radius:8px;">
+          <p style="margin:0;">
+            <strong>Vos informations :</strong><br/>
+            Nom : ${sanitizedName}<br/>
+            Email : ${sanitizedEmail}
+          </p>
+        </div>
 
-        console.log('✅ Email de remerciement envoyé:', thankYouResult);
-      } catch (emailError: any) {
-        console.error('❌ Erreur envoi remerciement:', emailError);
-        // On ne fait pas échouer la requête si l'email de remerciement échoue
-      }
-    }
+        <p>Nous apprécions votre intérêt.</p>
+        <p style="margin-top:25px;">Cordialement,<br/><strong>L'équipe Diebenu Consulting</strong></p>
+      </div>
+    `;
 
-    // =========================================================================
-    // RÉPONSE DE SUCCÈS
-    // =========================================================================
-    
-    console.log('✅ Processus terminé avec succès');
-    
-    return NextResponse.json(
-      { 
-        success: true, 
-        message: sendThankYouEmail 
-          ? 'Email de remerciement envoyé avec succès'
-          : 'Message envoyé avec succès'
-      },
-      { status: 200 }
-    );
+    // Envoyer les emails avec Resend
+    await resend.emails.send({
+      from: 'Diebenu Consulting <contact@diebenu.com>',
+      to: ['contact@diebenu.com'], // Remplacez par votre adresse
+      subject: `✅ [NOUVEAU CONTACT LÉGITIME] De ${fullName} (${email})`,
+      html: emailToBoss,
+      replyTo: email
+    });
+
+    await resend.emails.send({
+      from: 'Diebenu Consulting <contact@diebenu.com>',
+      to: [email],
+      subject: '📩 Confirmation de réception de vos coordonnées - Diebenu Consulting',
+      html: emailToClient
+    });
+
+    console.log('✅ Email légitime envoyé:', {
+      email,
+      spamScore: spamCheck.score,
+      confidence: 100 - spamCheck.score
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Coordonnées reçues avec succès. Un email de confirmation a été envoyé.'
+    });
 
   } catch (error: any) {
-    console.error('❌ ERREUR GLOBALE:', error);
-    console.error('Stack trace:', error.stack);
-    
+    console.error('❌ Erreur:', error);
     return NextResponse.json(
-      { 
-        error: 'Erreur lors de l\'envoi du message. Veuillez réessayer.',
-        details: error.message 
-      },
+      { error: 'Erreur serveur. Veuillez réessayer ultérieurement.' },
       { status: 500 }
     );
   }
+}
+
+// Gérer les requêtes OPTIONS pour CORS
+export async function OPTIONS(request: NextRequest) {
+  return NextResponse.json({}, { status: 200 });
 }
