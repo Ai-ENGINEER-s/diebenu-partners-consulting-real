@@ -1256,13 +1256,17 @@ export default function Navbar({
             {/* Actions additionnelles - ESPACEMENT AMÉLIORÉ */}
             <div className="hidden lg:flex items-center space-x-4">
               {/* Bouton PDF - Couleur différente */}
-              <button
-                onClick={handlePdfDownloadClick}
-                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold rounded-full shadow-lg hover:shadow-blue-500/50 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                <span>Catalogue PDF</span>
-              </button>
+            <button
+  onClick={handlePdfDownloadClick}
+  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold rounded-full shadow-lg hover:shadow-blue-500/50 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2"
+>
+  <Download className="w-4 h-4" />
+  <span className="whitespace-nowrap">Catalogue 2025</span>
+</button>
+
+
+
+
 
               <button
                 onClick={handleSearchClick}
