@@ -438,6 +438,206 @@
 
 
 
+// // version fonctionnel sans soucis juste j'ai modifie le design 
+
+// import { NextRequest, NextResponse } from 'next/server';
+// import { Resend } from 'resend';
+
+// const resend = new Resend(process.env.RESEND_API_KEY);
+
+// // ============================================
+// // SYSTÈME ANTI-SPAM ULTRA-SIMPLIFIÉ
+// // Focus uniquement sur les liens suspects
+// // ============================================
+
+// interface SpamCheckResult {
+//   isSpam: boolean;
+//   reason?: string;
+//   score: number;
+// }
+
+// // Mots-clés spam critiques (très réduit)
+// const CRITICAL_SPAM_KEYWORDS = [
+//   'viagra', 'cialis', 'casino', 'lottery', 'bitcoin', 'crypto',
+//   'nigerian prince', 'inheritance', 'million dollars',
+//   'xxx', 'porn', 'nude'
+// ];
+
+// function analyzeSpam(data: {
+//   fullName: string;
+//   email: string;
+//   subject: string;
+//   message: string;
+//   honeypot?: string;
+//   submissionTime?: number;
+// }): SpamCheckResult {
+//   let spamScore = 0;
+//   const reasons: string[] = [];
+
+//   // 1. HONEYPOT - Seule détection automatique de bot
+//   if (data.honeypot && data.honeypot.trim().length > 0) {
+//     return { isSpam: true, reason: 'Honeypot field filled (bot detected)', score: 100 };
+//   }
+
+//   // 2. LIENS SUSPECTS - Focus principal
+//   const urlMatches = data.message.match(/https?:\/\/[^\s]+/gi);
+//   if (urlMatches && urlMatches.length > 5) { 
+//     spamScore += 80; 
+//     reasons.push(`Trop de liens (${urlMatches.length})`); 
+//   } else if (urlMatches && urlMatches.length > 3) {
+//     spamScore += 50;
+//     reasons.push(`Nombreux liens détectés (${urlMatches.length})`);
+//   }
+
+//   // 3. Mots-clés spam CRITIQUES uniquement
+//   const messageLower = data.message.toLowerCase();
+//   const subjectLower = data.subject.toLowerCase();
+//   const criticalSpamFound = CRITICAL_SPAM_KEYWORDS.filter(keyword => 
+//     messageLower.includes(keyword) || subjectLower.includes(keyword)
+//   );
+//   if (criticalSpamFound.length > 0) { 
+//     spamScore += 60; 
+//     reasons.push(`Mots-clés suspects: ${criticalSpamFound.join(', ')}`); 
+//   }
+
+//   // 4. Soumission trop rapide (bot)
+//   if (data.submissionTime && data.submissionTime < 2000) { 
+//     spamScore += 40; 
+//     reasons.push('Soumission trop rapide'); 
+//   }
+
+//   // Seuil très élevé pour bloquer (80 au lieu de 40)
+//   return { 
+//     isSpam: spamScore >= 80, 
+//     reason: reasons.join(' | '), 
+//     score: Math.min(spamScore, 100) 
+//   };
+// }
+
+// function validateInput(data: any): { valid: boolean; error?: string } {
+//   // Validation minimale - juste vérifier que les champs existent
+//   if (!data.fullName || !data.email || !data.subject || !data.message) {
+//     return { valid: false, error: 'Veuillez remplir tous les champs' };
+//   }
+  
+//   // Email - format basique uniquement
+//   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//   if (!emailRegex.test(data.email)) {
+//     return { valid: false, error: 'Format d\'email invalide' };
+//   }
+  
+//   // Longueurs minimales très courtes
+//   if (data.fullName.trim().length < 2) {
+//     return { valid: false, error: 'Le nom est trop court' };
+//   }
+  
+//   if (data.subject.trim().length < 2) {
+//     return { valid: false, error: 'Le sujet est trop court' };
+//   }
+  
+//   if (data.message.trim().length < 5) {
+//     return { valid: false, error: 'Le message est trop court' };
+//   }
+  
+//   // Longueurs maximales (pour éviter les attaques)
+//   if (data.fullName.trim().length > 100) {
+//     return { valid: false, error: 'Le nom est trop long' };
+//   }
+  
+//   if (data.subject.trim().length > 200) {
+//     return { valid: false, error: 'Le sujet est trop long' };
+//   }
+  
+//   if (data.message.trim().length > 5000) {
+//     return { valid: false, error: 'Le message est trop long' };
+//   }
+  
+//   return { valid: true };
+// }
+
+// // ============================================
+// // API ROUTE HANDLER
+// // ============================================
+
+// export async function POST(request: NextRequest) {
+//   try {
+//     const body = await request.json();
+//     const { fullName, email, subject, message, honeypot, submissionTime } = body;
+
+//     const validation = validateInput({ fullName, email, subject, message });
+//     if (!validation.valid) {
+//       console.log('⚠️ Validation échouée:', validation.error);
+//       return NextResponse.json({ error: validation.error }, { status: 400 });
+//     }
+
+//     const spamCheck = analyzeSpam({ fullName, email, subject, message, honeypot, submissionTime });
+//     console.log('🔍 Analyse Spam:', { email, score: spamCheck.score, isSpam: spamCheck.isSpam, reason: spamCheck.reason });
+
+//     if (spamCheck.isSpam) {
+//       console.log('🚫 SPAM BLOQUÉ:', { name: fullName, email, score: spamCheck.score, reason: spamCheck.reason });
+//       // Réponse identique pour ne pas alerter les bots
+//       return NextResponse.json({ success: true, message: 'Message reçu' });
+//     }
+
+//     const messageHtml = message.replace(/\n/g, '<br>');
+//     const currentYear = new Date().getFullYear();
+
+//     const emailHtmlToBoss = `
+// <div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.5; color: #333; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+//   <h2 style="font-size: 18px; color: #111; margin-top: 0;">Nouveau message (Confiance: ${100 - spamCheck.score}%)</h2>
+//   <p><strong>De:</strong> ${fullName}</p>
+//   <p><strong>Email:</strong> ${email}</p>
+//   <p><strong>Sujet:</strong> ${subject}</p>
+//   <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+//   <p><strong>Message:</strong></p>
+//   <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px;">
+//     ${messageHtml}
+//   </div>
+// </div>`;
+
+//     const emailHtmlToClient = `
+// <div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.5; color: #333; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+//   <h2 style="font-size: 18px; color: #111; margin-top: 0;">Merci pour votre message - DIEBENU & PARTNERS</h2>
+//   <p>Bonjour ${fullName},</p>
+//   <p>Nous avons bien reçu votre message et notre équipe reviendra vers vous dans les plus brefs délais.</p>
+//   <br>
+//   <p>Cordialement,<br>
+//   L'équipe DIEBENU & PARTNERS</p>
+//   <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+//   <p style="font-size: 12px; color: #777; text-align: center;">&copy; ${currentYear} DIEBENU & PARTNERS. Tous droits réservés.</p>
+// </div>`;
+
+//     await resend.emails.send({
+//       from: 'DIEBENU & PARTNERS <contact@diebenu.com>',
+//       to: ['contact@diebenu.com'],
+//       subject: `✅ ${subject} - De ${fullName}`,
+//       html: emailHtmlToBoss,
+//       replyTo: email
+//     });
+
+//     await resend.emails.send({
+//       from: 'DIEBENU & PARTNERS <contact@diebenu.com>',
+//       to: [email],
+//       subject: '📩 Merci de votre message - DIEBENU & PARTNERS',
+//       html: emailHtmlToClient
+//     });
+
+//     console.log('✅ Email envoyé:', { email, spamScore: spamCheck.score, confidence: 100 - spamCheck.score });
+
+//     return NextResponse.json({ success: true, message: 'Message envoyé avec succès' });
+
+//   } catch (error: any) {
+//     console.error('❌ Erreur:', error);
+//     return NextResponse.json({ error: 'Erreur serveur. Veuillez réessayer ultérieurement.' }, { status: 500 });
+//   }
+// }
+
+// export async function OPTIONS(request: NextRequest) {
+//   return NextResponse.json({}, { status: 200 });
+// }
+
+
+
 
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
@@ -473,12 +673,12 @@ function analyzeSpam(data: {
   let spamScore = 0;
   const reasons: string[] = [];
 
-  // 1. HONEYPOT - Seule détection automatique de bot
+  // 1. HONEYPOT
   if (data.honeypot && data.honeypot.trim().length > 0) {
     return { isSpam: true, reason: 'Honeypot field filled (bot detected)', score: 100 };
   }
 
-  // 2. LIENS SUSPECTS - Focus principal
+  // 2. LIENS SUSPECTS
   const urlMatches = data.message.match(/https?:\/\/[^\s]+/gi);
   if (urlMatches && urlMatches.length > 5) { 
     spamScore += 80; 
@@ -488,7 +688,7 @@ function analyzeSpam(data: {
     reasons.push(`Nombreux liens détectés (${urlMatches.length})`);
   }
 
-  // 3. Mots-clés spam CRITIQUES uniquement
+  // 3. MOTS-CLÉS SPAM CRITIQUES
   const messageLower = data.message.toLowerCase();
   const subjectLower = data.subject.toLowerCase();
   const criticalSpamFound = CRITICAL_SPAM_KEYWORDS.filter(keyword => 
@@ -499,13 +699,12 @@ function analyzeSpam(data: {
     reasons.push(`Mots-clés suspects: ${criticalSpamFound.join(', ')}`); 
   }
 
-  // 4. Soumission trop rapide (bot)
+  // 4. SOUMISSION TROP RAPIDE
   if (data.submissionTime && data.submissionTime < 2000) { 
     spamScore += 40; 
     reasons.push('Soumission trop rapide'); 
   }
 
-  // Seuil très élevé pour bloquer (80 au lieu de 40)
   return { 
     isSpam: spamScore >= 80, 
     reason: reasons.join(' | '), 
@@ -514,43 +713,22 @@ function analyzeSpam(data: {
 }
 
 function validateInput(data: any): { valid: boolean; error?: string } {
-  // Validation minimale - juste vérifier que les champs existent
   if (!data.fullName || !data.email || !data.subject || !data.message) {
     return { valid: false, error: 'Veuillez remplir tous les champs' };
   }
-  
-  // Email - format basique uniquement
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(data.email)) {
     return { valid: false, error: 'Format d\'email invalide' };
   }
-  
-  // Longueurs minimales très courtes
-  if (data.fullName.trim().length < 2) {
-    return { valid: false, error: 'Le nom est trop court' };
-  }
-  
-  if (data.subject.trim().length < 2) {
-    return { valid: false, error: 'Le sujet est trop court' };
-  }
-  
-  if (data.message.trim().length < 5) {
-    return { valid: false, error: 'Le message est trop court' };
-  }
-  
-  // Longueurs maximales (pour éviter les attaques)
-  if (data.fullName.trim().length > 100) {
-    return { valid: false, error: 'Le nom est trop long' };
-  }
-  
-  if (data.subject.trim().length > 200) {
-    return { valid: false, error: 'Le sujet est trop long' };
-  }
-  
-  if (data.message.trim().length > 5000) {
-    return { valid: false, error: 'Le message est trop long' };
-  }
-  
+
+  if (data.fullName.trim().length < 2) return { valid: false, error: 'Le nom est trop court' };
+  if (data.subject.trim().length < 2) return { valid: false, error: 'Le sujet est trop court' };
+  if (data.message.trim().length < 5) return { valid: false, error: 'Le message est trop court' };
+  if (data.fullName.trim().length > 100) return { valid: false, error: 'Le nom est trop long' };
+  if (data.subject.trim().length > 200) return { valid: false, error: 'Le sujet est trop long' };
+  if (data.message.trim().length > 5000) return { valid: false, error: 'Le message est trop long' };
+
   return { valid: true };
 }
 
@@ -574,35 +752,42 @@ export async function POST(request: NextRequest) {
 
     if (spamCheck.isSpam) {
       console.log('🚫 SPAM BLOQUÉ:', { name: fullName, email, score: spamCheck.score, reason: spamCheck.reason });
-      // Réponse identique pour ne pas alerter les bots
       return NextResponse.json({ success: true, message: 'Message reçu' });
     }
 
     const messageHtml = message.replace(/\n/g, '<br>');
     const currentYear = new Date().getFullYear();
 
+    // 💌 EMAIL POUR LE BOSS (même design que client, sans score ni trait)
     const emailHtmlToBoss = `
-<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.5; color: #333; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-  <h2 style="font-size: 18px; color: #111; margin-top: 0;">Nouveau message (Confiance: ${100 - spamCheck.score}%)</h2>
-  <p><strong>De:</strong> ${fullName}</p>
-  <p><strong>Email:</strong> ${email}</p>
-  <p><strong>Sujet:</strong> ${subject}</p>
-  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-  <p><strong>Message:</strong></p>
-  <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px;">
+<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #111416; max-width: 600px; margin: 30px auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 10px;">
+  <h2 style="font-size: 20px; color: #111416; margin-top: 0; text-align: center;">📩 Nouveau message reçu</h2>
+  <p>Bonjour,</p>
+  <p>Vous avez reçu un nouveau message via le formulaire de contact du site <strong>DIEBENU & PARTNERS</strong>.</p>
+  <br>
+  <p><strong>Nom :</strong> ${fullName}<br>
+  <strong>Email :</strong> ${email}<br>
+  <strong>Sujet :</strong> ${subject}</p>
+  <br>
+  <div style="background-color: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 4px solid #CD352E;">
     ${messageHtml}
   </div>
+  <br>
+  <p style="font-size: 12px; color: #777; text-align: center;">&copy; ${currentYear} DIEBENU & PARTNERS. Tous droits réservés.</p>
 </div>`;
 
+    // 💌 EMAIL POUR LE CLIENT
     const emailHtmlToClient = `
-<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.5; color: #333; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-  <h2 style="font-size: 18px; color: #111; margin-top: 0;">Merci pour votre message - DIEBENU & PARTNERS</h2>
-  <p>Bonjour ${fullName},</p>
-  <p>Nous avons bien reçu votre message et notre équipe reviendra vers vous dans les plus brefs délais.</p>
+<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #111416; max-width: 600px; margin: 30px auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 10px;">
+  <h2 style="font-size: 20px; color: #CD352E; margin-top: 0; text-align: center;">📬 Merci pour votre message</h2>
+  <p>Bonjour <strong>${fullName}</strong>,</p>
+  <p>Nous avons bien reçu votre message concernant <strong>${subject}</strong>. Notre équipe vous répondra dans les plus brefs délais.</p>
+  <div style="background-color: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 4px solid #CD352E; margin-top: 10px;">
+    ${messageHtml}
+  </div>
   <br>
-  <p>Cordialement,<br>
-  L'équipe DIEBENU & PARTNERS</p>
-  <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+  <p>Bien cordialement,<br>
+  <strong>L’équipe DIEBENU & PARTNERS</strong></p>
   <p style="font-size: 12px; color: #777; text-align: center;">&copy; ${currentYear} DIEBENU & PARTNERS. Tous droits réservés.</p>
 </div>`;
 
@@ -621,7 +806,7 @@ export async function POST(request: NextRequest) {
       html: emailHtmlToClient
     });
 
-    console.log('✅ Email envoyé:', { email, spamScore: spamCheck.score, confidence: 100 - spamCheck.score });
+    console.log('✅ Email envoyé:', { email, spamScore: spamCheck.score });
 
     return NextResponse.json({ success: true, message: 'Message envoyé avec succès' });
 
@@ -631,6 +816,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS() {
   return NextResponse.json({}, { status: 200 });
 }
