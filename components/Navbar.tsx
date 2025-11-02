@@ -754,6 +754,9 @@ import {
   LayoutGrid,
   Award,
   Loader2,
+  Download,
+  CheckCircle,
+  Send,
 } from 'lucide-react';
 import Image from 'next/image';
 import { FORMATION_CATALOGUE } from '@/data/catalogue';
@@ -857,6 +860,10 @@ export default function Navbar({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchLoading, setSearchLoading] = useState(false);
+  
+  // États pour le téléchargement du PDF
+  const [showPdfModal, setShowPdfModal] = useState(false);
+  const [pdfDownloadAuthorized, setPdfDownloadAuthorized] = useState(false);
 
   // =========================================================================
   // FONCTION DE RECHERCHE
@@ -955,7 +962,7 @@ export default function Navbar({
 
   // Empêcher le scroll du body quand le menu mobile est ouvert
   useEffect(() => {
-    if (mobileMenuOpen || isSearchOpen) {
+    if (mobileMenuOpen || isSearchOpen || showPdfModal) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -963,7 +970,7 @@ export default function Navbar({
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [mobileMenuOpen, isSearchOpen]);
+  }, [mobileMenuOpen, isSearchOpen, showPdfModal]);
 
   const navItems = [
     { label: 'Accueil', page: 'home', icon: LayoutGrid },
@@ -1156,6 +1163,42 @@ export default function Navbar({
     setMobileSubMenuOpen(mobileSubMenuOpen === page ? null : page);
   };
 
+  // =========================================================================
+  // HANDLERS POUR LE TÉLÉCHARGEMENT DU PDF
+  // =========================================================================
+  const handlePdfDownloadClick = () => {
+    setShowPdfModal(true);
+    setMobileMenuOpen(false);
+  };
+
+  const handleClosePdfModal = () => {
+    setShowPdfModal(false);
+    setPdfDownloadAuthorized(false);
+  };
+
+  const handleFormSuccess = () => {
+    setPdfDownloadAuthorized(true);
+  };
+
+  const handleDownloadPdf = () => {
+    // Chemin vers votre PDF (à adapter selon votre structure)
+    const pdfPath = '/documents/catalogue-formations.pdf';
+    
+    // Créer un lien temporaire et déclencher le téléchargement
+    const link = document.createElement('a');
+    link.href = pdfPath;
+    link.download = 'Catalogue_Formations_Diebenu.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Fermer la modale après un court délai
+    setTimeout(() => {
+      handleClosePdfModal();
+    }, 500);
+  };
+  // =========================================================================
+
   return (
     <>
       <nav
@@ -1227,13 +1270,23 @@ export default function Navbar({
             </div>
 
             {/* Actions additionnelles */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-3">
+              {/* Bouton PDF */}
+              <button
+                onClick={handlePdfDownloadClick}
+                className="px-4 py-2.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-base font-semibold rounded-full shadow-lg hover:shadow-orange-500/50 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                <span>Catalogue PDF</span>
+              </button>
+
               <button
                 onClick={handleSearchClick}
                 className="p-3 rounded-full transition-all text-gray-500 hover:text-red-600 hover:bg-gray-100"
               >
                 <Search className="w-5 h-5" />
               </button>
+              
               <button
                 onClick={() => handlePageChange('contact')}
                 className="px-6 py-2.5 bg-gray-900 text-white text-base font-semibold rounded-full shadow-lg hover:bg-red-600 hover:shadow-red-500/50 transition-all duration-300 transform hover:-translate-y-0.5"
@@ -1423,12 +1476,21 @@ export default function Navbar({
 
               <div className="pt-4 space-y-3 border-t border-gray-200 mt-4">
                 <button
+                  onClick={handlePdfDownloadClick}
+                  className="w-full flex items-center justify-center px-5 py-4 rounded-xl text-lg font-medium text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 transition-all shadow-lg"
+                >
+                  <Download className="w-5 h-5 mr-3" />
+                  Télécharger le catalogue PDF
+                </button>
+                
+                <button
                   onClick={handleSearchClick}
                   className="w-full flex items-center justify-center px-5 py-4 rounded-xl text-lg font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all"
                 >
                   <Search className="w-5 h-5 mr-3" />
                   Rechercher
                 </button>
+                
                 <button
                   onClick={() => handlePageChange('contact')}
                   className="w-full px-5 py-4 bg-gray-900 text-white text-lg font-semibold rounded-xl shadow-lg hover:bg-red-600 transition-all"
@@ -1451,9 +1513,303 @@ export default function Navbar({
         onClose={handleCloseSearch}
         isLoading={searchLoading}
       />
+
+      {/* Modal de téléchargement PDF */}
+      <PdfDownloadModal
+        isOpen={showPdfModal}
+        onClose={handleClosePdfModal}
+        onFormSuccess={handleFormSuccess}
+        isAuthorized={pdfDownloadAuthorized}
+        onDownload={handleDownloadPdf}
+      />
     </>
   );
 }
+
+// =========================================================================
+// COMPOSANT : PDF DOWNLOAD MODAL
+// =========================================================================
+interface PdfDownloadModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onFormSuccess: () => void;
+  isAuthorized: boolean;
+  onDownload: () => void;
+}
+
+const PdfDownloadModal: React.FC<PdfDownloadModalProps> = ({
+  isOpen,
+  onClose,
+  onFormSuccess,
+  isAuthorized,
+  onDownload,
+}) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: 'Demande de téléchargement du catalogue de formations',
+    message: 'Je souhaite télécharger le catalogue de formations Diebenu & Partners.',
+    honeypot: '',
+  });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
+
+  useEffect(() => {
+    if (!isOpen) {
+      // Reset du formulaire quand la modal se ferme
+      setFormData({
+        name: '',
+        email: '',
+        subject: 'Demande de téléchargement du catalogue de formations',
+        message: 'Je souhaite télécharger le catalogue de formations Diebenu & Partners.',
+        honeypot: '',
+      });
+      setErrors({});
+      setIsSubmitting(false);
+    }
+  }, [isOpen]);
+
+  const validateForm = (): boolean => {
+    const newErrors: {[key: string]: string} = {};
+    
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
+      newErrors.name = 'Nom requis (minimum 2 caractères)';
+    }
+    
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Email valide requis';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    // Protection anti-spam honeypot
+    if (formData.honeypot) {
+      console.warn('Spam detected');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject,
+          message: formData.message,
+          honeypot: formData.honeypot,
+          submissionTime: Date.now(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur serveur');
+      }
+
+      // Succès - autoriser le téléchargement
+      onFormSuccess();
+      
+    } catch (error: any) {
+      console.error('Erreur:', error);
+      alert('Une erreur est survenue. Veuillez réessayer.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-in fade-in duration-200">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      ></div>
+
+      {/* Modal Content */}
+      <div
+        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="relative bg-gradient-to-r from-orange-500 to-red-600 px-8 py-6">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+          
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors group"
+          >
+            <X className="w-5 h-5 text-white" />
+          </button>
+
+          <div className="relative flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <Download className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-1">
+                Télécharger le catalogue
+              </h2>
+              <p className="text-white/90 text-sm">
+                Remplissez le formulaire pour accéder au PDF
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="p-8">
+          {!isAuthorized ? (
+            // Formulaire
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Honeypot */}
+              <div className="absolute -left-[5000px]" aria-hidden="true">
+                <input
+                  type="text"
+                  name="honeypot"
+                  value={formData.honeypot}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
+              {/* Nom */}
+              <div>
+                <label htmlFor="pdf-name" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Nom complet *
+                </label>
+                <input
+                  type="text"
+                  id="pdf-name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
+                    errors.name
+                      ? 'border-red-400 focus:border-red-500'
+                      : 'border-gray-200 focus:border-red-500'
+                  }`}
+                  placeholder="Votre nom et prénom"
+                  required
+                />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div>
+                <label htmlFor="pdf-email" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Email professionnel *
+                </label>
+                <input
+                  type="email"
+                  id="pdf-email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
+                    errors.email
+                      ? 'border-red-400 focus:border-red-500'
+                      : 'border-gray-200 focus:border-red-500'
+                  }`}
+                  placeholder="votre.email@entreprise.com"
+                  required
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3">
+                <FileText className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-blue-900">
+                  <p className="font-semibold mb-1">Catalogue complet inclus :</p>
+                  <ul className="text-blue-800 space-y-1 text-xs">
+                    <li>• Plus de 200 formations professionnelles</li>
+                    <li>• Descriptions détaillées et objectifs pédagogiques</li>
+                    <li>• Tarifs et durées de chaque formation</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Bouton Submit */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold rounded-xl hover:from-orange-600 hover:to-red-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Envoi en cours...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5" />
+                    Valider et accéder au PDF
+                  </>
+                )}
+              </button>
+
+              <p className="text-xs text-gray-500 text-center">
+                🔒 Vos données sont sécurisées et ne seront jamais partagées
+              </p>
+            </form>
+          ) : (
+            // Écran de téléchargement
+            <div className="text-center py-8">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
+                <CheckCircle className="w-10 h-10 text-green-600" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                Merci pour votre demande !
+              </h3>
+              
+              <p className="text-gray-600 mb-8">
+                Vous pouvez maintenant télécharger le catalogue de formations
+              </p>
+
+              <button
+                onClick={onDownload}
+                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl"
+              >
+                <Download className="w-6 h-6" />
+                Télécharger le catalogue PDF
+              </button>
+
+              <p className="mt-6 text-sm text-gray-500">
+                Le téléchargement devrait commencer automatiquement
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // =========================================================================
 // COMPOSANT : SEARCH OVERLAY
