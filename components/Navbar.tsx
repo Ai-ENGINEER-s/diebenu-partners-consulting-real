@@ -437,27 +437,29 @@ export default function Navbar({
         }`}
         onMouseLeave={() => setActiveMegaMenu(null)}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* ========== LAYOUT ULTRA-RESPONSIVE ========== */}
-          <div className="flex items-center justify-between h-20 sm:h-24">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          {/* ========== LAYOUT ULTRA-RESPONSIVE AVEC ESPACEMENT ÉQUILIBRÉ ========== */}
+          <div className="flex items-center justify-between h-20 sm:h-24 gap-4 lg:gap-6 xl:gap-8">
             
-            {/* Logo - Responsive avec espacement */}
-            <button
-              onClick={() => handlePageChange('home')}
-              className="flex-shrink-0 flex items-center group transition-transform hover:scale-[1.02] duration-300 relative z-50 mr-8 lg:mr-12 xl:mr-16"
-            >
-              <Image
-                src="/images/logo/logotrans.png"
-                alt="Diebenu & Partners Logo"
-                width={160}
-                height={40}
-                priority
-                className="object-contain w-32 h-8 sm:w-44 sm:h-11 lg:w-56 lg:h-14"
-              />
-            </button>
+            {/* Logo - Espacé uniformément */}
+            <div className="flex-shrink-0">
+              <button
+                onClick={() => handlePageChange('home')}
+                className="flex items-center group transition-transform hover:scale-[1.02] duration-300"
+              >
+                <Image
+                  src="/images/logo/logotrans.png"
+                  alt="Diebenu & Partners Logo"
+                  width={160}
+                  height={40}
+                  priority
+                  className="object-contain w-32 h-8 sm:w-44 sm:h-11 lg:w-52 lg:h-13 xl:w-56 xl:h-14"
+                />
+              </button>
+            </div>
 
-            {/* Menu Desktop (xl+) */}
-            <div className="hidden xl:flex items-center gap-1">
+            {/* Menu Desktop (xl+) - Centré et flexible */}
+            <div className="hidden xl:flex items-center justify-center flex-1 gap-1">
               {navItems.map((item) => (
                 <div
                   key={item.page}
@@ -495,8 +497,8 @@ export default function Navbar({
               ))}
             </div>
 
-            {/* Actions Desktop (lg+) */}
-            <div className="hidden lg:flex items-center gap-2 xl:gap-3">
+            {/* Actions Desktop (lg+) - Espacé uniformément à droite */}
+            <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
               {/* Bouton PDF Desktop */}
               <button
                 onClick={handlePdfDownloadClick}
@@ -525,7 +527,7 @@ export default function Navbar({
             </div>
 
             {/* Actions Tablet (md-lg) */}
-            <div className="hidden md:flex lg:hidden items-center gap-2">
+            <div className="hidden md:flex lg:hidden items-center gap-2 flex-shrink-0">
               <button
                 onClick={handlePdfDownloadClick}
                 className="p-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 transition-all"
@@ -552,7 +554,7 @@ export default function Navbar({
             {/* Bouton Menu Mobile (<md) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-full text-gray-800 hover:bg-gray-100 transition-all relative z-50"
+              className="md:hidden p-2 rounded-full text-gray-800 hover:bg-gray-100 transition-all flex-shrink-0"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -721,8 +723,7 @@ export default function Navbar({
       {/* Overlay de Recherche */}
       <SearchOverlay
         isOpen={isSearchOpen}
-        searchTerm={searchTerm}
-        onSearchChange={handleSearchChange}
+        searchTerm={searchTerm}onSearchChange={handleSearchChange}
         searchResults={searchResults}
         onSelect={handleSearchSelect}
         onClose={handleCloseSearch}
