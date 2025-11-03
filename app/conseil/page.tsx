@@ -343,7 +343,7 @@ export default function ConseilPage({
           
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight">
             Pôle Conseil
-            <span className="block text-red-600 mt-2">Expertise 2026</span>
+            <span className="block text-red-600 mt-2"> 2026</span>
           </h1>
           
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">

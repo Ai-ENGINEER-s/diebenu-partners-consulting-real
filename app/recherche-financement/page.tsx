@@ -342,7 +342,7 @@ export default function FinancementPage({
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight">
-            Recherche de Financement
+           Pôle  Recherche de Financement
             <span className="block text-red-600 mt-2">2026</span>
           </h1>
           
