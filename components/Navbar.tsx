@@ -228,7 +228,12 @@ export default function Navbar({
     { label: 'Accueil', page: 'home', icon: LayoutGrid },
     { label: 'Formations', page: 'formation', hasMega: true, icon: BookOpen },
     { label: 'Conseil', page: 'conseil', hasMega: true, icon: Briefcase },
-    { label: 'Recherche de Financement', page: 'recherche', hasMega: true, icon: Zap },
+    {
+      label: 'Recherche de Financement',
+      page: 'recherche',
+      hasMega: true,
+      icon: Zap,
+    },
     { label: 'Etudes', page: 'etude', hasMega: true, icon: FileText },
     { label: 'À propos', page: 'about', icon: Award },
   ];
@@ -438,10 +443,11 @@ export default function Navbar({
         onMouseLeave={() => setActiveMegaMenu(null)}
       >
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          {/* ========== LAYOUT ULTRA-RESPONSIVE AVEC ESPACEMENT ÉQUILIBRÉ ========== */}
-          <div className="flex items-center justify-between h-20 sm:h-24 gap-4 lg:gap-6 xl:gap-8">
+          {/* ========== NOUVEAU LAYOUT RESPONSIVE (lg+) ========== */}
+          {/* Changement: 'xl:gap-8' enlevé, 'lg:flex' utilisé comme breakpoint principal */}
+          <div className="flex items-center justify-between h-20 sm:h-24 gap-4 lg:gap-6">
             
-            {/* Logo - Espacé uniformément */}
+            {/* 1. Logo (Extrémité Gauche) */}
             <div className="flex-shrink-0">
               <button
                 onClick={() => handlePageChange('home')}
@@ -458,8 +464,10 @@ export default function Navbar({
               </button>
             </div>
 
-            {/* Menu Desktop (xl+) - Centré et flexible */}
-            <div className="hidden xl:flex items-center justify-center flex-1 gap-1">
+            {/* 2. Menu Central (Navigation + Actions) - Visible en lg+ */}
+            {/* Changement: 'hidden xl:flex' -> 'hidden lg:flex', 'flex-1' supprimé, gap ajusté */}
+            <div className="hidden lg:flex items-center justify-center gap-1 lg:gap-2 xl:gap-3">
+              {/* Items de navigation */}
               {navItems.map((item) => (
                 <div
                   key={item.page}
@@ -495,11 +503,11 @@ export default function Navbar({
                   )}
                 </div>
               ))}
-            </div>
 
-            {/* Actions Desktop (lg+) - Espacé uniformément à droite */}
-            <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
-              {/* Bouton PDF Desktop */}
+              {/* Séparateur visuel */}
+              <div className="w-2 xl:w-4" aria-hidden="true" />
+
+              {/* Bouton PDF Desktop (DÉPLACÉ ICI) */}
               <button
                 onClick={handlePdfDownloadClick}
                 className="px-3 xl:px-5 py-2 xl:py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs xl:text-sm font-semibold rounded-full shadow-lg hover:shadow-blue-500/50 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-1.5 xl:gap-2"
@@ -509,60 +517,66 @@ export default function Navbar({
                 <span className="xl:hidden">PDF</span>
               </button>
 
-              {/* Bouton Recherche */}
+              {/* Bouton Recherche (DÉPLACÉ ICI) */}
               <button
                 onClick={handleSearchClick}
                 className="p-2.5 xl:p-3 rounded-full transition-all text-gray-500 hover:text-red-600 hover:bg-gray-100"
               >
                 <Search className="w-4 h-4 xl:w-5 xl:h-5" />
               </button>
+            </div>
 
-              {/* Bouton Contact */}
+            {/* 3. Extrémité Droite (Contact & Toggles) */}
+            <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0">
+              
+              {/* Bouton Contact (lg+) (DÉPLACÉ ICI) */}
               <button
                 onClick={() => handlePageChange('contact')}
-                className="px-4 xl:px-6 py-2 xl:py-2.5 bg-gray-900 text-white text-xs xl:text-sm font-semibold rounded-full shadow-lg hover:bg-red-600 hover:shadow-red-500/50 transition-all duration-300 transform hover:-translate-y-0.5"
+                className="hidden lg:flex px-4 xl:px-6 py-2 xl:py-2.5 bg-gray-900 text-white text-xs xl:text-sm font-semibold rounded-full shadow-lg hover:bg-red-600 hover:shadow-red-500/50 transition-all duration-300 transform hover:-translate-y-0.5"
               >
                 Contact
               </button>
-            </div>
+            
+              {/* Actions Tablet (md-lg) (INCHANGÉ, MAIS MAINTENANT DANS CE GROUPE) */}
+              <div className="hidden md:flex lg:hidden items-center gap-2">
+                <button
+                  onClick={handlePdfDownloadClick}
+                  className="p-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 transition-all"
+                  title="Télécharger PDF"
+                >
+                  <Download className="w-4 h-4" />
+                </button>
+                
+                <button
+                  onClick={handleSearchClick}
+                  className="p-2.5 rounded-full text-gray-500 hover:text-red-600 hover:bg-gray-100 transition-all"
+                >
+                  <Search className="w-4 h-4" />
+                </button>
 
-            {/* Actions Tablet (md-lg) */}
-            <div className="hidden md:flex lg:hidden items-center gap-2 flex-shrink-0">
-              <button
-                onClick={handlePdfDownloadClick}
-                className="p-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 transition-all"
-                title="Télécharger PDF"
-              >
-                <Download className="w-4 h-4" />
-              </button>
-              
-              <button
-                onClick={handleSearchClick}
-                className="p-2.5 rounded-full text-gray-500 hover:text-red-600 hover:bg-gray-100 transition-all"
-              >
-                <Search className="w-4 h-4" />
-              </button>
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-2.5 rounded-full text-gray-800 hover:bg-gray-100 transition-all"
+                >
+                  {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+              </div>
 
+              {/* Bouton Menu Mobile (<md) (INCHANGÉ, MAIS MAINTENANT DANS CE GROUPE) */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2.5 rounded-full text-gray-800 hover:bg-gray-100 transition-all"
+                className="md:hidden p-2 rounded-full text-gray-800 hover:bg-gray-100 transition-all flex-shrink-0"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
-            </div>
 
-            {/* Bouton Menu Mobile (<md) */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-full text-gray-800 hover:bg-gray-100 transition-all flex-shrink-0"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+            </div> {/* Fin du groupe de droite */}
+          </div> {/* Fin du flex justify-between */}
         </div>
 
         {/* Mega Menus Desktop */}
-        <div className="hidden xl:block">
+        {/* Changement: 'xl:block' -> 'lg:block' */}
+        <div className="hidden lg:block">
           {activeMegaMenu === 'formation' && (
             <MegaMenuFormation onThemeSelect={handleMegaMenuFormationSelect} />
           )}
@@ -588,8 +602,9 @@ export default function Navbar({
       </nav>
 
       {/* Menu Mobile/Tablet */}
+      {/* Changement: 'xl:hidden' -> 'lg:hidden' */}
       {mobileMenuOpen && (
-        <div className="xl:hidden fixed inset-0 z-40 bg-white">
+        <div className="lg:hidden fixed inset-0 z-40 bg-white">
           <div className="h-20 sm:h-24"></div>
           <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-6rem)] overflow-y-auto">
             <div className="px-4 sm:px-6 py-4 space-y-2">
@@ -694,7 +709,7 @@ export default function Navbar({
               <div className="pt-4 space-y-3 border-t border-gray-200 mt-4">
                 <button
                   onClick={handlePdfDownloadClick}
-                  className="w-full flex items-center justify-center px-4 sm:px-5 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg"
+                  className="w-full flex items-center justify-center px-4 sm:px-5 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-7A00 transition-all shadow-lg"
                 >
                   <Download className="w-5 h-5 mr-3" />
                   Télécharger le catalogue PDF
@@ -723,7 +738,8 @@ export default function Navbar({
       {/* Overlay de Recherche */}
       <SearchOverlay
         isOpen={isSearchOpen}
-        searchTerm={searchTerm}onSearchChange={handleSearchChange}
+        searchTerm={searchTerm}
+        onSearchChange={handleSearchChange}
         searchResults={searchResults}
         onSelect={handleSearchSelect}
         onClose={handleCloseSearch}
