@@ -1,5 +1,52 @@
 // types/index.ts
-
+// =========================================================================
+// TYPES
+// =========================================================================
+type GenericSearchResult =
+  | {
+      page: 'formation';
+      type: 'theme';
+      title: string;
+      detail: string;
+      theme: Theme;
+      icon: 'layout';
+    }
+  | {
+      page: 'formation';
+      type: 'module';
+      title: string;
+      detail: string;
+      theme: Theme;
+      module: Module;
+      icon: 'book';
+    }
+  | {
+      page: 'etude';
+      type: 'module';
+      title: string;
+      detail: string;
+      theme: ThemeForOtherPages;
+      module: ModuleForOtherPages;
+      icon: 'file';
+    }
+  | {
+      page: 'conseil';
+      type: 'module';
+      title: string;
+      detail: string;
+      theme: ThemeForOtherPages;
+      module: ModuleForOtherPages;
+      icon: 'briefcase';
+    }
+  | {
+      page: 'financement';
+      type: 'module';
+      title: string;
+      detail: string;
+      theme: ThemeForOtherPages;
+      module: ModuleForOtherPages;
+      icon: 'zap';
+    };
 interface Session {
   date: string;
   location: 'Session 1' | 'Session 2' | 'Session 3' | 'Session 4' | 'Session 5';
@@ -12,6 +59,18 @@ interface Module {
   sessions: Session[];
   image?: string; // ✅ <-- Ajout ici
 }
+
+
+interface SearchOverlayProps {
+  isOpen: boolean;
+  searchTerm: string;
+  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  searchResults: GenericSearchResult[];
+  onSelect: (result: GenericSearchResult) => void;
+  onClose: () => void;
+  isLoading: boolean;
+}
+
 
 interface ModuleForOtherPages {
   code: string;
@@ -49,13 +108,17 @@ interface Session {
   pageType?: 'formation' | 'etude' | 'conseil' | 'financement'; // NOUVEAU
 }
 
+interface NavbarProps {
+  currentPage: string;
+  setCurrentPage: (page: string) => void;
+  setSelectedTheme: (theme: Theme) => void;
+  setSelectedModule: (module: Module) => void;
+  setSelectedEtudeTheme: (theme: ThemeForOtherPages) => void;
+  setSelectedEtudeModule: (module: ModuleForOtherPages) => void;
+  setSelectedConseilTheme: (theme: ThemeForOtherPages) => void;
+  setSelectedConseilModule: (module: ModuleForOtherPages) => void;
+  setSelectedFinancementTheme: (theme: ThemeForOtherPages) => void;
+  setSelectedFinancementModule: (module: ModuleForOtherPages) => void;
+}
 
-// interface SearchResult {
-//     type: 'theme' | 'module';
-//     title: string;
-//     detail: string;
-//     targetTheme: Theme;
-//     moduleCode?: string;
-// }
-
-export type { Session, Module, Theme , SearchResult, ModuleForOtherPages, ThemeForOtherPages };
+export type { Session, Module, Theme , SearchResult, ModuleForOtherPages, ThemeForOtherPages , GenericSearchResult, SearchOverlayProps , NavbarProps };
